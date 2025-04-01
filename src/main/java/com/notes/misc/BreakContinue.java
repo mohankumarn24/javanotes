@@ -11,10 +11,10 @@ public class BreakContinue {
 	private static void breakMethod() {
 
 		System.out.println("\nTesting break statement");
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			System.out.println();
-			for (int j = 0; j < 3; j++) {
-				if (j == 1) {
+			for (int j = 0; j < 4; j++) {
+				if (j == 2) {
 					break;
 				}
 				System.out.println(String.format("Inner loop count: %d", j));
@@ -27,10 +27,10 @@ public class BreakContinue {
 	private static void continueMethod() {
 
 		System.out.println("\nTesting continue statement");
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			System.out.println();
-			for (int j = 0; j < 3; j++) {
-				if (j == 1) {
+			for (int j = 0; j < 4; j++) {
+				if (j == 2) {
 					continue;
 				}
 				System.out.println(String.format("Inner loop count: %d", j));
