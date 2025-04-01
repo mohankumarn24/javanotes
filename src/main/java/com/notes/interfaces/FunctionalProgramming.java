@@ -31,8 +31,8 @@ public class FunctionalProgramming {
 		 * BinaryOperator<T>  		(T, T) -> T
 		 * 
 		 * BiPredicate<L, R> 	   	(L, R)  -> boolean
-		 * BiConsumer<T, U>		(T, U)  -> void 
-		 * BiFunction<T, U, R> 	(T, U) -> R
+		 * BiConsumer<T, U>			(T, U)  -> void 
+		 * BiFunction<T, U, R> 		(T, U) -> R
 		 */
 		
 		/*
