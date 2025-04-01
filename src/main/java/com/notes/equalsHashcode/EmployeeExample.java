@@ -40,12 +40,13 @@ import java.util.Map;
 public class EmployeeExample {
 	
     public static void main(String[] args) {
+    	
         Employee emp1 = new Employee(1, "John Doe", "Engineering");
         Employee emp2 = new Employee(1, "John Doe", "Engineering");
         Employee emp3 = new Employee(2, "Jane Smith", "Marketing");
         
         // Testing equals()
-        System.out.println("emp1 equals emp2: " + emp1.equals(emp2)); // true
+        System.out.println("emp1 equals emp2: " + emp1.equals(emp2)); // true if equals is overrriden
         System.out.println("emp1 equals emp3: " + emp1.equals(emp3)); // false
         
         // Testing hashCode()
