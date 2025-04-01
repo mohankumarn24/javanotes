@@ -37,13 +37,16 @@ public class Product {
 	*/
 
     @Override
-    public boolean equals(Object obj) {    	
+    public boolean equals(Object obj) {
+    	// 1. Check if same object reference
 		if (this == obj)
 			return true;
+		// 2. Check if null or different class
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		// 4. Compare significant fields
         Product product = (Product) obj;
         return productId.equals(product.productId); 	// Products are equal if they have the same ID
     }

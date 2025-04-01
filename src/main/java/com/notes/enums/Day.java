@@ -12,6 +12,11 @@ public enum Day {
 
     private final String message; // field to store the message
 
+    /**
+     * This prevents instantiation outside the enum and ensures a fixed set of instances
+     * It allows custom initialization of constants while still maintaining type safety and singleton behavior
+     * Java implicitly makes the constructor of an enum private
+     */
     // Constructor for the enum
     // Day (String message) {
     private Day (String message) {

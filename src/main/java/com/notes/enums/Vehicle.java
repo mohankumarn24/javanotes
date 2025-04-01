@@ -28,6 +28,6 @@ public enum Vehicle {
 
     // Method to display the vehicle's information
     public String getVehicleInfo() {
-        return this.name() + ": Max Speed = " + maxSpeed + " km/h, Fuel Type = " + fuelType;
+    	return String.format("%s: maxSpeed=%d kmph and fuelType=%s", this.name(), maxSpeed, fuelType);
     }
 }
