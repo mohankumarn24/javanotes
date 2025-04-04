@@ -10,9 +10,9 @@ public class InterruptingThreadDemo2 extends Thread {
 	public void run() {
 		for (int i = 1; i <= 2; i++) {
 			if (Thread.interrupted()) {
-				System.out.println("code for interrupted thread");
+				System.out.println("code for interrupted thread: " + Thread.currentThread().getName());
 			} else {
-				System.out.println("code for normal thread");
+				System.out.println("code for normal thread:" + Thread.currentThread().getName());
 			}
 		}
 	}
@@ -22,6 +22,9 @@ public class InterruptingThreadDemo2 extends Thread {
 		InterruptingThreadDemo2 t1 = new InterruptingThreadDemo2();
 		InterruptingThreadDemo2 t2 = new InterruptingThreadDemo2();
 
+		t1.setName("t1");
+		t2.setName("t2");
+		
 		t1.start();
 		t1.interrupt();
 
