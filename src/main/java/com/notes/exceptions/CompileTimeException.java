@@ -41,7 +41,7 @@ public class CompileTimeException {
         System.out.println("Method C start");
         // System.out.println("Method C");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        // Exception is thrown in below line. It is not propogated. Remove comment and see
+        // Exception is thrown in below line. It is not propogated either for try-cath/throws. Remove comment and see
         bufferedReader.readLine(); // throws exception here. Adding try-catch/throws is compulsory. Used throws
         System.out.println("Method C end");
     }
