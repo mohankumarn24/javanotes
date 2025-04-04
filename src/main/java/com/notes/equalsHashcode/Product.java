@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class Product {
 	
-    private final String productId;
+    private final String id;
     private String name;
     private double price;
     
     public Product(String productId, String name, double price) {
-        this.productId = productId;
+        this.id = productId;
         this.name = name;
         this.price = price;
     }
@@ -24,15 +24,15 @@ public class Product {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Product product = (Product) obj;
-		return Objects.equals(name, product.name)
-				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(product.price)
-				&& Objects.equals(productId, product.productId);
+		Product other = (Product) obj;
+		return Objects.equals(id, other.id) 
+				&& Objects.equals(name, other.name)
+				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, price, productId);
+		return Objects.hash(id, name, price);
 	}
 	*/
 
@@ -48,11 +48,11 @@ public class Product {
 			return false;
 		// 4. Compare significant fields
         Product product = (Product) obj;
-        return productId.equals(product.productId); 	// Products are equal if they have the same ID
+        return id.equals(product.id); 				// Products are equal if they have the same ID
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(productId);					// Hash code is based only on the ID
+        return Objects.hash(id);					// Hash code is based only on the ID
     }   
 }

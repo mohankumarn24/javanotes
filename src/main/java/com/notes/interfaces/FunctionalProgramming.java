@@ -49,17 +49,17 @@ public class FunctionalProgramming {
   	  			.map(t -> t.substring(0, 3))				// function			Function<String, String> getCodes = city -> city.substring(0, 3);
   	  			.forEach(t -> System.out.println(t));		// consumer			Consumer<String> printConsumer = city -> System.out.println(city);
 		
-		testPredicate();
-		testConsumer();	
-		testFunction();	
+		testPredicate();   		// test
+		testConsumer();	   		// accept
+		testFunction();	   		// apply
 		
-		testSupplier();
-		testUnaryOperator();
-		testBinaryOperator();
+		testSupplier();			// get
+		testUnaryOperator();	// apply
+		testBinaryOperator();	// apply	
 		
-		testBiPredicate();
-		testBiConsumer();
-		testBiFunction();
+		testBiPredicate();		// test
+		testBiConsumer();		// accept
+		testBiFunction();		// apply
 	}
 
 	private static void testPredicate() {
