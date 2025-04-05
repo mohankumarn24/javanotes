@@ -28,17 +28,17 @@ public class FunctionalProgramming {
 	public static void main(String[] args) {	
 		
 		/*
-		 * Predicate<T> 	   		T  -> boolean
-		 * Consumer<T>		   		T  -> void 
-		 * Function<T, R> 	   		T -> R
+		 * Predicate<T> 	   		T  -> boolean			test
+		 * Consumer<T>		   		T  -> void 				accept
+		 * Function<T, R> 	   		T -> R					apply
 		 * 
-		 * Supplier<T>  	   		() -> T
-		 * UnaryOperator<T>   		T -> T
-		 * BinaryOperator<T>  		(T, T) -> T
+		 * Supplier<T>  	   		() -> T					get
+		 * UnaryOperator<T>   		T -> T					apply
+		 * BinaryOperator<T>  		(T, T) -> T				apply
 		 * 
-		 * BiPredicate<L, R> 	   	(L, R)  -> boolean
-		 * BiConsumer<T, U>			(T, U)  -> void 
-		 * BiFunction<T, U, R> 		(T, U) -> R
+		 * BiPredicate<L, R> 	   	(L, R)  -> boolean		test
+		 * BiConsumer<T, U>			(T, U)  -> void 		accept
+		 * BiFunction<T, U, R> 		(T, U) -> R				apply
 		 */
 		
 		List<String> cities = Arrays.asList("Delhi", "Mumbai", "Goa", "Pune");
