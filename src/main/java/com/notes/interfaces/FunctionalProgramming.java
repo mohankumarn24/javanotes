@@ -124,6 +124,8 @@ public class FunctionalProgramming {
 	    Supplier<String[]> citySupplierShort = () -> new String[]{"Mumbai", "Delhi", "Goa", "Pune"};
 	    
 	    // String[] strings = citySupplierShort.get();
+		// List<String> cities = Arrays.asList(new String[]{"Mumbai", "Delhi", "Goa", "Pune"});	   
+	 // List<String> cities = Arrays.asList("Mumbai", "Delhi", "Goa", "Pune");	 
 	    List<String> cities = Arrays.asList(citySupplierShort.get());
 	    cities.stream()
 	    	  .forEach(System.out::println);
