@@ -36,6 +36,21 @@ public class CompileTimeException {
         System.out.println("Method methodExtra2 end");
     }
     
+    @SuppressWarnings("unused")
+	private static void methodExtra3() throws IOException {
+    	
+        System.out.println("Method methodExtra3 start");
+        try {
+			int x = 5/0;
+		} catch (ArithmeticException e) {
+			System.out.println("ArithmeticException in methodExtra3");
+			return; // even thoigh it returns, finally block is still executed.
+		} finally {
+			System.out.println("finally block executed in methodExtra3");
+		}
+        System.out.println("Method methodExtra3 end"); // not executed on return in exception block
+    }
+    
     private static void methodC() throws IOException, NumberFormatException {
     	
         System.out.println("Method C start");
@@ -79,6 +94,8 @@ public class CompileTimeException {
         } catch (IOException e) {
         	System.out.println("Exception occurred");
         }
+        
+        // methodExtra3();
         System.out.println("Main end");
     }
 }
