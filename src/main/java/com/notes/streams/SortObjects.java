@@ -34,7 +34,8 @@ public class SortObjects {
 		System.out.println("\nSort objects in reverse order");
 		List<Employee> sortedEmployeesReversed = employees.stream()
 				.filter(Objects::nonNull)
-				.sorted(Comparator.comparing(Employee::getId).reversed())
+				.sorted(Comparator.comparing(Employee::getId)
+				.reversed())
 				.collect(Collectors.toList());
 		sortedEmployeesReversed.forEach(t -> System.out.println(t.toString()));
 		
