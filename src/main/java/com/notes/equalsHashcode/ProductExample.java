@@ -36,6 +36,18 @@ public class ProductExample {
         // Add the second laptop - it won't be added since it's considered equal
         inventory.add(laptop2);
         System.out.println("Inventory size after adding laptop2: " + inventory.size()); 	// Still 1
+               
+        // my analysis
+        System.out.println("\n-- my analysis --");
+        Set<Product> products = new HashSet<>();
+        Product p1 = new Product("1", " Reynolds Pen", 10);
+        Product p2 = new Product("1", " Reynolds Pen", 12);
+        products.add(p1);
+        p1.equals(p2); 			// override default implementation of equals() to check id instead of ==
+        products.contains(p2); 	// As per hash contract between equals() and hashCode(), whenever two objects are equals, then their hash code must be equal. So, override hashCode() as well
+        
+        System.out.println("p1.equals(p2): " + p1.equals(p2));
+        System.out.println("products.contains(p2): " + products.contains(p2));
     }
 }
 
@@ -70,11 +82,12 @@ public class ProductExample {
 
 /*
  * My Analysis:
- * Let's say there is Product class (productId, name, price fields). 
- * I have two products which have same name, same name but only the price is different. Logically, the products are same
+ * Let's say there is Product class (id, name, price fields). 
+ * I will create two products product1, product2 which have same id, same name but only the price is different. Logically, the products are same
+ * 	-- refer above code
  * (Two products are equal if their productId's are same even though price differs -  as per our analogy)
  * But default implementation for equals() checks only for memory address equality ie product1 == product2. As a result, these two products are now different!
- * To resolve this, we must override equals() and hashCode()
+ * To resolve this, we must override equals()
  * We override equals() method to check for (product1.id == product2.id) instead of (product1 == product2)
  * Whenever we override equals() mtehod, we override hashCode() method as well to maintain contract between equals() and hashCode()
  *  - The most important rule: If two objects are equal (according to equals), they must have the same hash code.

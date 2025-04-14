@@ -28,17 +28,17 @@ public class FunctionalProgramming {
 	public static void main(String[] args) {	
 		
 		/*
-		 * Predicate<T> 	   		T  -> boolean
-		 * Consumer<T>		   		T  -> void 
-		 * Function<T, R> 	   		T -> R
+		 * Predicate<T> 	   		T  -> boolean			test
+		 * Consumer<T>		   		T  -> void 				accept
+		 * Function<T, R> 	   		T -> R					apply
 		 * 
-		 * Supplier<T>  	   		() -> T
-		 * UnaryOperator<T>   		T -> T
-		 * BinaryOperator<T>  		(T, T) -> T
+		 * Supplier<T>  	   		() -> T					get
+		 * UnaryOperator<T>   		T -> T					apply
+		 * BinaryOperator<T>  		(T, T) -> T				apply
 		 * 
-		 * BiPredicate<L, R> 	   	(L, R)  -> boolean
-		 * BiConsumer<T, U>			(T, U)  -> void 
-		 * BiFunction<T, U, R> 		(T, U) -> R
+		 * BiPredicate<L, R> 	   	(L, R)  -> boolean		test
+		 * BiConsumer<T, U>			(T, U)  -> void 		accept
+		 * BiFunction<T, U, R> 		(T, U) -> R				apply
 		 */
 		
 		List<String> cities = Arrays.asList("Delhi", "Mumbai", "Goa", "Pune");
@@ -49,17 +49,17 @@ public class FunctionalProgramming {
   	  			.map(t -> t.substring(0, 3))				// function			Function<String, String> getCodes = city -> city.substring(0, 3);
   	  			.forEach(t -> System.out.println(t));		// consumer			Consumer<String> printConsumer = city -> System.out.println(city);
 		
-		testPredicate();
-		testConsumer();	
-		testFunction();	
+		testPredicate();   		// test
+		testConsumer();	   		// accept
+		testFunction();	   		// apply
 		
-		testSupplier();
-		testUnaryOperator();
-		testBinaryOperator();
+		testSupplier();			// get
+		testUnaryOperator();	// apply
+		testBinaryOperator();	// apply	
 		
-		testBiPredicate();
-		testBiConsumer();
-		testBiFunction();
+		testBiPredicate();		// test
+		testBiConsumer();		// accept
+		testBiFunction();		// apply
 	}
 
 	private static void testPredicate() {
@@ -124,6 +124,8 @@ public class FunctionalProgramming {
 	    Supplier<String[]> citySupplierShort = () -> new String[]{"Mumbai", "Delhi", "Goa", "Pune"};
 	    
 	    // String[] strings = citySupplierShort.get();
+		// List<String> cities = Arrays.asList(new String[]{"Mumbai", "Delhi", "Goa", "Pune"});	   
+	 // List<String> cities = Arrays.asList("Mumbai", "Delhi", "Goa", "Pune");	 
 	    List<String> cities = Arrays.asList(citySupplierShort.get());
 	    cities.stream()
 	    	  .forEach(System.out::println);

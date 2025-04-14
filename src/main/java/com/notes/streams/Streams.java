@@ -80,10 +80,16 @@ public class Streams {
 		
 		// E
 		System.out.println("\n---E---");
+		/*
 		Optional<String> reduced = Stream.of("one", "two", "three")
 											.reduce((str, combinedValue) -> {
 												return combinedValue + " " + str;
 											});
+		*/
+		Optional<String> reduced = Stream.of("one", "two", "three")
+										 .reduce((combinedValue, str) -> {
+											 return combinedValue + " " + str;
+										 });
 		System.out.println(String.format("reduced: %s", reduced.get()));
 		
 		// F

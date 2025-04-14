@@ -27,7 +27,7 @@ public class CallableAndFutureExample {
 		Future<Integer> future = executorService.submit(task);
 
 		System.out.println("Waiting for the result...");
-		Integer result = future.get();
+		Integer result = future.get(); // Waits if necessary for the computation to complete, and thenretrieves its result.
 		System.out.println("Result: " + result);
 
 		executorService.shutdown();

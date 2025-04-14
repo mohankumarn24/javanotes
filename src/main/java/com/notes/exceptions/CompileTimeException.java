@@ -36,13 +36,37 @@ public class CompileTimeException {
         System.out.println("Method methodExtra2 end");
     }
     
-    private static void methodC() throws IOException {
+    @SuppressWarnings("unused")
+	private static void methodExtra3() throws IOException {
+    	
+        System.out.println("Method methodExtra3 start");
+        try {
+			int x = 5/0;
+		} catch (ArithmeticException e) {
+			System.out.println("ArithmeticException in methodExtra3");
+			return; // even thoigh it returns, finally block is still executed.
+		} finally {
+			System.out.println("finally block executed in methodExtra3");
+		}
+        System.out.println("Method methodExtra3 end"); // not executed on return in exception block
+    }
+    
+    private static void methodC() throws IOException, NumberFormatException {
     	
         System.out.println("Method C start");
         // System.out.println("Method C");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        // Exception is thrown in below line. It is not propogated. Remove comment and see
-        bufferedReader.readLine(); // throws exception here. Adding try-catch/throws is compulsory. Used throws
+        // Exception is thrown in below line. It is not propogated either for throws, but it is propogated for try-catch
+        // System.out.println("Entered value: " + Integer.parseInt(bufferedReader.readLine()));
+        try {
+			System.out.println("Entered value: " + Integer.parseInt(bufferedReader.readLine()));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // throws exception here. Adding try-catch/throws is compulsory. Used throws
         System.out.println("Method C end");
     }
 
@@ -70,6 +94,8 @@ public class CompileTimeException {
         } catch (IOException e) {
         	System.out.println("Exception occurred");
         }
+        
+        // methodExtra3();
         System.out.println("Main end");
     }
 }

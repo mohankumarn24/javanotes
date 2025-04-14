@@ -61,6 +61,12 @@ public class RegexEmailExample {
         String patternString2 = "sample";
         boolean doesMatch = Pattern.compile(patternString2).matcher(text).find();
         System.out.println(String.format("Does the text contain %s: %b", patternString2, doesMatch));
+        
+        // summary
+        System.out.println("\nsummary");
+        System.out.println(Pattern.compile(patternString).matcher(text).matches());
+        System.out.println(Pattern.compile(patternString).matcher(text).find());
+        System.out.println(Pattern.compile(patternString).matcher(text).replaceAll(replacementText));
     }
 }
 

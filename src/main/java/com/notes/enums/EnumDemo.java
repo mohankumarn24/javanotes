@@ -7,6 +7,7 @@ public class EnumDemo {
 		Day day1 = Day.MONDAY;
 		System.out.println("Enum: " + day1);
 		System.out.println("Enum name: " + day1.name());
+		// System.out.println("Enum name: " + Day.valueOf("MONDAY")); // returns MONDAY
 		System.out.println("Enum message: " + day1.getMessage());
 
 	    // Loop through all enum values and print their message
