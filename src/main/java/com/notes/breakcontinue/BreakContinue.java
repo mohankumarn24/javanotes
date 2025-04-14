@@ -1,4 +1,4 @@
-package com.notes.misc.breakcontinue;
+package com.notes.breakcontinue;
 
 public class BreakContinue {
 
