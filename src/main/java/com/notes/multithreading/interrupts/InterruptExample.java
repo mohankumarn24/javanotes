@@ -13,6 +13,7 @@ public class InterruptExample extends Thread {
 			// Handle interruption gracefully
 			System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 		}
+		System.out.println("Thread terminated gracefully: " + Thread.currentThread().getName());
 	}
 
 	public static void main(String[] args) {
