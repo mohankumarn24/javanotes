@@ -4,7 +4,7 @@ public class ShutdownHook extends Thread {
 	
 	@Override
 	public void run() {
-		System.out.println("\nProgram terminated successfully");
+		System.out.println("\n -- Program terminated --");
 	}
 
 }

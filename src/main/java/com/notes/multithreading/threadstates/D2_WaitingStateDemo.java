@@ -1,6 +1,6 @@
 package com.notes.multithreading.threadstates;
 
-public class C2_WaitingStateDemo {
+public class D2_WaitingStateDemo {
 	
     public static void main(String[] args) throws InterruptedException {
     	
@@ -11,7 +11,8 @@ public class C2_WaitingStateDemo {
         Thread t = new Thread(() -> {
             synchronized (lock) {
                 try {
-                    lock.wait(); // Thread enters WAITING state (lock released)
+                	lock.wait(); 									// Thread enters WAITING state (lock released)
+                    // lock.wait(5000);								// Thread enters TIMED_WAITING state (lock released)
                     /**
                      * The wait() method causes current thread to release the lock and wait until 
                      * either another thread invokes the notify() method or the notifyAll() method
@@ -24,17 +25,17 @@ public class C2_WaitingStateDemo {
         });
         
         t.start();
-        Thread.sleep(100); // Give thread time to enter WAITING state
+        Thread.sleep(100); 											// Give thread time to enter WAITING state
         
-        System.out.println("Thread state: " + t.getState()); // Outputs: WAITING
+        System.out.println("Thread state: " + t.getState()); 		// Outputs: WAITING
         
         // To proceed, we need to notify the waiting thread
         synchronized (lock) {
-            lock.notify(); 			// The notify() method wakes up a single thread that is waiting on this object's monitor
-            // lock.notifyAll(); 	// Wakes up all threads that are waiting on this object's monitor
+            lock.notify(); 											// The notify() method wakes up a single thread that is waiting on this object's monitor
+            // lock.notifyAll(); 									// Wakes up all threads that are waiting on this object's monitor
         }
         
         // Thread.sleep(100);
-        // System.out.println("Thread state: " + t.getState()); // Outputs: TERMINATED
+        // System.out.println("Thread state: " + t.getState()); 	// Outputs: TERMINATED
     }
 }

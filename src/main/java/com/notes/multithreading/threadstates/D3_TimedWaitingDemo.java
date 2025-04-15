@@ -1,6 +1,6 @@
 package com.notes.multithreading.threadstates;
 
-public class C3_TimedWaitingDemo {
+public class D3_TimedWaitingDemo {
 	
     public static void main(String[] args) throws InterruptedException {
     	
@@ -8,7 +8,7 @@ public class C3_TimedWaitingDemo {
 		
         Thread t = new Thread(() -> {
             try {
-                Thread.sleep(2000); // Thread enters TIMED_WAITING state
+                Thread.sleep(2000); 		// Thread enters TIMED_WAITING state
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

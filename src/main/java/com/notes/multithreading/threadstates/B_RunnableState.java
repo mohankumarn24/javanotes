@@ -7,10 +7,10 @@ public class B_RunnableState {
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		
 		Thread t = new Thread(() -> {
-		    System.out.println("Thread is running");
+		    System.out.println("Thread is running...");
 		});
-		t.start(); // Thread t moves to RUNNABLE state
-		System.out.println(t.getState()); // Likely outputs: RUNNABLE
+		t.start(); 							// Thread t moves to RUNNABLE state
+		System.out.println(t.getState()); 	// Likely outputs: RUNNABLE
 	}
 	
 }
