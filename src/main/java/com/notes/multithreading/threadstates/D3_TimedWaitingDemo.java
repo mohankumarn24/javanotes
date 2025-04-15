@@ -8,14 +8,14 @@ public class D3_TimedWaitingDemo {
 		
         Thread t = new Thread(() -> {
             try {
-                Thread.sleep(2000); 							// Thread enters TIMED_WAITING state
+                Thread.sleep(1000); 							// Thread enters TIMED_WAITING state
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
         
         t.start();
-        Thread.sleep(1000); 									// Give thread time to enter TIMED_WAITING state. Main thread goes to sleep for 1 second
+        Thread.sleep(500); 										// Give thread time to enter TIMED_WAITING state. Main thread goes to sleep for 500 ms
         
         System.out.println("Thread state: " + t.getState()); 	// Outputs: TIMED_WAITING
     }
