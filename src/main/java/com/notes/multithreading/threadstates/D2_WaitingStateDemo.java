@@ -46,6 +46,8 @@ public class D2_WaitingStateDemo {
         }
         */
         
-        System.out.println("t2 state: " + t2.getState()); 			// Outputs: TERMINATED
+        // System.out.println();
+        // System.out.println("t1 state: " + t1.getState()); 		// Outputs: TERMINATED
+        // System.out.println("t2 state: " + t2.getState()); 		// Outputs: TERMINATED
     }
 }
