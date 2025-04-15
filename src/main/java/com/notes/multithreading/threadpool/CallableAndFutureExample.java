@@ -1,4 +1,4 @@
-package com.notes.multithreading.callableandfuture;
+package com.notes.multithreading.threadpool;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
