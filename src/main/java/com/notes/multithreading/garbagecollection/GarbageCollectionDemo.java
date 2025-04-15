@@ -5,7 +5,8 @@ public class GarbageCollectionDemo {
 	/**
 	 * Note: Neither finalization nor garbage collection is guaranteed
 	 */
-	public void finalize() {
+	@Override
+	protected void finalize() {
 		System.out.println("object is garbage collected");
 	}
 
