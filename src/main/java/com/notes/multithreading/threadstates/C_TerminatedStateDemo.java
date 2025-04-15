@@ -11,7 +11,7 @@ public class C_TerminatedStateDemo {
         });
         
         t.start();
-        Thread.sleep(500); 										// Give thread time to complete
+        Thread.sleep(1000); 									// Give thread t time to complete. Main thread goes to sleep for 1 second
         
         System.out.println("Thread state: " + t.getState()); 	// Outputs: TERMINATED
     }

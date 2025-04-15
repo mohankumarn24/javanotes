@@ -9,8 +9,8 @@ public class A_NewState {
 		Thread t = new Thread(() -> {
 		    System.out.println("Thread is running");
 		});
-		// Thread t is in NEW state here
-		System.out.println(t.getState()); // Outputs: NEW
+		
+		System.out.println(t.getState()); 		// Outputs: NEW
 	}
 
 }
