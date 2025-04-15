@@ -1,8 +1,11 @@
 package com.notes.multithreading.threadstates;
 
-public class TerminatedStateDemo {
+public class D_TerminatedStateDemo {
 	
     public static void main(String[] args) throws InterruptedException {
+    	
+		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+		
         Thread t = new Thread(() -> {
             System.out.println("Thread running");
             // Method complete, thread will terminate

@@ -1,12 +1,14 @@
 package com.notes.multithreading.threadstates;
 
-public class TimedWaitingDemo {
+public class C3_TimedWaitingDemo {
 	
     public static void main(String[] args) throws InterruptedException {
     	
+		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+		
         Thread t = new Thread(() -> {
             try {
-                Thread.sleep(5000); // Thread enters TIMED_WAITING state
+                Thread.sleep(2000); // Thread enters TIMED_WAITING state
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

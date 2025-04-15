@@ -1,15 +1,17 @@
 package com.notes.multithreading.threadstates;
 
-public class WaitingStateDemo {
+public class C2_WaitingStateDemo {
 	
     public static void main(String[] args) throws InterruptedException {
     	
+		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+		
         Object lock = new Object();
         
         Thread t = new Thread(() -> {
             synchronized (lock) {
                 try {
-                    lock.wait(); // Thread enters WAITING state
+                    lock.wait(); // Thread enters WAITING state (lock released)
                     /**
                      * The wait() method causes current thread to release the lock and wait until 
                      * either another thread invokes the notify() method or the notifyAll() method
