@@ -32,3 +32,8 @@ public class InterruptExample extends Thread {
 		thread.interrupt();
 	}
 }
+
+/**
+ * The isInterrupted() method returns the interrupted flag either true or false. 
+ * The static interrupted() method returns the interrupted flag after that it sets the flag to false if it is true.
+ */

@@ -13,11 +13,6 @@ public class D2_WaitingStateDemo {
                 try {
                 	lock.wait(); 									// Thread enters WAITING state
                     // lock.wait(5000);								// Thread enters TIMED_WAITING state
-                    /**
-                     * The wait() method causes current thread to release the lock and wait until 
-                     * either another thread invokes the notify() method or the notifyAll() method
-                     * for this object, or a specified amount of time has elapsed
-                     */
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -26,8 +21,8 @@ public class D2_WaitingStateDemo {
         
         Thread t2 = new Thread(() -> {
             synchronized (lock) {
-                lock.notify(); 										// The notify() method wakes up a single thread that is waiting on this object's monitor
-                // lock.notifyAll(); 								// Wakes up all threads that are waiting on this object's monitor
+                lock.notify();
+                // lock.notifyAll();
             }
         });
         
@@ -51,3 +46,12 @@ public class D2_WaitingStateDemo {
         // System.out.println("t2 state: " + t2.getState()); 		// Outputs: TERMINATED
     }
 }
+
+/*
+wait() method:
+ - The wait() method causes current thread to release the lock and wait until either another thread invokes the notify() method or the notifyAll() method for this object, or a specified amount of time has elapsed.
+ - The current thread must own this object's monitor, so it must be called from the synchronized method only otherwise it will throw exception.
+ 
+notify() method:
+ - The notify() method wakes up a single thread that is waiting on this object's monitor. If any threads are waiting on this object, one of them is chosen to be awakened. The choice is arbitrary and occurs at the discretion of the implementation.
+*/
