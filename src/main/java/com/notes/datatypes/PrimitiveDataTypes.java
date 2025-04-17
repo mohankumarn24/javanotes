@@ -16,8 +16,8 @@ public class PrimitiveDataTypes {
 		short shortNum = (short) 32768;		// cannot assign 32768 without casting
 		int intNum = 2147483647 + 1; 		// cannot assign 2^31=2147483648. Gives Out of Range Compile Time error
 		long longNum = 100L;  				// 100 or 100L or 100l
-		float floatNum = 100f;				// 100 or 100F or 100f	
-		double doubleNum = 100d;			// 100 or 100D or 100d
+		float floatNum = 100.0f;			// 100 or 100F or 100f	
+		double doubleNum = 100.0d;			// 100 or 100D or 100d
 		
 		System.out.println(String.format("boolean %b", booleanFlag));
 		System.out.println(String.format("char %c", charA));
