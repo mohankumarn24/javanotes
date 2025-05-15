@@ -6,30 +6,18 @@ package com.notes.programs;
  */
 // https://www.geeksforgeeks.org/java-fibonacci-series/
 public class Fibonacci {
-	
-    // Function to print the fibonacci series
-    static int fibonacci(int n) {
-    	
-        // Base Case
-        if (n == 0) {
-        	return 0;
-        } else if (n == 1) {
-        	return 1;
-        } else {
-            // Recursive call
-            return fibonacci(n - 1) + fibonacci(n - 2);        	
-        }
-    }
 		
 	public static void main(String[] args) {
-		
-        // Given Number N
-        int n = 5;
-
+        int n = 10;
         // Print the first N numbers
         for (int i = 0; i < n; i++) {
-
             System.out.print(fibonacci(i) + " ");
         }
+    }
+	
+    static int fibonacci(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        return fibonacci(n - 1) + fibonacci(n - 2);
     }
 }
