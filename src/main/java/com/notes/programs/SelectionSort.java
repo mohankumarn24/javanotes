@@ -23,10 +23,10 @@ public class SelectionSort {
 		// One by one move boundary of unsorted subarray
 		for (int i = 0; i < n - 1; i++) {
 			// a. Find the minimum element in unsorted array
-			int minIndex = i;
+			int minIndex = i;					// Assume the current position holds the minimum element
 			for (int j = i + 1; j < n; j++) {
 				if (arr[j] < arr[minIndex]) {
-					minIndex = j;
+					minIndex = j; 				// Update min_idx if a smaller element is found
 				}
 			}
 
