@@ -1,7 +1,6 @@
 package com.notes.programs;
 
-//Java program for implementation of Bubble Sort
-
+// https://www.geeksforgeeks.org/bubble-sort-algorithm/
 public class BubbleSort {
 
 	public static void main(String args[]) {

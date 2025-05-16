@@ -1,9 +1,10 @@
 package com.notes.programs;
 
+// https://www.geeksforgeeks.org/selection-sort-algorithm-2/
 public class SelectionSort {
-	
+
 	public static void main(String[] args) {
-		
+
 		int[] arr = { 9, 8, 6, 5 };
 
 		System.out.println("Original array:");
@@ -14,9 +15,9 @@ public class SelectionSort {
 		System.out.println("Sorted array:");
 		printArray(arr);
 	}
-	
+
 	public static void selectionSort(int[] arr) {
-		
+
 		int n = arr.length;
 
 		// One by one move boundary of unsorted subarray

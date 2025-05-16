@@ -1,8 +1,6 @@
 package com.notes.programs;
 
-/**
- * Implementation of insertion sort algorithm in Java
- */
+// https://www.geeksforgeeks.org/insertion-sort-algorithm/
 public class InsertionSort {
 
 	public static void main(String[] args) {
