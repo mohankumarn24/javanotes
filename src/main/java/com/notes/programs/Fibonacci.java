@@ -8,6 +8,7 @@ package com.notes.programs;
 public class Fibonacci {
 		
 	public static void main(String[] args) {
+		
         int n = 10;
         // Print the first N numbers
         for (int i = 0; i < n; i++) {
@@ -16,8 +17,8 @@ public class Fibonacci {
     }
 	
     static int fibonacci(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
+    	
+        if (n == 0 || n == 1) return n;
         return fibonacci(n - 1) + fibonacci(n - 2);
     }
 }
