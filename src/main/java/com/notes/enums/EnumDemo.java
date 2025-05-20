@@ -5,9 +5,10 @@ public class EnumDemo {
 	public static void main(String[] args) {
 		
 		Day day1 = Day.MONDAY;
-		System.out.println("Enum: " + day1);
-		System.out.println("Enum name: " + day1.name());
-		// System.out.println("Enum name: " + Day.valueOf("MONDAY")); // returns MONDAY
+		System.out.println("Enum: " + day1);    							// day1, day1.name(), day1.toString(), Day.valueOf("MONDAY") all return "MONDAY"
+		// System.out.println("Enum name: " + day1.name()); 				// Most programmers should use the toString method inpreference to this one, as the toString method may returna more user-friendly name.
+		System.out.println("Enum name: " + day1.toString());				// preferred
+		// System.out.println("Enum name: " + Day.valueOf("MONDAY")); 		// returns MONDAY. Only values provided in enum is accepted
 		System.out.println("Enum message: " + day1.getMessage());
 
 	    // Loop through all enum values and print their message
