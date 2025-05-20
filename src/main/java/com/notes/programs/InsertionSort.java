@@ -30,7 +30,7 @@ public class InsertionSort {
 			int j = i - 1;
 
 			// Move elements that are greater than key to one position ahead of their current position
-			while (j >= 0 && arr[j] > key) {
+			while (j >= 0 && arr[j] > key) { //  (j >= 0 && arr[j] < key) --> desc order
 				arr[j + 1] = arr[j];
 				j--;
 			}

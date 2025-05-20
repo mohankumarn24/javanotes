@@ -25,7 +25,7 @@ public class SelectionSort {
 			// a. Find the minimum element in unsorted array
 			int minIndex = i;					// Assume the current position holds the minimum element
 			for (int j = i + 1; j < n; j++) {
-				if (arr[j] < arr[minIndex]) {
+				if (arr[j] < arr[minIndex]) {   // (arr[j] > arr[minIndex]) -- desc order
 					minIndex = j; 				// Update min_idx if a smaller element is found
 				}
 			}
