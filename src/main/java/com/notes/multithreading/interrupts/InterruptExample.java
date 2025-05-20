@@ -18,7 +18,7 @@ public class InterruptExample extends Thread {
 
 	public static void main(String[] args) {
 
-		InterruptExample thread = new InterruptExample();
+		Thread thread = new InterruptExample();
 		thread.start();
 
 		// Allow the thread to work for some time

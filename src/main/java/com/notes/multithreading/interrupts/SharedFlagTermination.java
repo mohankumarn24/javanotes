@@ -10,7 +10,7 @@ public class SharedFlagTermination {
 		public void run() {
 			while (!shutdownRequested) {
 				// Perform tasks
-				System.out.println("Working...");
+				System.out.println("Working..." + Thread.currentThread().getName());
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
