@@ -13,11 +13,11 @@ public class Streams {
 
 		// A
 		System.out.println("---A---");
-		List<Integer> numlist = Arrays.asList(1, 2, 3, 3, 4, 4, 5, 5);
+		List<Integer> numlist = Arrays.asList(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
 		List<Integer> result = numlist.stream()
 										.filter(t -> t > 2)
 										.map(t -> t * 1)
-										// .sorted(Comparator.reverseOrder()).distinct().limit(2)
+										// .sorted(Comparator.reverseOrder())
 										.sorted().distinct().limit(2)
 										.peek(t -> System.out.println("Debugging: " + t))
 										.collect(Collectors.toList()); // collect, count, foreach
