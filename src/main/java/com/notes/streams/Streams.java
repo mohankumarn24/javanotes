@@ -3,6 +3,7 @@ package com.notes.streams;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,13 +47,14 @@ public class Streams {
 		System.out.println("\n---B---");
 		List<String> stringList = Arrays.asList("Armani", "Balenciaga", "Chanel");
 		stringList.stream()
-					.map(x -> x.toLowerCase())
-					// .map(x -> x.toUpperCase())
+					.filter(Objects::nonNull)
+					// .map(x -> x.toLowerCase())
+					.map(x -> x.toUpperCase())
 					.forEach(n -> System.out.println(n));
 		System.out.println();
 		
 		stringList.stream()
-					.map(t -> {return t.toLowerCase();})
+					// .map(t -> {return t.toLowerCase();})
 					.map(t -> {return t.toUpperCase();})
 					.map(t -> {return t.substring(0,3);})	
 					.forEach(n -> System.out.println(n));
@@ -71,11 +73,11 @@ public class Streams {
 		
 		// D
 		System.out.println("\n---D---");
-		List<String> stringList2 = Arrays.asList("Armani", "Balenciaga", "Chanel");
+		List<String> stringList2 = Arrays.asList("Armani", "Balenciaga", "Chanel");	// Returns an Optional describing some element of the stream, or anempty Optional if the stream is empty. 
 		String value = stringList2.stream().findAny().get();
 		System.out.println(String.format("findAny: %s", value));
 		
-		value = stringList2.stream().findFirst().get();
+		value = stringList2.stream().findFirst().get();								// Returns an Optional describing the first element of this stream,or an empty Optional if the stream is empty
 		System.out.println(String.format("findFirst: %s", value));
 		
 		// E
