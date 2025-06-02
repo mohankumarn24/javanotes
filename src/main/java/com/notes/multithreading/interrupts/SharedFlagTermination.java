@@ -7,22 +7,25 @@ public class SharedFlagTermination {
 	
 	static class WorkerThread extends Thread {
 		
+		@Override
 		public void run() {
-			while (!shutdownRequested) {
-				// Perform tasks
-				System.out.println("Working..." + Thread.currentThread().getName());
-				try {
+			try {
+				while (!shutdownRequested) {
+					// Perform tasks
+					System.out.println("Working..." + Thread.currentThread().getName());
 					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// Handle interruption gracefully
-					System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 				}
+			} catch (InterruptedException e) {
+				// Handle interruption gracefully
+				System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 			}
+
 			System.out.println("Thread terminated gracefully: " + Thread.currentThread().getName());
 		}
 	}
 
 	public static void main(String[] args) {
+		
 		// Start multiple threads
 		Thread thread1 = new WorkerThread();
 		Thread thread2 = new WorkerThread();

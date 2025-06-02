@@ -101,14 +101,16 @@ public class CompileTimeException {
 }
 
 /*
- * Rule: If the superclass method does not declare an exception
- *  - subclass overridden method cannot declare the checked exception but can declare unchecked exception
  * Rule: If the superclass method declares an exception
  * 	- subclass overridden method can declare the same subclass exception or no exception but cannot declare parent exception
+ * Rule: If the superclass method does not declare an exception
+ *  - subclass overridden method cannot declare the checked exception but can declare unchecked exception
  * Rule: For each try block there can be zero or more catch blocks, but only one finally block
  * Rule: The finally block will not be executed if the program exits (either by calling System.exit() or by causing a fatal error that causes the process to abort)
- * Rule: If we throw an unchecked exception from a method, it is not required to handle the exception or declare it in throws clause. However, for checked exceptions, handling or declaration in the throws clause is mandatory."
- * Rule: Every subclass of Error and RuntimeException is an unchecked exception in Java. A checked exception is everything else under the Throwable class
+ * Rule: If we throw an unchecked exception from a method, it is not required to handle the exception or declare it in throws clause. 
+ * 		 However, for checked exceptions, handling or declaration in the throws clause is mandatory.
+ * Rule: Every subclass of Error and RuntimeException is an unchecked exception in Java.
+ * 		 A checked exception is everything else under the Throwable class
  * Rule: By default Unchecked Exceptions are forwarded in calling chain (propagated)
  * Rule: By default, Checked Exceptions are not forwarded in calling chain (propagated)
  * Rule: If we are calling a method that declares an exception, we must either caught or declare the exception

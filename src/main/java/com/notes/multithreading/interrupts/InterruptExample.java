@@ -2,6 +2,8 @@ package com.notes.multithreading.interrupts;
 
 // https://medium.com/@satyendra.jaiswal/thread-interruption-and-termination-in-java-9a90d20661b3
 public class InterruptExample extends Thread {
+	
+	@Override
 	public void run() {
 		try {
 			while (!Thread.interrupted()) {
