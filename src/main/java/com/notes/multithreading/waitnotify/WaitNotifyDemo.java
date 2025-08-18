@@ -1,5 +1,6 @@
 package com.notes.multithreading.waitnotify;
 
+// Inter Thread Communication: wait(), notify(), notifyAll()
 // https://www.digitalocean.com/community/tutorials/java-thread-wait-notify-and-notifyall-example
 public class WaitNotifyDemo {
 

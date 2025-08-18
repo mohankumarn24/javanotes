@@ -1,5 +1,10 @@
 package com.notes.multithreading.threadLocal;
 
+/*
+ * Thread-local variables are variables that are local to each thread. 
+ * They allow us to store data that is specific to a particular thread, ensuring that each thread has its own independent copy of the variable.
+ * URL: https://aeontanvir.medium.com/java-multithreading-a-step-by-step-guide-for-concurrent-programming-3bf5dccbbfa1
+ */
 public class ThreadLocalDemo {
 	
 	public static class MyRunnable implements Runnable {
