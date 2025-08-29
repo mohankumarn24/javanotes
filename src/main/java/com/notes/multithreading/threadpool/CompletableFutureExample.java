@@ -4,6 +4,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 // TODO
+// https://medium.com/javarevisited/java-completablefuture-c47ca8c885af
 // https://chatgpt.com/share/68b1a945-fce4-8004-970f-175e01ef7440
 public class CompletableFutureExample {
 	
