@@ -1,12 +1,12 @@
-package com.notes.multithreading.threadpool;
+package com.notes.multithreading.threadpool.completableFuture;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-// TODO
+// Ignore
 // https://medium.com/javarevisited/java-completablefuture-c47ca8c885af
 // https://chatgpt.com/share/68b1a945-fce4-8004-970f-175e01ef7440
-public class CompletableFutureExample {
+public class CompletableFutureExample2 {
 	
 	public static void main(String[] args) throws ExecutionException, InterruptedException {
 
