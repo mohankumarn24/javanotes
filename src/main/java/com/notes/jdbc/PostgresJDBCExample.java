@@ -1,0 +1,229 @@
+package com.notes.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PostgresJDBCExample {
+
+	private static final String URL = "jdbc:postgresql://localhost:5432/myjdbcdb?currentSchema=my_schema";
+	private static final String USER = "postgres";
+	private static final String PASSWORD = "Password1";
+
+	public static void main(String[] args) {
+		
+		// Insert Users
+		insertUser("Mohan", "mohan@example.com");
+		insertUser("Ravi", "ravi@example.com");
+
+		// Read Users
+		System.out.println();
+		System.out.println("All users:");
+		getAllUsers().forEach(System.out::println);
+
+		// Update User Email
+		updateUserEmail(1, "mohan123@example.com");
+
+		// Delete User
+		deleteUser(2);
+		
+		// Read Users again
+		System.out.println();
+		System.out.println("Users after update and delete:");
+		getAllUsers().forEach(System.out::println);
+	}
+	
+	public static Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(URL, USER, PASSWORD);
+	}
+
+	// CREATE
+	public static void insertUser(String name, String email) {
+		String sql = "INSERT INTO users(name, email) VALUES(?, ?)";
+		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setString(1, name);
+			stmt.setString(2, email);
+			int rows = stmt.executeUpdate();
+			System.out.println(rows + " user(s) inserted.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// READ
+	public static List<User> getAllUsers() {
+		List<User> users = new ArrayList<>();
+		String sql = "SELECT * FROM users";
+		try (Connection conn = getConnection();
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql)) {
+
+			while (rs.next()) {
+				users.add(new User(rs.getInt("id"), rs.getString("name"), rs.getString("email")));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return users;
+	}
+
+	// UPDATE
+	public static void updateUserEmail(int id, String newEmail) {
+		String sql = "UPDATE users SET email=? WHERE id=?";
+		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setString(1, newEmail);
+			stmt.setInt(2, id);
+			int rows = stmt.executeUpdate();
+			System.out.println(rows + " user(s) updated.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// DELETE
+	public static void deleteUser(int id) {
+		String sql = "DELETE FROM users WHERE id=?";
+		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, id);
+			int rows = stmt.executeUpdate();
+			System.out.println(rows + " user(s) deleted.");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+/* OUTPUT:
+1 user(s) inserted.
+1 user(s) inserted.
+
+All users:
+User{id=1, name='Mohan', email='mohan@example.com'}
+User{id=2, name='Ravi', email='ravi@example.com'}
+1 user(s) updated.
+1 user(s) deleted.
+
+Users after update and delete:
+User{id=1, name='Mohan', email='mohan123@example.com'}
+*/
+
+/*
+ * How it works:
+ * - Connection: Uses DriverManager.getConnection() to connect to PostgreSQL.
+ * - CRUD operations:
+ * 		INSERT → PreparedStatement
+ * 		SELECT → Statement + ResultSet
+ * 		UPDATE → PreparedStatement
+ * 		DELETE → PreparedStatement
+ * - Try-with-resources ensures connections/statements are closed automatically.
+*/
+
+/*
+ * STEPS:
+ * - Create db: myjdbcdb
+ * - Create schema: my_schema
+ * - Create table users
+ * - Download postgresql-42.7.7.jar jar file
+ * - Right click Project > Java Build Path > Libraries > Classpath > Add External Jar > Add postgresql-42.7.7.jar 
+ * /
+
+
+/* SQL Script
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+*/
+
+/* IGNORE
+import java.sql.*;
+
+public class JdbcCrudExample {
+
+    private static final String URL = "jdbc:postgresql://localhost:5432/testdb";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "password";
+
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            System.out.println("Connected to PostgreSQL");
+
+            // CREATE
+            createUser(conn, "Mohan", "mohan@example.com");
+
+            // READ
+            readUsers(conn);
+
+            // UPDATE
+            updateUserEmail(conn, 1, "mohan123@example.com");
+
+            // DELETE
+            deleteUser(conn, 1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Create
+    private static void createUser(Connection conn, String name, String email) throws SQLException {
+        String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            int rows = stmt.executeUpdate();
+            System.out.println("Inserted " + rows + " user(s)");
+        }
+    }
+
+    // Read
+    private static void readUsers(Connection conn) throws SQLException {
+        String sql = "SELECT id, name, email FROM users";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                System.out.println(
+                    "ID: " + rs.getInt("id") +
+                    ", Name: " + rs.getString("name") +
+                    ", Email: " + rs.getString("email")
+                );
+            }
+        }
+    }
+
+    // Update
+    private static void updateUserEmail(Connection conn, int id, String newEmail) throws SQLException {
+        String sql = "UPDATE users SET email = ? WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, newEmail);
+            stmt.setInt(2, id);
+            int rows = stmt.executeUpdate();
+            System.out.println("Updated " + rows + " user(s)");
+        }
+    }
+
+    // Delete
+    private static void deleteUser(Connection conn, int id) throws SQLException {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            int rows = stmt.executeUpdate();
+            System.out.println("Deleted " + rows + " user(s)");
+        }
+    }
+}
+*/
