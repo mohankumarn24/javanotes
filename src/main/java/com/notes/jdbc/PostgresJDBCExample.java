@@ -16,7 +16,7 @@ public class PostgresJDBCExample {
 	private static final String PASSWORD = "Password1";
 
 	public static void main(String[] args) {
-		
+
 		// Insert Users
 		insertUser("Mohan", "mohan@example.com");
 		insertUser("Ravi", "ravi@example.com");
@@ -31,78 +31,106 @@ public class PostgresJDBCExample {
 
 		// Delete User
 		deleteUser(2);
-		
+
 		// Read Users again
 		System.out.println();
 		System.out.println("Users after update and delete:");
 		getAllUsers().forEach(System.out::println);
 	}
-	
+
 	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(URL, USER, PASSWORD);
 	}
 
-	// CREATE
-	public static void insertUser(String name, String email) {
-		String sql = "INSERT INTO users(name, email) VALUES(?, ?)";
-		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+    // CREATE
+    public static void insertUser(String name, String email) {
+    	
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = getConnection();
+            String sql = "INSERT INTO users(name, email) VALUES(?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            int rows = stmt.executeUpdate();
+            System.out.println(rows + " user(s) inserted.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 
-			stmt.setString(1, name);
-			stmt.setString(2, email);
-			int rows = stmt.executeUpdate();
-			System.out.println(rows + " user(s) inserted.");
+    // READ
+    public static List<User> getAllUsers() {
+    	
+        List<User> users = new ArrayList<>();
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            conn = getConnection();
+            stmt = conn.createStatement();
+            String sql = "SELECT * FROM users";
+            rs = stmt.executeQuery(sql);
 
-	// READ
-	public static List<User> getAllUsers() {
-		List<User> users = new ArrayList<>();
-		String sql = "SELECT * FROM users";
-		try (Connection conn = getConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                users.add(new User(rs.getInt("id"), rs.getString("name"), rs.getString("email")));
+            }
 
-			while (rs.next()) {
-				users.add(new User(rs.getInt("id"), rs.getString("name"), rs.getString("email")));
-			}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return users;
+    }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return users;
-	}
+    // UPDATE
+    public static void updateUserEmail(int id, String newEmail) {
+    	
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = getConnection();
+            String sql = "UPDATE users SET email=? WHERE id=?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, newEmail);
+            stmt.setInt(2, id);
+            int rows = stmt.executeUpdate();
+            System.out.println(rows + " user(s) updated.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 
-	// UPDATE
-	public static void updateUserEmail(int id, String newEmail) {
-		String sql = "UPDATE users SET email=? WHERE id=?";
-		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-			stmt.setString(1, newEmail);
-			stmt.setInt(2, id);
-			int rows = stmt.executeUpdate();
-			System.out.println(rows + " user(s) updated.");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// DELETE
-	public static void deleteUser(int id) {
-		String sql = "DELETE FROM users WHERE id=?";
-		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-			stmt.setInt(1, id);
-			int rows = stmt.executeUpdate();
-			System.out.println(rows + " user(s) deleted.");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+    // DELETE
+    public static void deleteUser(int id) {
+    	
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = getConnection();
+            String sql = "DELETE FROM users WHERE id=?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            int rows = stmt.executeUpdate();
+            System.out.println(rows + " user(s) deleted.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 }
 
 /* OUTPUT:
