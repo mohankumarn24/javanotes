@@ -75,7 +75,7 @@ public class PostgresJdbcRowSetExample {
     // READ by ID (JdbcRowSet)
     public static User getUserById(int id) {
     	
-        JdbcRowSet rowSet = null;
+        JdbcRowSet rowSet = null; // public interface JdbcRowSet extends RowSet, Joinable {...}
         User user = null;
         try {
             rowSet = RowSetProvider.newFactory().createJdbcRowSet();
@@ -101,7 +101,7 @@ public class PostgresJdbcRowSetExample {
     // READ all (JdbcRowSet)
     public static List<User> getAllUsers() {
     	
-        JdbcRowSet rowSet = null;
+        JdbcRowSet rowSet = null;  // public interface JdbcRowSet extends RowSet, Joinable {...}
         List<User> users = new ArrayList<>();
         try {
             rowSet = RowSetProvider.newFactory().createJdbcRowSet();

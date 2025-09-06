@@ -76,7 +76,7 @@ public class PostgresCachedRowSetExample {
     public static User getUserById(int id) {
     	
         Connection conn = null;
-        CachedRowSet rowSet = null;
+        CachedRowSet rowSet = null; // public interface CachedRowSet extends RowSet, Joinable {...}
         User user = null;
         try {
             conn = getConnection();
@@ -102,7 +102,7 @@ public class PostgresCachedRowSetExample {
     public static List<User> getAllUsers() {
     	
         Connection conn = null;
-        CachedRowSet rowSet = null;
+        CachedRowSet rowSet = null; // public interface CachedRowSet extends RowSet, Joinable {...}
         List<User> users = new ArrayList<>();
         try {
             conn = getConnection();
@@ -126,7 +126,7 @@ public class PostgresCachedRowSetExample {
     public static void updateUserEmail(int id, String newEmail) {
     	
         Connection conn = null;
-        CachedRowSet rowSet = null;
+        CachedRowSet rowSet = null; // public interface CachedRowSet extends RowSet, Joinable {...}
         try {
             conn = getConnection();
             conn.setAutoCommit(false); // ✅ Required for acceptChanges(). otherwise gives "org.postgresql.util.PSQLException: Cannot commit when autoCommit is enabled." error

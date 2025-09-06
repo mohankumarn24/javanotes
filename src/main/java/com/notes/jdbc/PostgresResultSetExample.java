@@ -103,7 +103,6 @@ public class PostgresResultSetExample {
         return user;
     }
 
-    
     // READ
     public static List<User> getAllUsers() {
     	
