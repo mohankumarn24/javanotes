@@ -1,11 +1,15 @@
 package com.notes.i18n;
 
-import java.util.*;
+import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.*;
+import java.text.NumberFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 // https://chatgpt.com/share/68bb22a1-8f64-8004-b759-de6f9d605141
-// ONLY REFER SCANNER
+// ONLY REFER SCANNER CODE
 public class ScannerDemo {
 	
     public static void main(String[] args) {
@@ -23,7 +27,7 @@ public class ScannerDemo {
         String lang = scanner.nextLine().trim().toLowerCase();
 
         Locale locale = lang.equals("fr") ? new Locale("fr", "FR") : new Locale("en", "US");
-        ResourceBundle bundle = ResourceBundle.getBundle("messages_main", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle("scanner", locale);
 
         // Ask user name
         System.out.println(bundle.getString("askName"));
