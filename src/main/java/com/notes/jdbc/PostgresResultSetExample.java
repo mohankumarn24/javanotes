@@ -9,7 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostgresJDBCExample {
+// https://chatgpt.com/share/68bbda1f-601c-8004-8dca-b8a3134cfbc4
+public class PostgresResultSetExample {
 
 	private static final String URL = "jdbc:postgresql://localhost:5432/myjdbcdb?currentSchema=my_schema";
 	private static final String USER = "postgres";
@@ -21,6 +22,15 @@ public class PostgresJDBCExample {
 		insertUser("Mohan", "mohan@example.com");
 		insertUser("Ravi", "ravi@example.com");
 
+	    // Fetch single user
+		System.out.println();
+	    User user = getUserById(1);
+	    if (user != null) {
+	        System.out.println("Fetched by ID: " + user);
+	    } else {
+	        System.out.println("User not found.");
+	    }
+	    
 		// Read Users
 		System.out.println();
 		System.out.println("All users:");
@@ -63,6 +73,37 @@ public class PostgresJDBCExample {
         }
     }
 
+    // READ by ID
+    public static User getUserById(int id) {
+    	
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        User user = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT * FROM users WHERE id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+
+        return user;
+    }
+
+    
     // READ
     public static List<User> getAllUsers() {
     	
@@ -90,7 +131,7 @@ public class PostgresJDBCExample {
         }
         return users;
     }
-
+    
     // UPDATE
     public static void updateUserEmail(int id, String newEmail) {
     	
@@ -137,6 +178,8 @@ public class PostgresJDBCExample {
 1 user(s) inserted.
 1 user(s) inserted.
 
+Fetched by ID: User{id=1, name='Mohan', email='mohan@example.com'}
+
 All users:
 User{id=1, name='Mohan', email='mohan@example.com'}
 User{id=2, name='Ravi', email='ravi@example.com'}
@@ -156,6 +199,15 @@ User{id=1, name='Mohan', email='mohan123@example.com'}
  * 		UPDATE → PreparedStatement
  * 		DELETE → PreparedStatement
  * - Try-with-resources ensures connections/statements are closed automatically.
+*/
+
+/*
+ResultSet:
+ - Connected: ✅ Must keep DB connection open
+ - Disconnected: ❌ Cannot work without connection
+ - Features: Simple, fast, can scroll/update (if created scrollable)
+ - Usage: Quick DB reads for small/medium datasets
+ - Analogy: Live phone call with DB
 */
 
 /*
