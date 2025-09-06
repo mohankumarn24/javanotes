@@ -8,19 +8,25 @@ public class I18nExample {
 
 	public static void main(String[] args) {
 
-		Locale localeUS = new Locale("en", "US");
-		Locale localeFR = new Locale("fr", "FR");
-
+		// Locale localeDefault = Locale.getDefault(); 		// en_US
+		Locale localeUS = new Locale("en", "US"); 			// Locale localeUS = Locale.US;
 		ResourceBundle bundleUS = ResourceBundle.getBundle("messages", localeUS);
-		ResourceBundle bundleFR = ResourceBundle.getBundle("messages", localeFR);
-
+		System.out.println("US Locale: " + localeUS);
 		System.out.println("US Greeting: " + bundleUS.getString("greeting"));
+		
+		System.out.println();
+		Locale localeFR = new Locale("fr", "FR"); 			// Locale localeFR = Locale.FRANCE;
+		ResourceBundle bundleFR = ResourceBundle.getBundle("messages", localeFR);
+		System.out.println("FR Locale: " + localeFR);
 		System.out.println("FR Greeting: " + bundleFR.getString("greeting"));
 	}
 }
 
 /*
+US Locale: en_US
 US Greeting: Hello
+
+FR Locale: fr_FR
 FR Greeting: Bonjour
  */
 

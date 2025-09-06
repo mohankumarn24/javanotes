@@ -5,9 +5,17 @@ import java.text.MessageFormat;
 import java.text.*;
 
 // https://chatgpt.com/share/68bb22a1-8f64-8004-b759-de6f9d605141
-public class Main {
+// ONLY REFER SCANNER
+public class ScannerDemo {
 	
     public static void main(String[] args) {
+    	
+    	/**
+    	 * Scanner scanner = new Scanner(System.in);
+    	 * String lang = scanner.nextLine().trim().toLowerCase();
+    	 * String name = scanner.nextLine().trim();
+    	 * scanner.close();
+    	 */
     	
         Scanner scanner = new Scanner(System.in);
 
@@ -45,8 +53,7 @@ public class Main {
 
 /*
 Choose language (en/fr): en
-What is your name?
-Mohan
+What is your name? Mohan
 Hello Mohan!
 Today is September 5, 2025.
 Your account balance is $12,345.67.
@@ -54,8 +61,7 @@ Goodbye Mohan!
 
 
 Choose language (en/fr): fr
-Quel est votre nom ?
-Mohan
+Quel est votre nom ? Mohan
 Bonjour Mohan!
 Aujourd'hui c'est 5 septembre 2025.
 Votre solde de compte est 12 345,67 €.

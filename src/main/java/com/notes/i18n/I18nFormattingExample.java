@@ -42,21 +42,22 @@ public class I18nFormattingExample {
 
 /*
 Locale: en_US
-Formatted Date: September 5, 2025
-Formatted Time: 11:17:01 PM IST
+Formatted Date: September 6, 2025
+Formatted Time: 1:48:32 PM IST
 Formatted Number: 1,234,567.89
 Formatted Currency: $98,765.43
 ------------------------------
 Locale: fr_FR
-Formatted Date: 5 septembre 2025
-Formatted Time: 23:17:01 IST
+Formatted Date: 6 septembre 2025
+Formatted Time: 13:48:32 IST
 Formatted Number: 1 234 567,89
 Formatted Currency: 98 765,43 €
 ------------------------------
 Locale: ja_JP
-Formatted Date: 2025年9月5日
-Formatted Time: 23:17:01 IST
+Formatted Date: 2025年9月6日
+Formatted Time: 13:48:32 IST
 Formatted Number: 1,234,567.89
 Formatted Currency: ￥98,765
 ------------------------------
+
 */
