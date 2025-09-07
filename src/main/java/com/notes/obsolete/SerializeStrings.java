@@ -1,4 +1,4 @@
-package com.notes.collections;
+package com.notes.obsolete;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
