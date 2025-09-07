@@ -26,42 +26,58 @@ public class CallByValueDemo {
 		
 		// 1. Call by Value in Java (for Primitives):
 		int x = 10;
-		modify(x);
+		modifyPrimitives(x);
 		System.out.println(x); // Output: 10
 		// ✔️ x is not changed in the main method because only a copy of x is modified.
 		
+		String str = "Original string";
+		modifyString(str);
+		System.out.println(str);
+		
 		// 2.a. Call by Value (Object References):
 		Person person1 = new Person("Alice");
-		changeName(person1);
+		modifyObject(person1);
 		System.out.println(person1.getName()); // Output: Bob
 		// ✔️ Object content is changed because both the method and caller share the same object reference.
 				
 		// 2.b. Call by Value (Object References):
         Person person2 = new Person("Alice");
-        reassign(person2);
+        reassignObject(person2);
         System.out.println(person2.getName()); // Output: Alice
         // ❌ The original reference p in main() is unchanged because the method only changed its copy of the reference.
 	}
 
-	static void modify(int num) {
+	static void modifyPrimitives(int num) {
 		num = 20; // This only modifies the local copy
 	}
 	
-	static void changeName(Person person) {
+	static void modifyString(String str) {
+		str = "Modified string!!"; // This only modifies the local copy
+	}
+	
+	static void modifyObject(Person person) {
 		person.setName("Bob"); // Modifies the object that the reference points to
 	}
 	
-    static void reassign(Person person) {
+    static void reassignObject(Person person) {
         person = new Person(); // Reassigning reference (has no effect outside)
         person.setName("Bob");
     }
 }
 
+/*
+10
+Original string
+Bob
+Alice
+ */
+
+
 /* 
  * In Java, all method calls are "call by value", but this often leads to confusion because of how object references work.
  * 
  * 1. Call by Value in Java (for Primitives):
- *  	- When you pass primitive data types (like int, double, char, etc.) to a method, Java passes a copy of the value, not the actual variable.
+ *  	- When you pass primitive data types (like int, double, char, etc.) or String to a method, Java passes a copy of the value, not the actual variable.
  *  	- ✔️ x is not changed in the main method because only a copy of x is modified.
  *  
  * 2. Call by Value (Object References):

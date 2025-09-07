@@ -1,7 +1,9 @@
 package com.notes.i18n;
 
-import java.util.*;
-import java.text.*;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.util.Date;
+import java.util.Locale;
 
 // https://chatgpt.com/share/68bb22a1-8f64-8004-b759-de6f9d605141
 public class I18nFormattingExample {
