@@ -115,3 +115,66 @@ public class CompileTimeException {
  * Rule: By default, Checked Exceptions are not forwarded in calling chain (propagated)
  * Rule: If we are calling a method that declares an exception, we must either caught or declare the exception
  */
+
+/* CTE
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+public class TestCTE {
+	
+	private static void methodB() throws ParseException {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		System.out.println(dateFormat.parse("2025-01-15"));
+		
+		// Two options to handle CTE here: use try-catch or throws
+		// 1. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
+		// 2. if you use 'throws' here, then use 'throws' in this method's signature. Exception propogated to calling methid (this approach is used in this example)
+	}
+	
+	private static void methodA() throws ParseException {
+		
+		methodB();
+		
+		// Two options to handle CTE here: use try-catch or throws
+		// 3. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
+		// 4. if you use 'throws' here, then use 'throws' in this method's signature. Exception propogated to calling methid (this approach is used in this example)
+	}
+	
+	
+	public static void main(String[] args) throws ParseException {
+		
+		methodA();
+		
+		// Two options to handle CTE here: use try-catch or throws
+		// 5. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
+		// 6. if you use 'throws' here, then use 'throws' in this method's signature. Exception propogated to calling methid (this approach is used in this example)
+	}
+}
+
+// OUTPUT: Fri Jan 15 00:01:00 IST 202
+ */
+
+/* RTE
+public class TestRTE {
+
+	private static void methodB() {
+		System.out.println(5/0);
+	}
+
+	private static void methodA() {
+		methodB();
+	}
+
+	public static void main(String[] args) {
+		// exception propogates automatically
+		try {
+			methodA();
+		} catch (Exception e) {
+			System.out.println("error occurred");
+		}
+	}
+}
+
+//OUTPUT: error occurred
+*/
