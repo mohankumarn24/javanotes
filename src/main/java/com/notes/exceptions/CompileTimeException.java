@@ -127,18 +127,18 @@ public class TestCTE {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 		System.out.println(dateFormat.parse("2025-01-15"));
 		
-		// Two options to handle CTE here: use try-catch or throws
+		// Two options to handle CTE here: use 'try-catch' or 'throws' in this method's signature
 		// 1. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
-		// 2. if you use 'throws' here, then use 'throws' in this method's signature. Exception propogated to calling methid (this approach is used in this example)
+		// 2. if you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
 	}
 	
 	private static void methodA() throws ParseException {
 		
 		methodB();
 		
-		// Two options to handle CTE here: use try-catch or throws
+		// Two options to handle CTE here: use 'try-catch' or 'throws' in this method's signature
 		// 3. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
-		// 4. if you use 'throws' here, then use 'throws' in this method's signature. Exception propogated to calling methid (this approach is used in this example)
+		// 4. if you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
 	}
 	
 	
@@ -146,9 +146,9 @@ public class TestCTE {
 		
 		methodA();
 		
-		// Two options to handle CTE here: use try-catch or throws
+		// Two options to handle CTE here: use 'try-catch' or 'throws' in this method's signature
 		// 5. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
-		// 6. if you use 'throws' here, then use 'throws' in this method's signature. Exception propogated to calling methid (this approach is used in this example)
+		// 6. if you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
 	}
 }
 
