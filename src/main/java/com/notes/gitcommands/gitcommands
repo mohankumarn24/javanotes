@@ -1,29 +1,29 @@
 //http://blog.udacity.com/2015/06/a-beginners-git-github-tutorial.html
 
 
-mkdir gitdir 			    // create root directory for a git project
-cd gitdir		            // go to the newly created directoey
-git init			    // initialize github project repository
+mkdir gitdir 			    			// create root directory for a git project
+cd gitdir		            			// go to the newly created directoey
+git init			    				// initialize github project repository
 
-touch test.c    		    // create empty file
-git status    			    // check status 
+touch test.c    		    			// create empty file
+git status    			    			// check status 
 
-git add test.c  	  	    // add test.c to stage  
-git commit -m "empty file created"  // commit changes to master branch
+git add test.c  	  	    			// add test.c to stage  
+git commit -m "empty file created"  	// commit changes to master branch
 
-git branch                          // list available branches
+git branch                          	// list available branches
 
-git checkout -b branch1             // create new branch branch1                        
-vi test.c                           // make changes to test.c file in branch1
-git status                          // check status 
-git add test.c                      // add test.c to stage
-git diff test,c                     // gives diff between committed and not-committed file
-git commit -m "written c program"   // commit changes to branch1
+git checkout -b branch1             	// create new branch branch1                        
+vi test.c                           	// make changes to test.c file in branch1
+git status                          	// check status 
+git add test.c                      	// add test.c to stage
+git diff test,c                     	// gives diff between committed and not-committed file
+git commit -m "written c program"   	// commit changes to branch1
 
-git checkout master                 // switch to master
-git merge branch1                   // merge changes done in branch1 to master
+git checkout master                 	// switch to master
+git merge branch1                   	// merge changes done in branch1 to master
 
-git log				    // view change history
+git log				    				// view change history
 
 
 -----------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ git remote add origin <https://github.com/userName/repoName.git>
  
 // files copied from local system(master) to github server
 git checkout master
-git push origin master              // or use => git push --force origin master		    
+git push origin master              	// or use => git push --force origin master		    
               
 // files copied from github server to local system(branch1)
 git checkout branch1
@@ -46,10 +46,7 @@ git rm test.c
 git commit -a -m "Deleting files"
 
 // delete local branch
-git branch -d branch1                // git branch -D branch1 => force delete
+git branch -d branch1                	// git branch -D branch1 => force delete
 
 // delete remote branch
 git push origin --delete branch1
-
-
-
