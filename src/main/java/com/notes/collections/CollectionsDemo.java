@@ -23,23 +23,38 @@ public class CollectionsDemo {
 		 * - add, addAll 
 		 * - remove, removeAll, removeIf, retainAll, replaceAll 
 		 * - set, get
-		 * - clear, isEmpty, size, clone, contains, containsAll, equals
+		 * - clear, isEmpty, size, ||clone||, contains, containsAll, equals
 		 * - indexOf, lastIndexOf, toArray(), sort
-		 * - for, foreach, foreach using lambda exp., iterator interface, listIterator interface
+		 * - for loops: for, for-each, Iterator, ListIterator, forEach, forEachRemaining
+		 * 		- for 				-> for(int i = 0;i < list.size(); i++){}
+		 * 		- for-each 			-> for(String str: list) {}
+		 * 		- Iterator			-> Iterator<String> iterator = list.iterator();
+		 * 		- ListIterator		-> ListIterator<String> listIterator = list.listIterator(list.size());
+		 * 		- forEach			-> list.forEach(str ->  sysout(str));
+		 * 		- forEachRemaining	-> (list.iterator()).forEachRemaining(str -> sysout(str));
+		 * 							-> 			iterator.forEachRemaining(str -> sysout(str));
 		 * 
 		 * 
 		 * -- LinkedList --
-		 * - add, addAll, addFirst, addLast
-		 * - remove, removeAll, removeIf, retainAll, replaceAll, removeFirst, removeLast, removeFirstOccurrence, removeLastOccurrence
-		 * - set, get, getFirst, getLast
-		 * - clear, isEmpty, size, clone, contains, containsAll, equals
+		 * - add, addAll, [addFirst, addLast]
+		 * - remove, removeAll, [removeFirst, removeLast, removeFirstOccurrence, removeLastOccurrence], removeIf, retainAll, replaceAll
+		 * - set, get, [getFirst, getLast]
+		 * - clear, isEmpty, size, ||clone||, contains, containsAll, equals
 		 * - indexOf, lastIndexOf, toArray(), sort
-		 * - for, foreach, foreach using lambda exp., iterator interface, listIterator interface
-		 * - listIterator, descendingIterator
-		 * - poll, pollFirst, pollLast (Returns null if a list is empty)
-		 * - peek, peekFirst, peekLast (Throws NoSuchElementException is list is empty)
-		 * - Queue: offer, offerFirst, offerLast (https://stackoverflow.com/questions/15591431/difference-between-offer-and-add-in-priority-queue-in-java)
-		 * - Stack: push, pop
+		 * - for loops: for, for-each, Iterator, ListIterator, forEach, forEachRemaining
+		 * 		- for 					-> for(int i = 0;i < list.size(); i++){}
+		 * 		- for-each 				-> for(String str: list) {}
+		 * 		- Iterator				-> Iterator<String> iterator = list.iterator();
+		 * 		- ListIterator			-> ListIterator<String> listIterator = list.listIterator(list.size());
+		 * 		- forEach				-> list.forEach(str ->  sysout(str));
+		 * 		- forEachRemaining		-> (list.iterator()).forEachRemaining(str -> sysout(str));
+		 * 								-> 			iterator.forEachRemaining(str -> sysout(str));
+		 * 		- [descendingIterator]	-> Iterator<String> iterator = list.descendingIterator(); // while (iterator.hasNext()) {System.out.println(iterator.next());} // print in reverse
+		 * - [below methods comes from Deque interface:]
+		 * 		- poll, pollFirst, pollLast (Returns null if a list is empty)					--> removes item
+		 * 		- peek, peekFirst, peekLast (Throws NoSuchElementException is list is empty)	--> DOES NOT remove item
+		 * 		- Queue: offer, offerFirst, offerLast (https://stackoverflow.com/questions/15591431/difference-between-offer-and-add-in-priority-queue-in-java)  --> add element
+		 * 		- Stack: push, pop
 		 * 
 		 * 
 		 * -- Vector -- 
@@ -66,18 +81,20 @@ public class CollectionsDemo {
 		 * -- PriorityQueue -- 
 		 * - add, addAll
 		 * - remove, removeAll, removeIf, retainAll
-		 * - clear, isEmpty, size, contains, containsAll
-		 * - elements, equals
-		 * - iterator, spliterator, toArray
-		 * - peek, poll, offer
+		 * - [element]
+		 * - clear, isEmpty, size, || ||, contains, containsAll
+		 * - toArray, equals 
+		 * - iterator, [spliterator]
+		 * - [poll, peek, offer]
 		 * 
 		 * 
 		 * -- ArrayDeque -- 
-		 * - add, addAll, addFirst, addLast
-		 * - remove, removeAll, removeFirst, removeLast, removeFirstOccurence, removeLastOccurence, removeIf, retainAll
-		 * - clear, isEmpty, size, clone, contains, containsAll
-		 * - element, equals, getFirst, getLast, toArray
-		 * - iterator, spliterator, descendingIterator
+		 * - add, addAll, [addFirst, addLast]
+		 * - remove, removeAll, [removeFirst, removeLast, removeFirstOccurence, removeLastOccurence], removeIf, retainAll
+		 * - [element], getFirst, getLast
+		 * - clear, isEmpty, size, ||clone||, contains, containsAll
+		 * - toArray, equals
+		 * - iterator, [spliterator, descendingIterator]
 		 * - poll, pollFirst, pollLast
 		 * - peek, peekFirst, peekLast
 		 * - offer, offerFirst, offerLast
@@ -88,15 +105,16 @@ public class CollectionsDemo {
 		 * - add, addAll
 		 * - remove, removeAll, removeIf, retainAll
 		 * - clear, isEmpty, size, clone, contains, containsAll
-		 * - iterator, splitertor, toArray
+		 * - toArray
+		 * - iterator, [splitertor] 
 		 * 
 		 * 
 		 * -- LinkedHashSet --
 		 * - add, addAll 
 		 * - remove, removeAll, removeIf, retainAll 
 		 * - clear, isEmpty, size, clone, contains, containsAll, equals
-		 * - spliterator, toArray()
-		 * - for, foreach, foreach using lambda exp., iterator interface
+		 * - toArray()
+		 * - for, foreach, foreach using lambda exp., iterator interface, [spliterator]
 		 * 
 		 * 
 		 * -- TreeSet --
@@ -105,7 +123,7 @@ public class CollectionsDemo {
 		 * - set, get
 		 * - clear, isEmpty, size, clone, contains, containsAll, equals
 		 * - indexOf, lastIndexOf, sort, toArray()
-		 * - for, foreach, foreach using lambda exp., iterator interface, descendingIterator
+		 * - for, foreach, foreach using lambda exp., iterator interface, [descendingIterator]
 		 * - ceiling, floor, first, last, higher, lower
 		 * - poll, pollFirst, pollLast
 		 * - subSet, headSet, tailSet, descendingSet
