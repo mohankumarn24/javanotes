@@ -31,8 +31,9 @@ public class ParseExceptionCTE  {
 			e.printStackTrace();
 		}
 		
+		// Uncomment below line and check: if you uncomment below line, you cannot compile
+		// Date dateCTENotHandled = dateFormat.parse(dateString);
 		
-		Date dateCTENotHandled = dateFormat.parse(dateString);
 		/*
 			Exception in thread "main" java.lang.Error: Unresolved compilation problem: 
 					Unhandled exception type ParseException
