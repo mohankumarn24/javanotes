@@ -12,7 +12,7 @@ import javax.sql.rowset.RowSetProvider;
 // https://chatgpt.com/share/68bbda1f-601c-8004-8dca-b8a3134cfbc4
 public class PostgresCachedRowSetExample {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/myjdbcdb?currentSchema=my_schema";
+    private static final String URL = "jdbc:postgresql://localhost:5432/mydb?currentSchema=jdbc";
     private static final String USER = "postgres";
     private static final String PASSWORD = "Password1";
 
