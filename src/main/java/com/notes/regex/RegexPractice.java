@@ -39,6 +39,7 @@ public class RegexPractice {
 
     // 5. Check for palindrome words
     // level madam noon civic --> [level, madam, noon, civic]
+    // a b c.				  --> [a, b, c]
     public static List<String> findPalindromes(String text) {
         List<String> palindromes = new ArrayList<>();
         Matcher m = Pattern.compile("\\b(\\w+)\\b").matcher(text);
