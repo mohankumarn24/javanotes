@@ -1,15 +1,11 @@
 package com.notes.jdbc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import javax.sql.rowset.JdbcRowSet;
+import javax.sql.rowset.RowSetProvider;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sql.rowset.JdbcRowSet;
-import javax.sql.rowset.RowSetProvider;
 
-// https://chatgpt.com/share/68bbda1f-601c-8004-8dca-b8a3134cfbc4
 public class PostgresJdbcRowSetExample {
 
     private static final String URL = "jdbc:postgresql://localhost:5432/mydb?currentSchema=jdbc";
@@ -18,12 +14,17 @@ public class PostgresJdbcRowSetExample {
 
     public static void main(String[] args) {
 
+    	// delete all users
+    	System.out.println("a. Deleting all users");
+    	deleteAllUsers();
+    	
         // Insert Users
-        insertUser("Mohan", "mohan@example.com");
-        insertUser("Ravi", "ravi@example.com");
+    	System.out.println("\nb. Creating two users");
+        insertUser(1, "Mohan", "mohan@example.com");
+        insertUser(2, "Ravi", "ravi@example.com");
 
         // Fetch single user
-        System.out.println();
+        System.out.println("\nc. Reading user with id=1");
         User user = getUserById(1);
         if (user != null) {
             System.out.println("Fetched by ID: " + user);
@@ -32,53 +33,80 @@ public class PostgresJdbcRowSetExample {
         }
 
         // Read Users
-        System.out.println();
-        System.out.println("All users:");
+        System.out.println("\nd. Reading all users");
         getAllUsers().forEach(System.out::println);
 
         // Update User Email
+        System.out.println("\ne. Updating user with id=1");
         updateUserEmail(1, "mohan123@example.com");
 
         // Delete User
+        System.out.println("\nf. Deleting user withid=2");
         deleteUser(2);
 
         // Read Users again
-        System.out.println();
+        System.out.println("\ng. Reading all users again");
         System.out.println("Users after update and delete:");
         getAllUsers().forEach(System.out::println);
     }
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
-    }
 
-    // CREATE
-    public static void insertUser(String name, String email) {
+    // CLEAN UP
+    public static void deleteAllUsers() {
     	
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("INSERT INTO users(name, email) VALUES(?, ?)");
-            stmt.setString(1, name);
-            stmt.setString(2, email);
-            int rows = stmt.executeUpdate();
-            System.out.println(rows + " user(s) inserted.");
+        try (JdbcRowSet rowSet = RowSetProvider.newFactory().createJdbcRowSet()) {
+            rowSet.setUrl(URL);
+            rowSet.setUsername(USER);
+            rowSet.setPassword(PASSWORD);
+
+            // Select all rows
+            rowSet.setCommand("SELECT * FROM users");
+            rowSet.execute();
+
+            // Iterate and delete each row
+            int count = 0;
+            while (rowSet.next()) {
+                rowSet.deleteRow();
+                count++;
+            }
+
+            System.out.println(count + " user(s) deleted.");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (stmt != null) {try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }}
-            if (conn != null) {try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }}
         }
     }
 
-    // READ by ID (JdbcRowSet)
+    
+    // CREATE
+    public static void insertUser(int id, String name, String email) {
+    	
+        try (JdbcRowSet rowSet = RowSetProvider.newFactory().createJdbcRowSet()) {
+            rowSet.setUrl(URL);
+            rowSet.setUsername(USER);
+            rowSet.setPassword(PASSWORD);
+
+            // Select an empty result set but with correct metadata
+            rowSet.setCommand("SELECT id, name, email FROM users WHERE 1=0");
+            rowSet.execute();
+
+            rowSet.moveToInsertRow();				// set column values for a new row.
+            rowSet.updateInt("id", id);
+            rowSet.updateString("name", name);
+            rowSet.updateString("email", email);
+            rowSet.insertRow();						// Equivalent to INSERT INTO users (id, name, email) VALUES (?, ?, ?) in plain JDBC.
+            rowSet.moveToCurrentRow();				// move back to the RowSet’s normal cursor. Required to continue normal RowSet operations (like iterating rows if needed)
+
+            System.out.println("1 user inserted with id=" + id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // READ by ID
     public static User getUserById(int id) {
     	
-        JdbcRowSet rowSet = null; // public interface JdbcRowSet extends RowSet, Joinable {...}
         User user = null;
-        try {
-            rowSet = RowSetProvider.newFactory().createJdbcRowSet();
+        try (JdbcRowSet rowSet = RowSetProvider.newFactory().createJdbcRowSet()) {
             rowSet.setUrl(URL);
             rowSet.setUsername(USER);
             rowSet.setPassword(PASSWORD);
@@ -92,19 +120,15 @@ public class PostgresJdbcRowSetExample {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (rowSet != null) {try { rowSet.close(); } catch (SQLException e) { e.printStackTrace(); }}
         }
         return user;
     }
 
-    // READ all (JdbcRowSet)
+    // READ all
     public static List<User> getAllUsers() {
     	
-        JdbcRowSet rowSet = null;  // public interface JdbcRowSet extends RowSet, Joinable {...}
         List<User> users = new ArrayList<>();
-        try {
-            rowSet = RowSetProvider.newFactory().createJdbcRowSet();
+        try (JdbcRowSet rowSet = RowSetProvider.newFactory().createJdbcRowSet()) {
             rowSet.setUrl(URL);
             rowSet.setUsername(USER);
             rowSet.setPassword(PASSWORD);
@@ -117,8 +141,6 @@ public class PostgresJdbcRowSetExample {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (rowSet != null) {try { rowSet.close(); } catch (SQLException e) { e.printStackTrace(); }}
         }
         return users;
     }
@@ -126,57 +148,82 @@ public class PostgresJdbcRowSetExample {
     // UPDATE
     public static void updateUserEmail(int id, String newEmail) {
     	
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("UPDATE users SET email=? WHERE id=?");
-            stmt.setString(1, newEmail);
-            stmt.setInt(2, id);
-            int rows = stmt.executeUpdate();
-            System.out.println(rows + " user(s) updated.");
+        try (JdbcRowSet rowSet = RowSetProvider.newFactory().createJdbcRowSet()) {
+            rowSet.setUrl(URL);
+            rowSet.setUsername(USER);
+            rowSet.setPassword(PASSWORD);
+
+            rowSet.setCommand("SELECT * FROM users WHERE id=?");
+            rowSet.setInt(1, id);
+            rowSet.execute();
+
+            if (rowSet.next()) {
+                rowSet.updateString("email", newEmail);
+                rowSet.updateRow();
+                System.out.println("1 user updated.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (stmt != null) {try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }}
-            if (conn != null) {try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }}
         }
     }
 
     // DELETE
     public static void deleteUser(int id) {
     	
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("DELETE FROM users WHERE id=?");
-            stmt.setInt(1, id);
-            int rows = stmt.executeUpdate();
-            System.out.println(rows + " user(s) deleted.");
+        try (JdbcRowSet rowSet = RowSetProvider.newFactory().createJdbcRowSet()) {
+            rowSet.setUrl(URL);
+            rowSet.setUsername(USER);
+            rowSet.setPassword(PASSWORD);
+
+            rowSet.setCommand("SELECT * FROM users WHERE id=?");
+            rowSet.setInt(1, id);
+            rowSet.execute();
+
+            if (rowSet.next()) {
+                rowSet.deleteRow();
+                System.out.println("1 user deleted.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (stmt != null) {try { stmt.close(); } catch (SQLException e) { e.printStackTrace(); }}
-            if (conn != null) {try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }}
         }
     }
 }
 
+/**
+CREATE TABLE users (
+    id INT PRIMARY KEY NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+
+*/
+
 /* OUTPUT:
-1 user(s) inserted.
-1 user(s) inserted.
-
-Fetched by ID: User{id=1, name='Mohan', email='mohan@example.com'}
-
-All users:
-User{id=1, name='Mohan', email='mohan@example.com'}
-User{id=2, name='Ravi', email='ravi@example.com'}
-1 user(s) updated.
+a. Deleting all users
 1 user(s) deleted.
 
+b. Creating two users
+1 user inserted with id=1
+1 user inserted with id=2
+
+c. Reading user with id=1
+Fetched by ID: User{id=1, name='Mohan', email='mohan@example.com'}
+
+d. Reading all users
+User{id=1, name='Mohan', email='mohan@example.com'}
+User{id=2, name='Ravi', email='ravi@example.com'}
+
+e. Updating user with id=1
+1 user updated.
+
+f. Deleting user withid=2
+1 user deleted.
+
+g. Reading all users again
 Users after update and delete:
 User{id=1, name='Mohan', email='mohan123@example.com'}
+
+
 */
 
 /*
