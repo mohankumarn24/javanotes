@@ -18,51 +18,77 @@ public class PostgresResultSetExample {
 
 	public static void main(String[] args) {
 
-		// Insert Users
-		insertUser("Mohan", "mohan@example.com");
-		insertUser("Ravi", "ravi@example.com");
+    	// delete all users
+    	System.out.println("a. Deleting all users");
+    	deleteAllUsers();
+    	
+        // Insert Users
+    	System.out.println("\nb. Creating two users");
+        insertUser(1, "Mohan", "mohan@example.com");
+        insertUser(2, "Ravi", "ravi@example.com");
 
-	    // Fetch single user
-		System.out.println();
-	    User user = getUserById(1);
-	    if (user != null) {
-	        System.out.println("Fetched by ID: " + user);
-	    } else {
-	        System.out.println("User not found.");
-	    }
-	    
-		// Read Users
-		System.out.println();
-		System.out.println("All users:");
-		getAllUsers().forEach(System.out::println);
+        // Fetch single user
+        System.out.println("\nc. Reading user with id=1");
+        User user = getUserById(1);
+        if (user != null) {
+            System.out.println("Fetched by ID: " + user);
+        } else {
+            System.out.println("User not found.");
+        }
 
-		// Update User Email
-		updateUserEmail(1, "mohan123@example.com");
+        // Read Users
+        System.out.println("\nd. Reading all users");
+        getAllUsers().forEach(System.out::println);
 
-		// Delete User
-		deleteUser(2);
+        // Update User Email
+        System.out.println("\ne. Updating user with id=1");
+        updateUserEmail(1, "mohan123@example.com");
 
-		// Read Users again
-		System.out.println();
-		System.out.println("Users after update and delete:");
-		getAllUsers().forEach(System.out::println);
+        // Delete User
+        System.out.println("\nf. Deleting user withid=2");
+        deleteUser(2);
+
+        // Read Users again
+        System.out.println("\ng. Reading all users again");
+        System.out.println("Users after update and delete:");
+        getAllUsers().forEach(System.out::println);
 	}
 
 	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(URL, USER, PASSWORD);
 	}
 
-    // CREATE
-    public static void insertUser(String name, String email) {
+    // DELETE
+    public static void deleteAllUsers() {
     	
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             conn = getConnection();
-            String sql = "INSERT INTO users(name, email) VALUES(?, ?)";
+            String sql = "DELETE FROM users";
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, name);
-            stmt.setString(2, email);
+            int rows = stmt.executeUpdate();
+            System.out.println(rows + " user(s) deleted.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+    
+    // CREATE
+    public static void insertUser(int id, String name, String email) {
+    	
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = getConnection();
+            String sql = "INSERT INTO users(id, name, email) VALUES(?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.setString(2, name);
+            stmt.setString(3, email);
             int rows = stmt.executeUpdate();
             System.out.println(rows + " user(s) inserted.");
         } catch (SQLException e) {
