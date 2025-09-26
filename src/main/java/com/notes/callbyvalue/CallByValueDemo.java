@@ -1,5 +1,8 @@
 package com.notes.callbyvalue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CallByValueDemo {
 	
 	private static class Person {
@@ -19,6 +22,11 @@ public class CallByValueDemo {
 
 		public void setName(String name) {
 			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return "Person [name=" + name + "]";
 		}
 	}
 	
@@ -45,6 +53,14 @@ public class CallByValueDemo {
         reassignObject(person2);
         System.out.println(person2.getName()); // Output: Alice
         // ❌ The original reference p in main() is unchanged because the method only changed its copy of the reference.
+        
+        // 3. collections
+        System.out.println();
+        List<Person> persons = new ArrayList<>();
+        persons.add(new Person("Alice"));
+        modifyCollections(persons);
+        persons.forEach(person -> System.out.println(person.toString()));
+        
 	}
 
 	static void modifyPrimitives(int num) {
@@ -63,6 +79,10 @@ public class CallByValueDemo {
         person = new Person(); // Reassigning reference (has no effect outside)
         person.setName("Bob");
     }
+    
+    static void modifyCollections(List<Person> persons) {
+    	persons.add(new Person("Bob"));
+    }
 }
 
 /*
@@ -70,6 +90,9 @@ public class CallByValueDemo {
 Original string
 Bob
 Alice
+
+Person [name=Alice]
+Person [name=Bob]
  */
 
 
