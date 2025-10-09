@@ -23,5 +23,7 @@ public class EnumDemo {
         for (Vehicle vehicle : Vehicle.values()) {
             System.out.println(vehicle.getVehicleInfo());
         }
+        
+        System.out.println("\nUsed in RequestBody: " + Day.valueOf("MONDAY"));	// User sends "monday" in request body and we must ensure that it is valid value
 	}
 }
