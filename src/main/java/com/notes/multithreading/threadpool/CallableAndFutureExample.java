@@ -40,6 +40,10 @@ public class CallableAndFutureExample {
 		System.out.println("Result: " + result);
 
 		executorService.shutdown();
+        while (!executorService.isTerminated()) {
+        	
+        }
+        System.out.println("Finished all threads");  	
 	}
 }
 

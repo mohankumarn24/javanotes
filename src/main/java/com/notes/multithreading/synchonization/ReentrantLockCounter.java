@@ -27,3 +27,11 @@ public class ReentrantLockCounter {
 		}
 	}
 }
+
+/*
+
+final List<String> list = new ArrayList<>();
+list.add("Hello"); 								// ✅ allowed. You can modify the contents, but you cannot replace the entire list object
+list = new ArrayList<>(); 						// ❌ not allowed
+
+ */

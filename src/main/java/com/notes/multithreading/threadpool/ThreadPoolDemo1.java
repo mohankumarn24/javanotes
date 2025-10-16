@@ -7,10 +7,10 @@ public class ThreadPoolDemo1 {
 
 	public static void main(String[] args) {
 		
-		ExecutorService executorService = Executors.newFixedThreadPool(5); //creating a pool of 5 threads
+		ExecutorService executorService = Executors.newFixedThreadPool(5); 	//creating a pool of 5 threads
         for (int i = 0; i < 10; i++) {  
             Runnable runnable = new WorkerThread(String.valueOf(i));  
-            executorService.execute(runnable); //calling execute method of ExecutorService 
+            executorService.execute(runnable); 								//calling execute method of ExecutorService 
          }  
         
         executorService.shutdown();  

@@ -12,7 +12,8 @@ public class SingleThreadExecutorDemo {
 			System.out.println("Task is executing...");
 		};
 
-		executor.execute(task);
+		executor.execute(task); 
+		
+		// Note: This program does not terminate. Use ExecutorService instead of Executor
 	}
-
 }

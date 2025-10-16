@@ -3,25 +3,28 @@ package com.notes.multithreading.interrupts;
 // https://medium.com/@satyendra.jaiswal/thread-interruption-and-termination-in-java-9a90d20661b3
 public class InterruptExample extends Thread {
 	
-	@Override
-	public void run() {
-		try {
-			while (!Thread.interrupted()) {
-				// Perform a time-consuming task
-				System.out.println("Working...");
-				Thread.sleep(1000);
+	static class WorkerThread extends Thread {
+		
+		@Override
+		public void run() {
+			try {
+				while (!Thread.interrupted()) {
+					// Perform a time-consuming task
+					System.out.println("Working..." + Thread.currentThread().getName());
+					Thread.sleep(1000);
+				}
+			} catch (InterruptedException e) {
+				// Handle interruption gracefully
+				System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 			}
-		} catch (InterruptedException e) {
-			// Handle interruption gracefully
-			System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
+			System.out.println("Thread terminated gracefully: " + Thread.currentThread().getName());
 		}
-		System.out.println("Thread terminated gracefully: " + Thread.currentThread().getName());
 	}
 
 	public static void main(String[] args) {
 
 		// worker thread
-		Thread thread = new InterruptExample();
+		Thread thread = new WorkerThread();
 		thread.start();
 
 		// Allow the thread to work for some time
