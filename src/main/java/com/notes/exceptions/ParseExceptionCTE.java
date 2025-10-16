@@ -42,4 +42,101 @@ public class ParseExceptionCTE  {
 	}
 }	
 
+/*
+------------------------------------------------------------
+ Topic: What happens to return value if exception occurs?
+------------------------------------------------------------
+
+🧩 Case 1: Exception occurs BEFORE return statement
+----------------------------------------------------
+If an exception is thrown before the 'return' statement is executed,
+the method exits immediately — it never reaches the return statement.
+
+Example:
+    public Object getData() {
+        Object obj = new Object();
+        if (true) {
+            throw new RuntimeException("Something went wrong!");
+        }
+        return obj; // ❌ never reached
+    }
+
+Result:
+    - The method does NOT return anything.
+    - The exception propagates to the caller (unless caught).
+
+------------------------------------------------------------
+
+🧩 Case 2: Exception is CAUGHT inside the method
+----------------------------------------------------
+If the method catches the exception, behavior depends on what happens next.
+
+✅ Option 1: Return a fallback value
+    public Object getData() {
+        try {
+            throw new RuntimeException("Oops!");
+        } catch (Exception e) {
+            System.out.println("Caught exception");
+            return null;  // or some default object
+        }
+    }
+
+    → Caller gets null (or whatever fallback is returned).
+
+✅ Option 2: Rethrow exception
+    public Object getData() {
+        try {
+            throw new RuntimeException("Oops!");
+        } catch (Exception e) {
+            throw e; // rethrow
+        }
+    }
+
+    → Caller gets the exception. No return value is produced.
+
+------------------------------------------------------------
+
+🧩 Case 3: finally block and return
+----------------------------------------------------
+If both 'try' and 'finally' are present, and return is inside 'try',
+the return value is computed first, then 'finally' executes.
+
+Example:
+    public int test() {
+        try {
+            return 1;
+        } finally {
+            System.out.println("finally runs");
+        }
+    }
+
+Output:
+    finally runs
+Return value:
+    1
+
+However, if 'finally' itself throws an exception:
+    - The return value is DISCARDED.
+    - The new exception from 'finally' propagates to the caller.
+
+------------------------------------------------------------
+
+✅ Summary Table
+------------------------------------------------------------
+| Situation                        | Return Value         | Exception Behavior           |
+|----------------------------------|----------------------|------------------------------|
+| Exception before return          | No return            | Exception propagates         |
+| Exception caught, fallback value | Fallback value       | None (handled)               |
+| Exception caught, rethrown       | No return            | Exception propagates         |
+| finally after return (no error)  | Return executes      | finally runs normally        |
+| Exception inside finally         | Return discarded     | finally exception propagates |
+
+------------------------------------------------------------
+In short:
+- If an exception happens before reaching 'return', the return never happens.
+- If exception is caught, you control what to return.
+- finally always runs, but if it throws, it overrides any pending return.
+
+------------------------------------------------------------
+*/
 
