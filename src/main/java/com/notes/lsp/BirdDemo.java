@@ -22,10 +22,25 @@ public class BirdDemo {
 	}
 }
 
+
+/**
+ * LSP:
+ * - Now, since both Sparrow and Penguin extend Bird, they are subtypes of Bird
+ * - So anywhere your code expects a Bird, you can pass a Sparrow or a Penguin, and the code should still behave logically as intended
+ * - Subtypes should be replaceable for their base types without breaking the program’s behavior.
+ * 		Bird sparrow = new Sparrow();
+ * 		Bird penguin = new Penguin();
+ * 		sparrow.makeSound(); // works fine
+ * 		penguin.makeSound(); // works fine
+ * - This follows the Liskov Substitution Principle — both Sparrow and Penguin behave correctly as Birds because they fulfill the makeSound() contract.
+ * 		
+ */
+
+
 /*
 ------ PROBLEM ------
 // Wrong Example (Violating LSP)
-// Penguin is a Bird, but it cannot fly
+// Penguin is a Bird, but it cannot fly. This violates LSP because Penguin cannot safely replace Bird
 // If client code assumes every Bird can fly, substituting Penguin will break the program
 
 public class Bird {
