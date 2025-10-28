@@ -1,7 +1,7 @@
 package com.notes.multithreading.interrupts;
 
 // https://medium.com/@satyendra.jaiswal/thread-interruption-and-termination-in-java-9a90d20661b3
-public class InterruptExample extends Thread {
+public class InterruptExample {
 	
 	static class WorkerThread extends Thread {
 		
@@ -24,8 +24,8 @@ public class InterruptExample extends Thread {
 	public static void main(String[] args) {
 
 		// worker thread
-		Thread thread = new WorkerThread();
-		thread.start();
+		Thread t1 = new WorkerThread();
+		t1.start();
 
 		// Allow the thread to work for some time
 		// Main thread sleeps for 5 seconds, so the worker thread prints "Working..." about 5 times
@@ -36,7 +36,7 @@ public class InterruptExample extends Thread {
 		}
 
 		// Interrupt the worker thread
-		thread.interrupt();
+		t1.interrupt();
 		/*
 		* After 5 seconds, the main thread calls thread.interrupt():
 		*  - This sets the worker thread’s interrupt flag.
