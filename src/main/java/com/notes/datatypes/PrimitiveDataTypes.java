@@ -11,7 +11,8 @@ public class PrimitiveDataTypes {
 		
 		// values overflows
 		boolean booleanFlag = true;
-		char charA = 'A';   				// alphabetA = 65;
+		char charA = 'A';   				// char charA = 65;  -> char A
+											// 0 -> 48, A -> 65, a -> 97
 		byte byteNum = (byte) 128; 			// cannot assign 128 without casting
 		short shortNum = (short) 32768;		// cannot assign 32768 without casting
 		int intNum = 2147483647 + 1; 		// cannot assign 2^31=2147483648. Gives Out of Range Compile Time error

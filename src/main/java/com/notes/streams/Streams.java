@@ -23,18 +23,18 @@ public class Streams {
 										.peek(t -> System.out.println("Debugging: " + t))
 										.collect(Collectors.toList()); // collect, count, foreach
 		
-		long count = result.stream().count();  // long count();
+		long count = result.stream().count();  											// long count();
 		System.out.println(String.format("count: %d", count));	
 		
 		result.stream().forEach(n -> System.out.println(n));
 		
-		boolean anyMatch = result.stream().anyMatch(t -> t > 8); // any one must match
+		boolean anyMatch = result.stream().anyMatch(t -> t > 8); 						// any one must match
 		System.out.println(String.format("anyMatch: %b", anyMatch));
 		
-		boolean allMatch = result.stream().allMatch(t -> t > 8); // all must match
+		boolean allMatch = result.stream().allMatch(t -> t > 8); 						// all must match
 		System.out.println(String.format("allMatch: %b", allMatch));
 		
-		boolean noneMatch = result.stream().noneMatch(t -> t > 1000); // none must match
+		boolean noneMatch = result.stream().noneMatch(t -> t > 1000); 					// none must match
 		System.out.println(String.format("noneMatch: %b", noneMatch));	
 		
 		Optional<Integer> minOptional = result.stream().min((a, b) -> a.compareTo(b));
@@ -66,33 +66,35 @@ public class Streams {
 				Arrays.asList("Armani 2", "Balenciaga 2", "Chanel 2"),
 				Arrays.asList("Armani 3", "Balenciaga 3", "Chanel 3"));
 		strlist.stream()
-				.flatMap(t -> t.stream()) // or .flatMap(Collection::stream)
+				.flatMap(t -> t.stream()) 												// or .flatMap(Collection::stream)
 				.map(t -> t.toUpperCase())
 				.forEach(n -> System.out.println(n));
 		System.out.println();
 		
 		// D
 		System.out.println("\n---D---");
-		List<String> stringList2 = Arrays.asList("Armani", "Balenciaga", "Chanel");	// Returns an Optional describing some element of the stream, or anempty Optional if the stream is empty. 
+		List<String> stringList2 = Arrays.asList("Armani", "Balenciaga", "Chanel");		// Returns an Optional describing some element of the stream, or anempty Optional if the stream is empty. 
 		String value = stringList2.stream().findAny().get();
 		System.out.println(String.format("findAny: %s", value));
 		
-		value = stringList2.stream().findFirst().get();								// Returns an Optional describing the first element of this stream,or an empty Optional if the stream is empty
+		value = stringList2.stream().findFirst().get();									// Returns an Optional describing the first element of this stream,or an empty Optional if the stream is empty
 		System.out.println(String.format("findFirst: %s", value));
 		
 		// E
-		System.out.println("\n---E---");
-		/*
-		Optional<String> reduced = Stream.of("one", "two", "three")
-											.reduce((str, combinedValue) -> {
-												return combinedValue + " " + str;
-											});
-		*/
+		System.out.println("\n---E---");		
 		Optional<String> reduced = Stream.of("one", "two", "three")
 										 .reduce((combinedValue, str) -> {
 											 return combinedValue + " " + str;
 										 });
 		System.out.println(String.format("reduced: %s", reduced.get()));
+		
+		Optional<Integer> sum = Stream.of(1, 2, 3, 4, 5).reduce((a, b) -> a + b);		// Optional<Integer> product = Stream.of(2, 3, 4).reduce((a, b) -> a * b); // 24
+		sum.ifPresent(System.out::println);  											// Output: 15
+		
+		String joined1 = String.join(" ", "one", "two", "three");
+		System.out.println("joined1: " + joined1);										// joined1: one two three
+		String joined2 = String.join(", ", "one", "two", "three");
+		System.out.println("joined2: " + joined2);										// joined2: one, two, three
 		
 		// F
 		System.out.println("\n---F---");
@@ -101,5 +103,4 @@ public class Streams {
 		Stream<String> concatStream = Stream.concat(a.stream(), b.stream());
 		concatStream.map(t -> t.toUpperCase()).forEach(t -> System.out.println(t));
 	}
-
 }
