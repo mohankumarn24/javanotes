@@ -2,6 +2,7 @@ package com.notes.multithreading.threadpool;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadPoolDemo1 {
 
@@ -13,10 +14,16 @@ public class ThreadPoolDemo1 {
             executorService.execute(runnable); 								//calling execute method of ExecutorService 
          }  
         
-        executorService.shutdown();  
-        while (!executorService.isTerminated()) {
-        	
-        }
+        // Graceful shutdown
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+            	executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+        	executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        } 
         System.out.println("Finished all threads");  		
 	}
 }

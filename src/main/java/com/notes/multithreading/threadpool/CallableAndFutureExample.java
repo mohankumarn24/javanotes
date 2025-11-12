@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -39,11 +40,17 @@ public class CallableAndFutureExample {
 		Integer result = future.get(); // Waits if necessary for the computation to complete, and then retrieves its result
 		System.out.println("Result: " + result);
 
-		executorService.shutdown();
-        while (!executorService.isTerminated()) {
-        	
+		// Graceful shutdown
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+            	executorService.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+        	executorService.shutdownNow();
+            Thread.currentThread().interrupt();
         }
-        System.out.println("Finished all threads");  	
+        System.out.println("Finished all threads");  
 	}
 }
 
