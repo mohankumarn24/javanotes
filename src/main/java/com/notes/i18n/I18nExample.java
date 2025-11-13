@@ -25,6 +25,12 @@ public class I18nExample {
 }
 
 /*
+
+messages_en_US.properties:
+welcome=Hello {0}, you have {1} new messages.
+farewell=Goodbye
+
+output:
 Welcome message  : Hello Mohan, you have 5 new messages.
 Farewell message : Goodbye
 

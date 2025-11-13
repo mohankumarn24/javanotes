@@ -56,9 +56,9 @@ public class JavaOptional {
 		// B. orElse(), orElseGet(), orElseThrow()
 		String data = null;
 		String result = Optional.ofNullable(data).orElse("some data 1");							
-		System.out.println(result);														// some data 1
+		System.out.println(result);															// some data 1
 		result = Optional.ofNullable(data).orElseGet(() -> "some data 2");
-		System.out.println(result);														// some data 2
+		System.out.println(result);															// some data 2
 		try {
 			result = Optional.ofNullable(data).orElseThrow(() -> new RuntimeException("RTE"));	
 		} catch (RuntimeException ex) {
@@ -101,8 +101,8 @@ public class JavaOptional {
 	
 	// C2. Conditional return With filter()
 	private static boolean priceIsInRange2(Modem modem2) {
-		return Optional.ofNullable(modem2)											// optinal[modem] or Optional.empty. if Optional.empty, map & filters are skipped
-						.map(Modem::getPrice)										// optional[20]  or Optional.empty. if Optional.empty, filters are skipped
+		return Optional.ofNullable(modem2)													// optinal[modem] or Optional.empty. if Optional.empty, map & filters are skipped
+						.map(Modem::getPrice)												// optional[20]  or Optional.empty. if Optional.empty, filters are skipped
 						.filter(p -> p >= 10)
 						.filter(p -> p <= 15)
 						.isPresent();
@@ -116,7 +116,7 @@ public class JavaOptional {
 	    int size = listOptional
 	    				.map(List::size)
 	    				.orElse(0);
-	    System.out.println(size);														// 6								
+	    System.out.println(size);															// 6								
 	}
 	
 	// D2. Transforming Value With map()
@@ -127,7 +127,7 @@ public class JavaOptional {
 	    int len = nameOptional
 	    			.map(String::length)
 	    			.orElse(0);
-	    System.out.println(len);														// 8	
+	    System.out.println(len);															// 8	
 	}
 	
 	// D3. Transforming Value With map()
@@ -137,13 +137,13 @@ public class JavaOptional {
 	    boolean correctPassword = passwordOptional
 	    							.filter(pass -> pass.equals("password"))
 	    							.isPresent();
-	    System.out.println(correctPassword);											// false
+	    System.out.println(correctPassword);												// false
 
 	    correctPassword = passwordOptional
 	    							.map(String::trim)
 	    							.filter(pass -> pass.equals("password"))
 	    							.isPresent();
-	    System.out.println(correctPassword);											// true	    
+	    System.out.println(correctPassword);												// true	    
 	}
 	
 	// E1. Chaining Optionals in Java 8
@@ -154,7 +154,7 @@ public class JavaOptional {
 	      .filter(Optional::isPresent)
 	      .map(Optional::get)
 	      .findFirst();
-	    System.out.println(found); 														// Optional[hello]
+	    System.out.println(found); 															// Optional[hello]
 	}
 	
 	// E2. Chaining Optionals in Java 8
@@ -171,7 +171,7 @@ public class JavaOptional {
 	            .map(Optional::get)
 	            .findFirst();
 
-	    System.out.println(found); 														// Optional[hello]
+	    System.out.println(found); 															// Optional[hello]
 	}
 	
 	// E3. Chaining Optionals in Java 8
@@ -185,7 +185,7 @@ public class JavaOptional {
 	      .filter(Optional::isPresent)
 	      .map(Optional::get)
 	      .findFirst();
-	    System.out.println(found);														// Optional[hello]
+	    System.out.println(found);															// Optional[hello]
 	}				
 	
 	// E4. Chaining Optionals in Java 8
@@ -200,7 +200,7 @@ public class JavaOptional {
 	      .map(Optional::get)
 	      .findFirst()
 	      .orElseGet(() -> "default");
-	    System.out.println(found);														// default 
+	    System.out.println(found);															// default 
 	}
 	
 	private static Optional<String> getEmpty() {

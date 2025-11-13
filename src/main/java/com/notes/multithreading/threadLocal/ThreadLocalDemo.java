@@ -1,5 +1,8 @@
 package com.notes.multithreading.threadLocal;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 /*
  * Thread-local variables are variables that are local to each thread. 
  * They allow us to store data that is specific to a particular thread, ensuring that each thread has its own independent copy of the variable.
@@ -13,7 +16,9 @@ public class ThreadLocalDemo {
 
 		@Override
 		public void run() {
-			threadLocal.set((int) (Math.random() * 50D));
+			// threadLocal.set((int) (Math.random() * 50D));
+			// threadLocal.set(new Random().nextInt(500)); 							// 0-499
+			threadLocal.set(ThreadLocalRandom.current().nextInt(50));				// 0-49
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -33,6 +38,15 @@ public class ThreadLocalDemo {
 		t2.start();
 	}
 }
+
+/*
+ * - Math.random() → returns something like 0.73842
+ * - (int) 0.73842 → becomes 0
+ * 
+ * so,
+ * - Math.random() * 50D → returns something like 36.921
+ * - (int) 36.921 → becomes 36
+ */
 
 /*
 ThreadLocal variables are special kinds of variables created and provided by the Java ThreadLocal class. 
