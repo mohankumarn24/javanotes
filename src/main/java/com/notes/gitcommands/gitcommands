@@ -25,7 +25,8 @@ git merge branch1                   	// merge changes done in branch1 to master
 
 git log				    				// view change history
 
-
+git fetch --prune						// cleaning up local Git branches that no longer exist on remote
+										// make local Git references are up-to-date with the remote repository
 -----------------------------------------------------------------------------------------------
 // add remote repository
 git remote add origin <https://github.com/userName/repoName.git>
@@ -50,3 +51,41 @@ git branch -d branch1                	// git branch -D branch1 => force delete
 
 // delete remote branch
 git push origin --delete branch1
+
+-----------------------------------------------------------------------------------------------
+// git fetch vs git pull
+
+git fetch
+ - Downloads commits, branches, and tags from the remote repository
+ - Does NOT modify your working files or local branches
+ - Updates only your remote-tracking branches (e.g., origin/main)
+ - Safe to run anytime—no merge conflicts possible
+ 
+Use when:
+ - You want to see what’s changed on the remote before integrating it
+ - You want to review changes, diff, or merge manually
+ 
+git fetch
+git diff origin/main
+git merge origin/main
+
+
+git pull
+ - Performs git fetch + integration (merge or rebase)
+ - Automatically updates your local branch with remote changes
+ - Can modify your working directory
+ - Can cause merge conflicts
+ 
+Use when:
+ - You’re ready to immediately bring your local branch up to date with the remote
+ - You don’t need to inspect the changes first
+ 
+Default behavior:
+git pull = git fetch + git merge
+
+Summary Table:
+| Command     | Fetch changes? | Update local branch?  | Safe?        | Might cause conflicts? |
+| ----------- | -------------- | --------------------- | ------------ | ---------------------- |
+| `git fetch` | ✔️ Yes         | ❌ No                  | ✔️ Very safe | ❌ No                  |
+| `git pull`  | ✔️ Yes         | ✔️ Yes (merge/rebase)  | ⚠️ Depends   | ✔️ Yes                 |
+ 
