@@ -25,6 +25,7 @@ class Student implements Comparable<Student> {
         return id + " - " + name;
     }
 }
+
 // comparator, If you dont need this, use lambda functions
 class NameComparator implements Comparator<Student> {
     @Override

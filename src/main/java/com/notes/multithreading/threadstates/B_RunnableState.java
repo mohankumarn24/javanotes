@@ -13,5 +13,4 @@ public class B_RunnableState {
 		t.start(); 								// Thread t moves to RUNNABLE state
 		System.out.println(t.getState()); 		// Likely outputs: RUNNABLE
 	}
-	
 }

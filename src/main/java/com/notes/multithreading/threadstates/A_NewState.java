@@ -12,5 +12,4 @@ public class A_NewState {
 		
 		System.out.println(t.getState()); 		// Outputs: NEW
 	}
-
 }

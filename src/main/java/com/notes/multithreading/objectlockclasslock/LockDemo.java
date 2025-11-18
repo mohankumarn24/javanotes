@@ -18,31 +18,32 @@ class BankAccount {
 	        // this is using object lock
 	    }
 	    */
-		
-		/*
-		// Manually added class lock to non-static method for global synchronization
-	    synchronized (LockDemo.class) {
-	        // this is using class lock
-	    }
-	    */
 	}
 
 	// Static method (class/static lock) - protects static shared data
 	public static synchronized void showBankPolicy() {
-		// class lock (Demo.class)
+		// class lock (BankAccount.class)
 		System.out.println(Thread.currentThread().getName() + " reading bank policy");
 		try { Thread.sleep(1000); } catch (Exception e) { e.printStackTrace(); }
+		
+		/*
+		// class lock using synchronized block for global synchronization
+	    synchronized (BankAccount.class) {
+	        // this is using class lock
+	    }
+	    */
 	}
 }
 
-public class LockDemo1 {
+public class LockDemo {
 	public static void main(String[] args) {
 
 		BankAccount acc1 = new BankAccount();
 		BankAccount acc2 = new BankAccount();
 
 		Thread t1 = new Thread(() -> acc1.deposit(50), "T1");		// If 2 threads use the same account object, only one can deposit at a time.
-		Thread t2 = new Thread(() -> acc1.deposit(30), "T2");		// If 2 threads use the same account object, only one can deposit at a time.
+		Thread t2 = new Thread(() -> acc1.deposit(30), "T2");		// If 2 threads use the same account object, only one can deposit at a time.	
+																	// 'acc1' is shared across threads 'T1' and 'T2'. Use ThreadLocal, if you don't want to share variable 'acc1' across threads
 		Thread t3 = new Thread(() -> acc2.deposit(20), "T3");		// If they use different accounts, both can deposit simultaneously.
 
 		Thread t4 = new Thread(BankAccount::showBankPolicy, "T4");	// Only one thread in the entire JVM can execute this at a time.
