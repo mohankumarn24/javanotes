@@ -1,6 +1,8 @@
 package com.notes.multithreading.threadstates;
 
-public class D2_WaitingStateDemo {
+import java.time.Instant;
+
+public class D2_WaitingStateDemoNotify {
 	
     public static void main(String[] args) throws InterruptedException {
 
@@ -11,11 +13,12 @@ public class D2_WaitingStateDemo {
         Thread t1 = new Thread(() -> {
             synchronized (lock) {
                 try {
-                	lock.wait(); 									// Thread enters WAITING state
-                    // lock.wait(5000);								// Thread enters TIMED_WAITING state
+                	lock.wait(); 									// Thread enters WAITING state and releases lock
+                    // lock.wait(5000);								// Thread enters TIMED_WAITING state and releases lock
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                	Thread.currentThread().interrupt();
                 }
+                System.out.println(Thread.currentThread().getName() + " got notified at time: " + Instant.now().toString()); 	// System.currentTimeMillis()
             }
         });
         
@@ -28,9 +31,12 @@ public class D2_WaitingStateDemo {
         
         t1.start();
         Thread.sleep(100);
-
         System.out.println("t1 state: " + t1.getState()); 			// Outputs: WAITING
         
+        // main thread sleeps for 5 seconds
+        Thread.sleep(5000);
+        
+        // notify
         t2.start();												    // thread t2 sends notify on lock object. Use thread t2 or main thread
         Thread.sleep(100);
         
