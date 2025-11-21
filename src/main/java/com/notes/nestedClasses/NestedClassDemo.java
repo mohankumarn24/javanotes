@@ -1,46 +1,36 @@
 package com.notes.nestedClasses;
 
 public class NestedClassDemo {
-
+	
 	public static void main(String[] args) {
 		
-		nestedClasses();
-	}
-
-	private static void nestedClasses() {
-
-		// Accesing non-static variables/methods
+		// -- Accesing non-static variables/methods --
 		// Outer class
-		OuterClass outerClass = new OuterClass();
-		System.out.println("Calling outer class non-static variable: " + outerClass.x);
-		outerClass.displayOuter();
-		// System.out.println("Calling outer class static variable: " + OuterClass.xx);
-		// OuterClass.displayOuterStatic();
+		Outer outer = new Outer();
+		System.out.println("Calling outer class non-static variable: " + outer.x);
+		outer.displayOuter();
 
 		// Inner class
-		OuterClass.InnerClass innerClass = outerClass.new InnerClass();
-		// OuterClass.InnerClass innerClass = (new OuterClass()).new InnerClass();
-		System.out.println("Calling inner non-static class non-static variable: " + innerClass.y);
-		innerClass.displayInner();
-		// System.out.println("Calling inner non-static class static variable: " + OuterClass.InnerClass.yy);
-		// OuterClass.InnerClass.displayInnerStatic();
+		Outer.Inner inner = outer.new Inner();
+		// Outer.Inner inner = (new Outer()).new Inner();
+		System.out.println("Calling inner non-static class non-static variable: " + inner.y);
+		inner.displayInner();
 		
 		// Inner static class
-		OuterClass.InnerStaticClass innerStaticClass = new OuterClass.InnerStaticClass();
-		System.out.println("Calling inner static class non-static variable: " + innerStaticClass.z);
-		innerStaticClass.displayInner();
-		// System.out.println("Calling inner static class static variable: " + OuterClass.InnerStaticClass.zz);		
-		// OuterClass.InnerStaticClass.displayInnerStatic();
-		
-		// Accesing static variables/methods
+		Outer.InnerStatic innerStatic = new Outer.InnerStatic();
+		System.out.println("Calling inner static class non-static variable: " + innerStatic.z);
+		innerStatic.displayInner();
 		System.out.println();
-		System.out.println("Calling outer class static variable: " + OuterClass.xx);
-		OuterClass.displayOuterStatic();
 		
-		System.out.println("Calling inner non-static class static variable: " + OuterClass.InnerClass.yy);
-		OuterClass.InnerClass.displayInnerStatic();
 		
-		System.out.println("Calling inner static class static variable: " + OuterClass.InnerStaticClass.zz);		
-		OuterClass.InnerStaticClass.displayInnerStatic();
+		// -- Accesing static variables/methods --
+		System.out.println("Calling outer class static variable: " + Outer.xx);
+		Outer.displayOuterStatic();
+		
+		System.out.println("Calling inner non-static class static variable: " + Outer.Inner.yy);
+		Outer.Inner.displayInnerStatic();
+		
+		System.out.println("Calling inner static class static variable: " + Outer.InnerStatic.zz);		
+		Outer.InnerStatic.displayInnerStatic();
 	}
 }

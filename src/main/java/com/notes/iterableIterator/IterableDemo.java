@@ -1,6 +1,8 @@
 package com.notes.iterableIterator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 // Custom Iterable
 class NameCollection implements Iterable<String> {
@@ -41,6 +43,7 @@ public class IterableDemo {
 	public static void main(String[] args) {
 		String[] names = { "Mohan", "John", "Sam" };
 
+		// custom collection similar to 'List<String> list = new ArrayList<>();'
 		NameCollection nameCollection = new NameCollection(names);
 
 		// using iterator

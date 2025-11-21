@@ -73,7 +73,7 @@ public class Streams {
 		
 		// D
 		System.out.println("\n---D---");
-		List<String> stringList2 = Arrays.asList("Armani", "Balenciaga", "Chanel");		// Returns an Optional describing some element of the stream, or anempty Optional if the stream is empty. 
+		List<String> stringList2 = Arrays.asList("Armani", "Balenciaga", "Chanel");		// Returns an Optional describing some element of the stream, or an empty Optional if the stream is empty
 		String value = stringList2.stream().findAny().get();
 		System.out.println(String.format("findAny: %s", value));
 		

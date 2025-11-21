@@ -5,7 +5,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-// comparable
+/*
+@FunctionalInterface
+public interface Comparable<T> {
+	public int compareTo(T o);
+}
+
+@FunctionalInterface
+public interface Comparator<T> {
+	int compare(T o1, T o2);
+}
+*/
+
+// Natural sorting
 class Student implements Comparable<Student> {
     int id;
     String name;
@@ -26,7 +38,8 @@ class Student implements Comparable<Student> {
     }
 }
 
-// comparator, If you dont need this, use lambda functions
+// Custom sorting
+// lambda:  Comparator<String> comparator = (s1, s2) -> s1.compareTo(s2);
 class NameComparator implements Comparator<Student> {
     @Override
     public int compare(Student a, Student b) {
@@ -85,7 +98,7 @@ Use Comparable:
    Example: String, Integer, LocalDate already implement Comparable.
 
 Use Comparator:
- - When you want multiple sorting options
+ - When you want multiple sorting options, custom sorting
  - When you cannot modify the class (e.g., class from 3rd party library)
  - When you want clean separation between object structure and sorting logic
 */

@@ -51,6 +51,7 @@ public class Product {
         return id.equals(product.id); 				// Products are equal if they have the same ID
     }
     
+    // Contract: when two objects are same, then obviously their hashCode must be same
     @Override
     public int hashCode() {
         return Objects.hash(id);					// Hash code is based only on the ID
