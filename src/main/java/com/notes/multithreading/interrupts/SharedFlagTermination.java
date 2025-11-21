@@ -16,7 +16,8 @@ public class SharedFlagTermination {
 					Thread.sleep(1000);
 				}
 			} catch (InterruptedException e) {
-				// Handle interruption gracefully
+				// Handle interruption if needed
+				// Thread.currentThread().interrupt(); // Restore interrupted status
 				System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 			}
 

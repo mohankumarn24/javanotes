@@ -15,7 +15,7 @@ public class ThreadLocalDemo {
 		private ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
 		// private ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 0); 			// initialized with zero
 		
-		// Normal variables = shared across threads if the object is shared
+		// Normal variables = shared across threads if the object is shared. Ex: 'count' variable in 'counter'
 		// ThreadLocal = one value per thread, even when the object is shared
 
 		@Override

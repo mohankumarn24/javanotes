@@ -14,7 +14,8 @@ public class InterruptExample {
 					Thread.sleep(1000);
 				}
 			} catch (InterruptedException e) {
-				// Handle interruption gracefully
+				// Handle interruption if needed
+				// Thread.currentThread().interrupt(); // Restore interrupted status
 				System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 			}
 			System.out.println("Thread terminated gracefully: " + Thread.currentThread().getName());
