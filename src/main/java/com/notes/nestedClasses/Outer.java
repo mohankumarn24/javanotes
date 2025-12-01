@@ -7,9 +7,9 @@ public class Outer {
 		System.out.println("Calling outer class non-static method");
 	}
 	
-	public static int xx = 1000;												// OuterClass.xx;
+	public static int xx = 1000;												// Outer.xx;
 	public static void displayOuterStatic() {
-		System.out.println("Calling outer class static method");				// OuterClass.displayOuterStatic();
+		System.out.println("Calling outer class static method");				// Outer.displayOuterStatic();
 	}	
 
 	// Inner class
@@ -19,9 +19,9 @@ public class Outer {
 			System.out.println("Calling inner non-static class non-static method");
 		}
 		
-		public static int yy = 2000;											// OuterClass.InnerClass.yy;
+		public static int yy = 2000;											// Outer.Inner.yy;
 		public static void displayInnerStatic() {
-			System.out.println("Calling inner non-static class static method"); // OuterClass.InnerClass.displayInnerStatic();
+			System.out.println("Calling inner non-static class static method"); // Outer.Inner.displayInnerStatic();
 		}
 	}
 	
@@ -32,9 +32,9 @@ public class Outer {
 			System.out.println("Calling inner static class non-static method");
 		}
 		
-		public static int zz = 3000;											// OuterClass.InnerStaticClass.zz;
+		public static int zz = 3000;											// Outer.InnerStatic.zz;
 		public static void displayInnerStatic() {
-			System.out.println("Calling inner static class static method"); 	// OuterClass.InnerStaticClass.displayInnerStatic();
+			System.out.println("Calling inner static class static method"); 	// Outer.InnerStatic.displayInnerStatic();
 		}
 	}
 }

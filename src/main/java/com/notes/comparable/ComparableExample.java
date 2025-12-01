@@ -29,7 +29,8 @@ class Student implements Comparable<Student> {
 
     @Override
     public int compareTo(Student other) {
-        return this.id - other.id;  			// ascending order
+        // return this.id > other.id ? 1 : -1;
+    	return this.id - other.id;  						// ascending order
     }
 
     @Override
@@ -87,6 +88,16 @@ public class ComparableExample {
         // 5. Comparator using Lambda (ID descending)
         System.out.println("\nComparator − ID Desc (Lambda)");
         Collections.sort(list, (a, b) -> b.id - a.id);
+        System.out.println(list);
+        
+        // 6a. Comparator using Lambda (ID ascending)
+        System.out.println("\nComparator − ID Desc (Lambda)");
+        Collections.sort(list, (a, b) -> a.id > b.id ? 1 : -1);
+        System.out.println(list);
+
+        // 6b. Comparator using Lambda (ID descending)
+        System.out.println("\nComparator − ID Desc (Lambda)");
+        Collections.sort(list, (a, b) -> b.id > a.id ? 1 : -1);
         System.out.println(list);
     }
 }
