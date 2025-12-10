@@ -4,11 +4,6 @@ public class PrimitiveDataTypes {
 
 	public static void main(String[] args) {
 		
-		primitiveDataTypes();
-	}
-	
-	private static void primitiveDataTypes() {
-		
 		// values overflows
 		boolean booleanFlag = true;
 		char charA = 'A';   				// char charA = 65;  -> char A
@@ -30,3 +25,14 @@ public class PrimitiveDataTypes {
 		System.out.println(String.format("double %f", doubleNum));
 	}
 }
+
+/*
+boolean true
+char A
+byte -128
+short -32768
+int -2147483648
+long 100
+float 100.000000
+double 100.000000
+*/

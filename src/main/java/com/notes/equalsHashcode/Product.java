@@ -49,6 +49,8 @@ public class Product {
 		// 4. Compare significant fields
         Product product = (Product) obj;
         return id.equals(product.id); 				// Products are equal if they have the same ID
+        											// Never allow mutable fields inside equals() or hashCode().
+        											// If you used name or price (mutable), and they changed after insertion, the map could lose the key permanently.
     }
     
     // Contract: when two objects are same, then obviously their hashCode must be same

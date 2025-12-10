@@ -1,6 +1,8 @@
 package com.notes.equalsHashcode;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /*
@@ -17,37 +19,47 @@ import java.util.Set;
  */
 
 public class ProductExample {
-	
-    public static void main(String[] args) {
-        // Create a set of products
-        Set<Product> inventory = new HashSet<>();
-        
-        // Add a product to our inventory
-        Product laptop1 = new Product("P123", "Laptop", 999.99);
-        inventory.add(laptop1);
-        
-        // Create another product object with the same ID but different price
-        Product laptop2 = new Product("P123", "Laptop", 1099.99);
-        
-        // Check if the product exists in our inventory
-        System.out.println("Inventory size: " + inventory.size());          		 		// 1
-        System.out.println("Contains laptop2: " + inventory.contains(laptop2)); 	 		// true, because of overriden equals() and hashCode() methods
-        
-        // Add the second laptop - it won't be added since it's considered equal
-        inventory.add(laptop2);
-        System.out.println("Inventory size after adding laptop2: " + inventory.size()); 	// Still 1
-               
-        // my analysis
-        System.out.println("\n-- my analysis --");
-        Set<Product> products = new HashSet<>();
+    public static void main(String[] args) {    	
+        // List 1
+    	System.out.println("List1:");
+        Set<Product> set = new HashSet<>();								// can't use 'List' as it allows duplicates
         Product p1 = new Product("1", " Reynolds Pen", 10);
         Product p2 = new Product("1", " Reynolds Pen", 12);
-        products.add(p1);
-        p1.equals(p2); 			// override default implementation of equals() to check id instead of ==
-        products.contains(p2); 	// As per hash contract between equals() and hashCode(), whenever two objects are equals, then their hash code must be equal. So, override hashCode() as well
+        set.add(p1);        
+        System.out.println("p1.equals(p2)	 : " + p1.equals(p2));		// override default implementation of 'equals()' to check 'id' instead of '=='
+        System.out.println("set.contains(p2) : " + set.contains(p2));	// As per hash contract between 'equals()' and h'ashCode()', whenever two objects are equals, then their hash code must be equal.
+        																// So, override 'hashCode()' as well
         
-        System.out.println("p1.equals(p2): " + p1.equals(p2));
-        System.out.println("products.contains(p2): " + products.contains(p2));
+        // Map 1
+        System.out.println("\nMap1:");
+        Map<Product, String> map1 = new HashMap<>();
+        map1.put(p1, "Value1");
+        map1.put(p2, "Value2");
+        System.out.println("p1.equals(p2) 	: " + p1.equals(p2));		// true
+        System.out.println("map1.size()   	: " + map1.size());     	// 1
+        System.out.println("map1.get(p1)  	: " + map1.get(p1));    	// "Value1"
+        System.out.println("map1.get(p2)  	: " + map1.get(p2));    	// "Value2"
+        /*
+         * Why does p2 overwrite p1? Because in a HashMap:
+		 *   - It hashes the key -> finds the bucket
+         *   - It checks equals() to see whether the key already exists
+         *   - If key exists, it updates the value
+         *   - If not, it inserts a new entry
+         *   - Since p1.equals(p2) -> same key, the second put() overwrites the first
+		 *
+         * If 'Product' is used as a key in a map:
+         *   - Never allow mutable fields inside equals() or hashCode().
+         *   - In your design, you used only id (final) -> safe.
+         *   If you used name or price (mutable), and they changed after insertion, the map could lose the key permanently.
+        */        
+        
+        // Map 2
+        // What if Product were used as a Map value? Then Product.equals() doesn’t matter because keys matter, not values
+        System.out.println("\nMap2:");
+        Map<String, Product> map2 = new HashMap<>();
+        map2.put("A", p1);
+        map2.put("B", p2);
+        System.out.println("map2.size()  	: " + map2.size());     	// 2
     }
 }
 

@@ -91,20 +91,11 @@ public class Streams {
 		Optional<Integer> sum = Stream.of(1, 2, 3, 4, 5).reduce((a, b) -> a + b);		// Optional<Integer> product = Stream.of(2, 3, 4).reduce((a, b) -> a * b); // 24
 		sum.ifPresent(System.out::println);  											// Output: 15
 		
-		String joined1 = String.join(" ", "one", "two", "three");
-		System.out.println("joined1: " + joined1);										// joined1: one two three
-		String joined2 = String.join(", ", "one", "two", "three");
-		System.out.println("joined2: " + joined2);										// joined2: one, two, three
-		String joined3 = String.join(" ", Arrays.asList("one", "two", "three"));	
-		System.out.println("joined3: " + joined3);										// joined3: one two three
-		
 		// F
 		System.out.println("\n---F---");
 		List<String> a = Arrays.asList("a1", "b1", "c1");
 		List<String> b = Arrays.asList("a2", "b2", "c2");
 		Stream<String> concatStream = Stream.concat(a.stream(), b.stream());
 		concatStream.map(t -> t.toUpperCase()).forEach(t -> System.out.println(t));
-		
-		System.out.println(String.join(" ", Arrays.asList("one", "two", "three")));
 	}
 }

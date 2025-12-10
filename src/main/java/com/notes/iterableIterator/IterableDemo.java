@@ -43,7 +43,7 @@ class NameCollection implements Iterable<String> {
 // Custom Iterator
 class NameIterator implements Iterator<String> {
 	private String[] data;
-	private int index = 0;								// Has an internal index
+	private int index = 0;								// has an internal index
 
 	public NameIterator(String[] data) {
 		this.data = data;

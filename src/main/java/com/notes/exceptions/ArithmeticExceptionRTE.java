@@ -15,9 +15,8 @@ public class ArithmeticExceptionRTE {
 		int y = 0;
 		System.out.println(x / y);
 		/*
-		 	Exception in thread "main" java.lang.ArithmeticException: / by zero
-		 			at com.notes.exceptions.ArithmeticExceptionRTE.main(ArithmeticExceptionRTE.java:16)
-		 */
-				
+		 * 	Exception in thread "main" java.lang.ArithmeticException: / by zero
+		 *			at com.notes.exceptions.ArithmeticExceptionRTE.main(ArithmeticExceptionRTE.java:16)
+		 */	
 	}
 }

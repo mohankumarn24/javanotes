@@ -40,7 +40,7 @@ class Student implements Comparable<Student> {
 }
 
 // Custom sorting
-// lambda:  Comparator<String> comparator = (s1, s2) -> s1.compareTo(s2);
+// lambda:  Comparator<String> comparator = (a, b) -> a.name.compareTo(b.name);
 class NameComparator implements Comparator<Student> {
     @Override
     public int compare(Student a, Student b) {
@@ -49,6 +49,9 @@ class NameComparator implements Comparator<Student> {
 }
 
 // Comparator class for ID Descending
+// lambda:  Comparator<String> comparator = (a, b) -> b.id - a.id;
+// lambda:  Comparator<String> comparator = (a, b) -> b.id > a.id ? 1 : -1;
+// lambda:  Comparator<String> comparator = (a, b) -> Integer.compare(b.id, a.id);
 class IdDescComparator implements Comparator<Student> {
     @Override
     public int compare(Student a, Student b) {

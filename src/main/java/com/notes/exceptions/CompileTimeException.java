@@ -128,8 +128,9 @@ public class TestCTE {
 		System.out.println(dateFormat.parse("2025-01-15"));
 		
 		// Two options to handle CTE here: use 'try-catch' or 'throws' in this method's signature
-		// 1. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
-		// 2. if you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
+		// 1. If you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
+		//    Note: if you use 'try-catch' and re-throw exception in 'try-catch' block, then use 'throws' in this method's signature
+		// 2. If you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
 	}
 	
 	private static void methodA() throws ParseException {
@@ -137,8 +138,9 @@ public class TestCTE {
 		methodB();
 		
 		// Two options to handle CTE here: use 'try-catch' or 'throws' in this method's signature
-		// 3. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
-		// 4. if you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
+		// 3. If you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
+		//    Note: if you use 'try-catch' and re-throw exception in 'try-catch' block, then use 'throws' in this method's signature
+		// 4. If you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
 	}
 	
 	
@@ -147,8 +149,9 @@ public class TestCTE {
 		methodA();
 		
 		// Two options to handle CTE here: use 'try-catch' or 'throws' in this method's signature
-		// 5. if you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
-		// 6. if you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
+		// 5. If you use 'try-catch' here, then no need of 'throws' in this method's signature. Exception handled here itself
+		//    Note: if you use 'try-catch' and re-throw exception in 'try-catch' block, then use 'throws' in this method's signature
+		// 6. If you DO NOT use 'try-catch' here, then use 'throws' in this method's signature. Exception propogated to calling method (this approach is used in this example)
 	}
 }
 
@@ -172,6 +175,7 @@ public class TestRTE {
 			methodA();
 		} catch (Exception e) {
 			System.out.println("error occurred");
+			// throw e;									// use 'throws' in this method's signature
 		}
 	}
 }

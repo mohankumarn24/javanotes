@@ -1,56 +1,42 @@
-//http://blog.udacity.com/2015/06/a-beginners-git-github-tutorial.html
-
+// http://blog.udacity.com/2015/06/a-beginners-git-github-tutorial.html
 
 mkdir gitdir 			    			// create root directory for a git project
 cd gitdir		            			// go to the newly created directoey
 git init			    				// initialize github project repository
 
-touch test.c    		    			// create empty file
-git status    			    			// check status 
+// add remote repository
+git remote add origin <https://github.com/mohankumarn24/repoName.git>
 
-git add test.c  	  	    			// add test.c to stage  
-git commit -m "empty file created"  	// commit changes to master branch
-
-git branch                          	// list available branches
-
-git checkout -b branch1             	// create new branch branch1                        
-vi test.c                           	// make changes to test.c file in branch1
+// commands used regularly
+git branch                          	// list all available branches
+git checkout dev/feature 	          	// switch to branch dev/feature
+										// Create & switch to a new branch dev/feature => git checkout -b dev/feature 
+git pull origin dev/feature				// pull latest first
+                      
+vi Main.java                           	// make changes to Main.java file in dev/feature
 git status                          	// check status 
-git add test.c                      	// add test.c to stage
-git diff test,c                     	// gives diff between committed and not-committed file
-git commit -m "written c program"   	// commit changes to branch1
+git diff Main.java                     	// gives diff between committed and not-committed file
+
+git add Main.java                      	// add dev/feature to stage
+git commit -m "written Java program"   	// commit changes to dev/feature
+git push origin dev/feature				// push to your branch dev/feature
 
 git checkout master                 	// switch to master
-git merge branch1                   	// merge changes done in branch1 to master
+git pull origin master					// if master has moved ahead, pull latest first
+git merge dev/feature                  	// merge dev/feature into master
+git push origin master					// push the updated master
+										// or use => git push --force origin master
 
 git log				    				// view change history
-
-git fetch --prune						// cleaning up local Git branches that no longer exist on remote
-										// make local Git references are up-to-date with the remote repository
------------------------------------------------------------------------------------------------
-// add remote repository
-git remote add origin <https://github.com/userName/repoName.git>
- 
-// files copied from local system(master) to github server
-git checkout master
-git push origin master              	// or use => git push --force origin master		    
-              
-// files copied from github server to local system(branch1)
-git checkout branch1
-git pull origin branch1		    
+git fetch --prune						// Clean up local tracking references
 
 -----------------------------------------------------------------------------------------------
-// delete file
-git rm test.c
-
-// commit changes to branch
-git commit -a -m "Deleting files"
-
-// delete local branch
-git branch -d branch1                	// git branch -D branch1 => force delete
-
-// delete remote branch
-git push origin --delete branch1
+// delete commands
+git rm Main.java						// delete file
+git commit -m "Deleting files"			// commit changes to your branch
+git branch -d dev/feature               // delete local branch									 
+										// git branch -D dev/feature => force delete
+git push origin --delete dev/feature	// delete remote branch
 
 -----------------------------------------------------------------------------------------------
 // git fetch vs git pull
@@ -86,6 +72,6 @@ git pull = git fetch + git merge
 Summary Table:
 | Command     | Fetch changes? | Update local branch?  | Safe?        | Might cause conflicts? |
 | ----------- | -------------- | --------------------- | ------------ | ---------------------- |
-| `git fetch` | ✔️ Yes         | ❌ No                  | ✔️ Very safe | ❌ No                  |
-| `git pull`  | ✔️ Yes         | ✔️ Yes (merge/rebase)  | ⚠️ Depends   | ✔️ Yes                 |
+| 'git fetch' | ✔️ Yes         | ❌ No                  | ✔️ Very safe | ❌ No                  |
+| 'git pull'  | ✔️ Yes         | ✔️ Yes (merge/rebase)  | ⚠️ Depends   | ✔️ Yes                 |
  

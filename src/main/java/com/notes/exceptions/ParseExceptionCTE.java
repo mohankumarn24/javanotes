@@ -25,19 +25,25 @@ public class ParseExceptionCTE  {
 		 */
 		try {
 			Date dateCTEhandled = dateFormat.parse(dateString); 
-			System.out.println(dateCTEhandled);  // Sun Jan 01 00:00:00 IST 2023
+			System.out.println(dateCTEhandled);  				// Sun Jan 01 00:00:00 IST 2023
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			// throw e;											// add "throws ParseException"
+																// don't swallow the exception. Instead, rethrow to bubble up
+		} finally {
+			System.out.println("Finally block executed");		// always runs
 		}
 		
 		// Uncomment below line and check: if you uncomment below line, you cannot compile
 		// Date dateCTENotHandled = dateFormat.parse(dateString);
 		
 		/*
-			Exception in thread "main" java.lang.Error: Unresolved compilation problem: 
-					Unhandled exception type ParseException
-					at com.notes.exceptions.ParseExceptionCTE.main(ParseExceptionCTE.java:23)
+		 * Output:
+		 *	Exception in thread "main" java.lang.Error: Unresolved compilation problem: 
+		 *			Unhandled exception type ParseException
+		 *			at com.notes.exceptions.ParseExceptionCTE.main(ParseExceptionCTE.java:23)
+		 *  Finally block executed
 		*/
 	}
 }	
@@ -47,7 +53,7 @@ public class ParseExceptionCTE  {
  Topic: What happens to return value if exception occurs?
 ------------------------------------------------------------
 
-🧩 Case 1: Exception occurs BEFORE return statement
+Case 1: Exception occurs BEFORE return statement
 ----------------------------------------------------
 If an exception is thrown before the 'return' statement is executed,
 the method exits immediately — it never reaches the return statement.
@@ -63,15 +69,15 @@ Example:
 
 Result:
     - The method does NOT return anything.
-    - The exception propagates to the caller (unless caught).
+    - The exception propagates to the caller (unless caught)
 
 ------------------------------------------------------------
 
-🧩 Case 2: Exception is CAUGHT inside the method
+Case 2: Exception is CAUGHT inside the method
 ----------------------------------------------------
 If the method catches the exception, behavior depends on what happens next.
 
-✅ Option 1: Return a fallback value
+ Option 1: Return a fallback value
     public Object getData() {
         try {
             throw new RuntimeException("Oops!");
@@ -81,9 +87,9 @@ If the method catches the exception, behavior depends on what happens next.
         }
     }
 
-    → Caller gets null (or whatever fallback is returned).
+    → Caller gets null (or whatever fallback is returned)
 
-✅ Option 2: Rethrow exception
+ Option 2: Rethrow exception
     public Object getData() {
         try {
             throw new RuntimeException("Oops!");
@@ -92,11 +98,11 @@ If the method catches the exception, behavior depends on what happens next.
         }
     }
 
-    → Caller gets the exception. No return value is produced.
+    → Caller gets the exception. No return value is produced
 
 ------------------------------------------------------------
 
-🧩 Case 3: finally block and return
+Case 3: finally block and return
 ----------------------------------------------------
 If both 'try' and 'finally' are present, and return is inside 'try',
 the return value is computed first, then 'finally' executes.
@@ -121,7 +127,7 @@ However, if 'finally' itself throws an exception:
 
 ------------------------------------------------------------
 
-✅ Summary Table
+ Summary Table
 ------------------------------------------------------------
 | Situation                        | Return Value         | Exception Behavior           |
 |----------------------------------|----------------------|------------------------------|
@@ -136,7 +142,6 @@ In short:
 - If an exception happens before reaching 'return', the return never happens.
 - If exception is caught, you control what to return.
 - finally always runs, but if it throws, it overrides any pending return.
-
 ------------------------------------------------------------
 */
 
