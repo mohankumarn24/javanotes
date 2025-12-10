@@ -2,9 +2,7 @@ package com.notes.multithreading.garbagecollection;
 
 public class GarbageCollectionDemo {
 
-	/**
-	 * Note: Neither finalization nor garbage collection is guaranteed
-	 */
+	// Note: Neither finalization nor garbage collection is guaranteed
 	@Override
 	protected void finalize() {
 		System.out.println("object is garbage collected");
@@ -21,3 +19,8 @@ public class GarbageCollectionDemo {
 		System.gc();
 	}
 }
+
+/*
+object is garbage collected
+object is garbage collected
+*/

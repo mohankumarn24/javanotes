@@ -1,6 +1,5 @@
 package com.notes.multithreading.objectlockclasslock;
 
-// chatgpt.com/share/6915f004-4930-8004-87f7-576b2599cadf
 class BankAccount {
 
 	private int balance = 100;

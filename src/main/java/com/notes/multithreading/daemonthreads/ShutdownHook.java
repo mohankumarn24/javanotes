@@ -7,5 +7,4 @@ public class ShutdownHook extends Thread {
 		
 		System.out.println("Shutdownhook executed successfully");
 	}
-
 }

@@ -34,3 +34,11 @@ public class D1_BlockedStateDemo {
         System.out.println("t2 state: " + t2.getState()); 	// Outputs: BLOCKED
     }
 }
+
+/*
+ - A thread can enter the synchronized block only if it owns the lock
+ - To demonstrate BLOCKED state, both threads must lock on the same object
+ - If we removed 'synchronized(lock)' or used 'synchronized (this)', then 
+ 	-- Each thread gets its own lock, and no blocking happens:
+ 	-- They will run independently
+*/

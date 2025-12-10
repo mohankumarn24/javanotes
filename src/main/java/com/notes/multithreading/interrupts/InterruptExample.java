@@ -1,6 +1,5 @@
 package com.notes.multithreading.interrupts;
 
-// https://medium.com/@satyendra.jaiswal/thread-interruption-and-termination-in-java-9a90d20661b3
 public class InterruptExample {
 	
 	static class WorkerThread extends Thread {
@@ -8,7 +7,7 @@ public class InterruptExample {
 		@Override
 		public void run() {
 			try {
-				while (!Thread.interrupted()) {
+				while (!Thread.interrupted()) {			// clears the flag
 					// Perform a time-consuming task
 					System.out.println("Working..." + Thread.currentThread().getName());
 					Thread.sleep(1000);

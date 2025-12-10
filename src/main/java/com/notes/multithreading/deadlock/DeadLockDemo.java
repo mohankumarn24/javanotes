@@ -1,7 +1,9 @@
 package com.notes.multithreading.deadlock;
 
-// https://www.tpointtech.com/deadlock-in-java
 public class DeadLockDemo {
+	
+	// private static final String resource1 = "foo";
+	// private static final String resource2 = "bar";
 	
 	public static void main(String[] args) {
 		
@@ -11,10 +13,10 @@ public class DeadLockDemo {
 		// t1 tries to lock resource1 then resource2
 		Thread t1 = new Thread(() -> {
 			synchronized (resource1) {
-				System.out.println("Thread 1: locked resource 1"); // first print statement
+				System.out.println("Thread 1: locked resource 1");
 				try { Thread.sleep(100); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 				synchronized (resource2) {
-					System.out.println("Thread 1: locked resource 2"); // second print statement
+					System.out.println("Thread 1: locked resource 2");
 				}
 			}
 		});
@@ -22,10 +24,10 @@ public class DeadLockDemo {
 		// t2 tries to lock resource2 then resource1
 		Thread t2 = new Thread(() -> {
 				synchronized (resource2) {
-					System.out.println("Thread 2: locked resource 2"); // third print statement
+					System.out.println("Thread 2: locked resource 2");
 					try { Thread.sleep(100); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 					synchronized (resource1) {
-						System.out.println("Thread 2: locked resource 1"); // fourth print statement
+						System.out.println("Thread 2: locked resource 1");
 					}
 				}
 		});
@@ -34,3 +36,8 @@ public class DeadLockDemo {
 		t2.start();
 	}
 }
+
+/*
+Thread 2: locked resource 2
+Thread 1: locked resource 1
+*/

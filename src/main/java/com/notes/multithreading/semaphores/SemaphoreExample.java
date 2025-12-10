@@ -38,8 +38,8 @@ public class SemaphoreExample {
         ParkingLot parkingLot = new ParkingLot(PARKING_SLOTS);
 
         // 2 cars trying to park but only 1 can at a time
-        for (int i = 1; i <= NUMBER_OF_CARS; i++) {
-            String carName = "Car-" + i;
+        for (int i = 0; i < NUMBER_OF_CARS; i++) {
+            String carName = "Car-" + (i + 1);
             new Thread(() -> parkingLot.parkCar(carName), carName).start();
         }
     }

@@ -6,7 +6,7 @@ public class ShutdownHookDemo {
 		
 		Thread t1 = new WorkerThread();
 		Runtime runtime = Runtime.getRuntime();    
-		runtime.addShutdownHook(t1);
+		runtime.addShutdownHook(t1);						// shutdownhook. Invoked automatically on JVM shutdown
 		// Runtime.getRuntime().addShutdownHook(t1);
 		// Runtime.getRuntime().removeShutdownHook(t1);
 		

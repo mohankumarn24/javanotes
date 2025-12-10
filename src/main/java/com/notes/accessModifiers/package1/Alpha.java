@@ -44,6 +44,15 @@ public class Alpha {
 		System.out.println(String.format("defualt: %d", alpha.p));
 		System.out.println(String.format("public: %d", alpha.q));
 		System.out.println(String.format("private: %d", alpha.r));
-		System.out.println(String.format("protected: %d", alpha.s));		
+		System.out.println(String.format("protected: %d", alpha.s));	
+		
+		// Local variables cannot have access modifiers (Access modifiers apply to members of a class, not inside a method)
+		// Inside methods, variables belong to the stack, so visibility control doesn't apply.
+		
+		// String str = "hello";							// valid
+		// final String str = "hello";						// valid
+		// static String str = "hello";						// CTE: Illegal modifier for parameter str; only final is permitted
+		// private final String str = "hello";				// CTE: Illegal modifier for parameter str; only final is permitted
+		// private static final String str = "hello";		// CTE: Illegal modifier for parameter str; only final is permitted
 	}
 }

@@ -1,6 +1,5 @@
 package com.notes.multithreading.interrupts;
 
-// https://medium.com/@satyendra.jaiswal/thread-interruption-and-termination-in-java-9a90d20661b3
 public class SharedFlagTermination {
 	
 	private static volatile boolean shutdownRequested = false;
