@@ -67,6 +67,8 @@ public class IterableDemo {
 
 		// custom collection similar to 'List<String> list = new ArrayList<>();'
 		NameCollection nameCollection = new NameCollection(names);
+		
+		// names[0] = "Mohan updated"; 					// NOTE: if you modify array, nameCollection also gets modified
 
 		// using iterator
 		System.out.println("Using iterator:");

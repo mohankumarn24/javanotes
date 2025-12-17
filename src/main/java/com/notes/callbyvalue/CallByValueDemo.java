@@ -33,28 +33,41 @@ public class CallByValueDemo {
 	public static void main(String[] args) {
 		
 		// 1. Call by Value in Java (for Primitives):
+		// NOT MODIFIED
 		int x = 10;
 		modifyPrimitives(x);
-		System.out.println(x); // Output: 10
+		System.out.println(x); 												// Output: 10
 		// ✔️ x is not changed in the main method because only a copy of x is modified.
 		
-		String str = "Original string";
+		// string
+		// NOT MODIFIED
+		String str = "hello";
 		modifyString(str);
-		System.out.println(str);
+		System.out.println(str);											// Original string
+		
+		// string array
+		// MODIFIED
+		// String[] strArray = {"Delhi", "Mumbai", "Bombay", "Goa"};	  	// same as below
+		String[] strArray = new String[] {"Delhi", "Mumbai", "Bombay", "Goa"};
+		modifyStringArray(strArray);
+		System.out.println(String.join(", ", strArray));
 		
 		// 2.a. Call by Value (Object References):
+		// MODIFIED
 		Person person1 = new Person("Alice");
 		modifyObject(person1);
-		System.out.println(person1.getName()); // Output: Bob
+		System.out.println(person1.getName()); 								// Output: Bob
 		// ✔️ Object content is changed because both the method and caller share the same object reference.
 				
 		// 2.b. Call by Value (Object References):
-        Person person2 = new Person("Alice");
+		// NOT MODIFIED
+        Person person2 = new Person("Bob");
         reassignObject(person2);
-        System.out.println(person2.getName()); // Output: Alice
+        System.out.println(person2.getName()); 								// Output: Alice
         // ❌ The original reference p in main() is unchanged because the method only changed its copy of the reference.
         
         // 3. collections
+        // MODIFIED
         System.out.println();
         List<Person> persons = new ArrayList<>();
         persons.add(new Person("Alice"));
@@ -64,35 +77,40 @@ public class CallByValueDemo {
 	}
 
 	static void modifyPrimitives(int num) {
-		num = 20; // This only modifies the local copy
+		num = 100; 															// This only modifies the local copy
 	}
 	
 	static void modifyString(String str) {
-		str = "Modified string!!"; // This only modifies the local copy
+		str = "hello modified"; 											// This only modifies the local copy
+	}
+	
+	static void modifyStringArray(String[] strArray) {
+		strArray[0] = "Delhi Modified"; 									// MODIFIES the string index value
 	}
 	
 	static void modifyObject(Person person) {
-		person.setName("Bob"); // Modifies the object that the reference points to
+		person.setName("Alice Modified");									// MODIFIES the object that the reference points to
 	}
 	
     static void reassignObject(Person person) {
-        person = new Person(); // Reassigning reference (has no effect outside)
-        person.setName("Bob");
+        person = new Person(); 												// Reassigning reference (has no effect outside)
+        person.setName("Bob Modified");
     }
     
     static void modifyCollections(List<Person> persons) {
-    	persons.add(new Person("Bob"));
+    	persons.add(new Person("Bob new"));									// MODIFIES collection
     }
 }
 
 /*
 10
-Original string
+hello
+Delhi Modified, Mumbai, Bombay, Goa
+Alice Modified
 Bob
-Alice
 
 Person [name=Alice]
-Person [name=Bob]
+Person [name=Bob new]
  */
 
 

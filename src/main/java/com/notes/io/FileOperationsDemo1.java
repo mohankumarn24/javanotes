@@ -11,15 +11,15 @@ import java.nio.file.StandardOpenOption;
 public class FileOperationsDemo1 {
 
 	public static void main(String[] args) {
-		Path filePath = Paths.get("example1.txt");			// file created in project root path
+		Path path = Paths.get("example.txt");										// file created in project root path
 
 		// 1️. Create a file
 		try {
-			if (Files.notExists(filePath)) {				// Files.exists(filePath)
-				Files.createFile(filePath);					// Files.delete(filePath);
-				System.out.println("1. File created: " + filePath.getFileName());
+			if (Files.notExists(path)) {											// Files.exists(filePath)
+				Files.createFile(path);												// Files.delete(filePath);
+				System.out.println("1. File created: " + path.getFileName());
 			} else {
-				System.out.println("1. File already exists: " + filePath.getFileName());
+				System.out.println("1. File already exists: " + path.getFileName());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -29,10 +29,10 @@ public class FileOperationsDemo1 {
 		// 2️. Write to a file (overwrites if exists) (Write whole file)
 		String content = "Hello, Java 11 File Operations!\n";
 		try {
-			Files.writeString(filePath, content, StandardCharsets.UTF_8,
-					StandardOpenOption.CREATE,					// creates the file if it doesn’t exist
-					StandardOpenOption.TRUNCATE_EXISTING,		// clears the file before writing
-					StandardOpenOption.WRITE);					// writes to the file
+			Files.writeString(path, content, StandardCharsets.UTF_8,
+					StandardOpenOption.CREATE,										// creates the file if it doesn’t exist
+					StandardOpenOption.TRUNCATE_EXISTING,							// clears the file before writing
+					StandardOpenOption.WRITE);										// writes to the file
 
 			System.out.println("2. File written successfully.");
 		} catch (IOException e) {
@@ -42,9 +42,9 @@ public class FileOperationsDemo1 {
 		// 3️. Append to a file
 		String moreContent = "Appending a second line.\n";
 		try {
-			Files.writeString(filePath, moreContent, StandardCharsets.UTF_8, 
-					StandardOpenOption.CREATE, 					// Create file if not exists
-					StandardOpenOption.APPEND);					// StandardOpenOption.TRUNCATE_EXISTING -> overwrites existing content
+			Files.writeString(path, moreContent, StandardCharsets.UTF_8, 
+					StandardOpenOption.CREATE, 										// Create file if not exists
+					StandardOpenOption.APPEND);										// StandardOpenOption.TRUNCATE_EXISTING -> overwrites existing content
 			System.out.println("3. File appended successfully.");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -52,22 +52,22 @@ public class FileOperationsDemo1 {
 
 		// 4️. Read from a file (Read whole file)
 		try {
-			String fileContent = Files.readString(filePath, StandardCharsets.UTF_8);
+			String fileContent = Files.readString(path, StandardCharsets.UTF_8);
 			System.out.println("\n4. File content:\n" + fileContent);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// 5️. Check if file exists
-		if (Files.exists(filePath)) {
-			System.out.println("5. File exists: " + filePath.getFileName());
+		if (Files.exists(path)) {
+			System.out.println("5. File exists: " + path.getFileName());
 		} else {
 			System.out.println("5. File does not exist.");
 		}
 
 		// 6️. Delete the file
 		try {
-			Files.delete(filePath);
+			Files.delete(path);
 			System.out.println("6. File deleted successfully.");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -76,13 +76,13 @@ public class FileOperationsDemo1 {
 }
 
 /*
-| Feature       | `readString`                               | `readAllLines`                                   |
+| Feature       | 'readString'                               | 'readAllLines'                                   |
 | ------------- | ------------------------------------------ | ------------------------------------------------ |
-| Returns       | `String`                                   | `List<String>`                                   |
+| Returns       | 'String'                                   | 'List<String>'                                   |
 | Ideal for     | Whole file as one string                   | Line-by-line processing                          |
 | Memory        | Entire file in memory                      | Entire file in memory                            |
 | Introduced    | Java 11                                    | Java 7                                           |
-| Example usage | `String content = Files.readString(path);` | `List<String> lines = Files.readAllLines(path);` |
+| Example usage | 'String content = Files.readString(path);' | 'List<String> lines = Files.readAllLines(path);' |
 */
 
 
