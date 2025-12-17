@@ -17,14 +17,14 @@ public class YieldDemo {
 }
 
 /*
+Thread-0 -> 1
+Thread-0 -> 2
+Thread-0 -> 3
 Thread-1 -> 1
+Thread-0 -> 4
+Thread-0 -> 5
 Thread-1 -> 2
 Thread-1 -> 3
 Thread-1 -> 4
-Thread-0 -> 1
 Thread-1 -> 5
-Thread-0 -> 2
-Thread-0 -> 3
-Thread-0 -> 4
-Thread-0 -> 5
 */

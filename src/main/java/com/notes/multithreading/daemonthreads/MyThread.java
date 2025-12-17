@@ -4,7 +4,6 @@ public class MyThread extends Thread {
 	
 	@Override
 	public void run() {
-		
 		if (Thread.currentThread().isDaemon()) {
 			while (true) {
 				System.out.println("Daemon thread running...");

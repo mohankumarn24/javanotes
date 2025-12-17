@@ -18,7 +18,7 @@ public class CompletableFutureExample {
 
 		// Attach callback (non-blocking)
 		future.thenApply(msg -> msg + " Processed").thenAccept(result -> System.out.println(result));
-		System.out.println("Main thread working..."); // runs even if above line is not completed
+		System.out.println("-- Main thread (start) --"); // runs even if above line is not completed
 		
 		// Blocking style (same as Future.get)
 		// System.out.println("Blocking result: " + future.get());
@@ -26,6 +26,8 @@ public class CompletableFutureExample {
 		
 		// Ensure main thread doesn’t exit early
 		Thread.sleep(3000);
+		
+		System.out.println(" -- Main thread (end) --"); // runs even if above line is not completed
 	}
 }
 

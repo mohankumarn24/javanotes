@@ -4,6 +4,6 @@ public class WorkerThread extends Thread {
 
 	@Override
 	public void run() {
-		System.out.println("shut down hook task completed");
+		System.out.println("shutdownhook task completed (shutdownhook is invoked automatically on JVM shutdown)");
 	}
 }
