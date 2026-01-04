@@ -23,6 +23,9 @@ public class StringOperations {
 		 *  Integer objects are cached from -128 to 127, causing '==' to behave inconsistently
 		 */
 		
+		System.out.println("Bearer <token>".substring(0, 7));			// "Bearer "
+		System.out.println("Bearer <token>".substring(7));				// "<token>"
+		
 		String message = "hello world";
 		
 		// 1. substring
@@ -75,12 +78,12 @@ public class StringOperations {
 
 		// 8. isEmpty vs isBlank (Java 11+)
 		System.out.println("\n8. isEmpty vs isBlank (Java 11+)");
-		String s81 = "";
 		String s82 = "   ";
+		String s81 = "";
 
-		System.out.println(s81.isEmpty());   							// true
-		System.out.println(s82.isEmpty());   							// false
 		System.out.println(s82.isBlank());   							// true
+		System.out.println(s82.isEmpty());   							// false
+		System.out.println(s81.isEmpty());   							// true	
 
 		// 9. trim vs strip
 		System.out.println("\n9. trim vs strip");
@@ -133,18 +136,18 @@ public class StringOperations {
 		// 15. String -> int
 		System.out.println("\n15. String -> int");
 		String numStr = "123";
-		int num = Integer.parseInt(numStr);								// String -> int
+		int num = Integer.parseInt(numStr);								// String -> int 							=> Integer.parseInt("123");
 		System.out.println(num);
 
 		// 16. String -> Integer
 		System.out.println("\n16. String -> Integer");
-		Integer numObj = Integer.valueOf(numStr);						// String -> Integer
+		Integer numObj = Integer.valueOf(numStr);						// String -> Integer						=> Integer.valueOf("123");
 		System.out.println(numObj);
 
-		// 17. int -> Strin; Integer -> String
+		// 17. int -> String; Integer -> String
 		System.out.println("\n17. int -> String; Integer -> String");
 		int value = 456;
-		String valueStr = String.valueOf(value);						// int -> String; Integer -> String
+		String valueStr = String.valueOf(value);						// int -> String; Integer -> String			=> String.valueOf(456);
 		// String valueStr = Integer.toString(value);					// int -> String
 		System.out.println(valueStr);
 

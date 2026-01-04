@@ -15,8 +15,8 @@ public class FileOperationsDemo1 {
 
 		// 1️. Create a file
 		try {
-			if (Files.notExists(path)) {											// Files.exists(filePath)
-				Files.createFile(path);												// Files.delete(filePath);
+			if (Files.notExists(path)) {											// Files.exists(path)
+				Files.createFile(path);												// Files.delete(path);
 				System.out.println("1. File created: " + path.getFileName());
 			} else {
 				System.out.println("1. File already exists: " + path.getFileName());
