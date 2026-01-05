@@ -4,6 +4,6 @@ public class ShutdownHook extends Thread {
 	
 	@Override
 	public void run() {
-		System.out.println("Shutdownhook invoked automatically on JVM shutdown");
+		System.out.println("-- shutdown hook invoked automatically on JVM shutdown --");
 	}
 }

@@ -1,6 +1,7 @@
 package com.notes.multithreading.sleepyield;
 
 class MyThread1 extends Thread {
+	@Override
     public void run() {
         System.out.println("Thread started: " + Thread.currentThread().getName());
         try {
