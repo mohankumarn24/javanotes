@@ -20,9 +20,9 @@ class BankAccount {
 	}
 
 	// Static method (class/static lock) - protects static shared data
-	public static synchronized void showBankPolicy() {
+	public static synchronized void printPassBook() {
 		// class lock (BankAccount.class)
-		System.out.println(Thread.currentThread().getName() + " reading bank policy");
+		System.out.println(Thread.currentThread().getName() + " printing pass book");
 		try { Thread.sleep(1000); } catch (Exception e) { e.printStackTrace(); }
 		
 		/*
@@ -45,8 +45,8 @@ public class LockDemo {
 																	// 'acc1' is shared across threads 'T1' and 'T2'. Use ThreadLocal, if you don't want to share variable 'acc1' across threads
 		Thread t3 = new Thread(() -> acc2.deposit(20), "T3");		// If they use different accounts, both can deposit simultaneously.
 
-		Thread t4 = new Thread(BankAccount::showBankPolicy, "T4");	// Only one thread in the entire JVM can execute this at a time.
-		Thread t5 = new Thread(BankAccount::showBankPolicy, "T5");	// Even if you have 100 account objects, they all share the class lock.
+		Thread t4 = new Thread(BankAccount::printPassBook, "T4");	// Only one thread in the entire JVM can execute this at a time.
+		Thread t5 = new Thread(BankAccount::printPassBook, "T5");	// Even if you have 100 account objects, they all share the class lock.
 
 		t1.start(); 		// object lock of acc1 used
 		t2.start(); 		// must WAIT for acc1's lock
@@ -57,10 +57,10 @@ public class LockDemo {
 }
 
 /* DO NOT REPLACE
-T4 reading bank policy			(class lock)
+T4 printing pass book			(class lock)
 T1 deposited. Balance = 150		(acc1 lock)
 T3 deposited. Balance = 120		(acc2 lock)   // runs in parallel
-T5 reading bank policy			(waited for class lock)
+T5 printing pass book			(waited for class lock)
 T2 deposited. Balance = 180		(waited for acc1 lock)
 */
 
