@@ -38,7 +38,7 @@ public class StringOperations {
 		System.out.println(message.indexOf("world"));					// 6
 		System.out.println(message.indexOf("world 123"));				// -1
 		
-		// 3. compareTo
+		// 3. compareTo (compareToIgnoreCase)							// equals, equalsIgnoreCase, compareTo, compareToIgnoreCase
 		System.out.println("\n3. compareTo");
 		System.out.println(message.compareTo("hello world"));			// 0
 		System.out.println(message.compareTo("hello"));					// 6
