@@ -38,3 +38,18 @@ public class BubbleSort {
 		System.out.println();
 	}
 }
+
+
+/*
+=> 9 8 6 | 5		iteration 0 < n - 1 (0 < 3):
+   8 9 6 | 5 		after swapping 9 & 8
+   8 6 9 | 5 		after swapping 9 & 6
+   8 6 5 | 9		after swapping 9 & 5
+   
+=> 8 6 | 5 9		iteration 1 < n - 1 (0 < 3):
+   6 8 | 5 9		after swapping 8 & 6
+   6 5 | 8 9		after swapping 8 & 5
+   
+=> 6 | 5 8 9		iteration 2 < n - 1 (0 < 3):
+   5 | 6 8 9		after swapping 6 & 5
+*/
