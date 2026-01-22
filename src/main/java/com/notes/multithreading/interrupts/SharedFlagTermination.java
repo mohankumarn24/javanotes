@@ -2,6 +2,8 @@ package com.notes.multithreading.interrupts;
 
 public class SharedFlagTermination {
 	
+	// When we use volatile keyword with a variable, all the threads read it's value directly from the memory and don't cache it. 
+	// This makes sure that the value read is the same as in the memory.
 	private static volatile boolean shutdownRequested = false;
 	
 	static class WorkerThread extends Thread {
