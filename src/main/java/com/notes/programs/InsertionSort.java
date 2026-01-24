@@ -47,3 +47,19 @@ public class InsertionSort {
 		System.out.println();
 	}
 }
+
+/*
+9 |8 6 5
+save key=8. compare 9 > 8? 	shift 9 towards right, j--	    :	9 9 6 5
+					 	 	j++, put 8 at correct position 	:	8 9 6 5
+
+8 9 |6 5
+save key=6. compare 9 > 6? 	shift 9 towards right, j--		:	8 9 9 5
+        	compare 8 > 6? 	shift 8 towards right, j-- 		:	8 8 9 5
+                     	 	j++, put 6 at correct position	:	6 8 9 5
+6 8 9| 5
+save key=5. compare 9 > 5? 	shift 9 towards right, j--		:	6 8 9 9
+        	compare 8 > 5? 	shift 8 towards right, j-- 		:	6 8 8 9
+        	compare 6 > 5? 	shift 6 towards right, j-- 		:	6 6 8 9
+                     	 	j++, put 5 at correct position	:	5 6 8 9
+*/
