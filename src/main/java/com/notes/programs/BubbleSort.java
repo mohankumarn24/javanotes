@@ -41,6 +41,18 @@ public class BubbleSort {
 
 
 /*
+Summary:
+ Repeatedly compare adjacent elements and swap them if they are in the wrong order. Largest elements “bubble” to the end
+
+Time Complexity:
+ Best: O(n) (already sorted with optimization)
+ Average: O(n²)
+ Worst: O(n²)
+
+Space Complexity:
+ O(1) (in-place)
+
+--
 => 9 8 6 | 5		iteration 0 < n - 1 (0 < 3):
    8 9 6 | 5 		after swapping 9 & 8
    8 6 9 | 5 		after swapping 9 & 6

@@ -49,6 +49,19 @@ public class InsertionSort {
 }
 
 /*
+Summary: 
+ You split the cards into two groups: the sorted cards and the unsorted cards. 
+ Then, you pick a card from the unsorted group and put it in the right place in the sorted group
+
+Time Complexity:
+ Best: O(n) (already sorted)
+ Average: O(n²)
+ Worst: O(n²)
+
+Space Complexity:
+ O(1) (in-place)
+
+--
 9 |8 6 5
 save key=8. compare 9 > 8? 	shift 9 towards right, j--	    :	9 9 6 5
 					 	 	j++, put 8 at correct position 	:	8 9 6 5
