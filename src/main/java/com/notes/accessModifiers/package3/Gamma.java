@@ -35,5 +35,10 @@ public class Gamma {
 		System.out.println(String.format("public: %d", alpha.q));
 		// System.out.println(String.format("private: %d", alpha.r));
 		// System.out.println(String.format("protected: %d", alpha.s));
+		
+		// alpha.defaultMethod();
+		alpha.publicMethod();
+		// alpha.privateMethod();
+		// alpha.protectedMethod();
 	}
 }

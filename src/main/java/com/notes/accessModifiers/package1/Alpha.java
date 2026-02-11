@@ -46,6 +46,11 @@ public class Alpha {
 		System.out.println(String.format("private: %d", alpha.r));
 		System.out.println(String.format("protected: %d", alpha.s));	
 		
+		alpha.defaultMethod();
+		alpha.publicMethod();
+		alpha.privateMethod();
+		alpha.protectedMethod();
+		
 		// Local variables cannot have access modifiers (Access modifiers apply to members of a class, not inside a method)
 		// Inside methods, variables belong to the stack, so visibility control doesn't apply.
 		
