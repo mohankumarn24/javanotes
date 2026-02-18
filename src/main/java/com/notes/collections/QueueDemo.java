@@ -33,7 +33,8 @@ public class QueueDemo {
 		// remove head
 		/*
 		System.out.println("\nremove head");
-		priorityQueue.poll();  								// returns null if the queue is empty
+		priorityQueue.poll();  								// returns null if the queue is empty. 
+															// If {22, 11, 33} are added to priorotyQueue, then priorityQueue.remove() will remove '11' and not '22'
 		priorityQueue.remove(); 							// throws an exception if the queue is empty
 															// If {22, 11, 33} are added to priorotyQueue, then priorityQueue.remove() will remove '11' and not '22'
 															// A PriorityQueue is not FIFO; it dequeues elements based on priority, not insertion order
@@ -43,16 +44,21 @@ public class QueueDemo {
 		*/  
 		
 		/*
-		 PriorityQueue Methods Overview
-
+		 PriorityQueue Methods Overview:
+		 
+		 PriorityQueue<Integer> queue = new PriorityQueue<>();
+		 queue.add(22);
+		 queue.add(11);
+		 queue.add(33);
+		 
 		 +-----------+----------------------+------------------+---------------------------------+
 		 | Method    | Returns head element | Removes element  | If queue is empty               |
 		 +-----------+----------------------+------------------+---------------------------------+
-		 | peek()    | ✅ Yes               | ❌ No            | returns null                     |
-		 | poll()    | ✅ Yes               | ✅ Yes           | returns null                     |
+		 | peek()    | ✅ Yes               | ❌ No            | returns null                     | 11
+		 | poll()    | ✅ Yes               | ✅ Yes           | returns null                     | removes 11
 		 +-----------+----------------------+------------------+---------------------------------+
-		 | element() | ✅ Yes               | ❌ No            | throws NoSuchElementException    |
-		 | remove()  | ✅ Yes               | ✅ Yes           | throws NoSuchElementException    |
+		 | element() | ✅ Yes               | ❌ No            | throws NoSuchElementException    | 11
+		 | remove()  | ✅ Yes               | ✅ Yes           | throws NoSuchElementException    | removes 11
 		 +-----------+----------------------+------------------+---------------------------------+
 		*/
 
