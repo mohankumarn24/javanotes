@@ -16,7 +16,7 @@ public class MapDemo {
 		Map<Integer, Integer> map = new HashMap<>();
 		map.put(1, 100);
 		map.put(2, 200);
-		map.put(3,  300);
+		map.put(3, 300);
 		
 		// iterate map
 		System.out.println("iterate map");
@@ -39,11 +39,11 @@ public class MapDemo {
 		
 		// Traversing Map using iterator
 		System.out.println("\nTraversing Map using iterator");
-		Set set = map.entrySet();// Converting to Set so that we can traverse
-		Iterator itr = set.iterator();
+		Set<Map.Entry<Integer, Integer>> set = map.entrySet();			// Returns a Set view of the map entries (key-value pairs) for traversal
+		Iterator<Map.Entry<Integer, Integer>> itr = set.iterator();		// Iterator<Map.Entry<Integer, Integer>> itr = map.entrySet().iterator();
 		while (itr.hasNext()) {
 			// Converting to Map.Entry so that we can get key and value separately
-			Map.Entry entry = (Map.Entry) itr.next();
+			Map.Entry<Integer, Integer> entry = itr.next();
 			System.out.println(entry.getKey() + " " + entry.getValue());
 		}
 	    

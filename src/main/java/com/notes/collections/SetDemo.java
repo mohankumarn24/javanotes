@@ -71,8 +71,8 @@ public class SetDemo {
 		// print lowest Value
 		System.out.println("\nLowest Value: " + treeSet.pollFirst());    // Retrieves and removes the first (lowest) element,or returns null if this set is empty.
 		
-		// print highest  Value
-		System.out.println("\nHighest Value: " + treeSet.pollLast());	//Retrieves and removes the first (lowest) element,or returns null if this set is empty.
+		// print highest Value
+		System.out.println("\nHighest Value: " + treeSet.pollLast());	 // Retrieves and removes the last (highest) element,or returns null if this set is empty.
 		
 	}
 }
