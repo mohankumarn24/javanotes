@@ -167,6 +167,7 @@ public class StringOperations {
 		System.out.println(trimmed);
 		
 		// 20. Note: Always use '.equals'
+		System.out.println("\n20.  20. Note: Always use '.equals'");
 		Integer intA = Integer.valueOf("100");
 		Integer intB = Integer.valueOf("100");
 
@@ -177,5 +178,20 @@ public class StringOperations {
 		Integer intD = Integer.valueOf("200");
 
 		System.out.println(intC == intD);        						// false. No cache here → two different objects
+		
+		// 21. Create new string from character array
+		System.out.println("\n21. Create new string from character array");
+		String str1 = "hello";											// original string
+
+		String str2 = new String();
+		StringBuilder sb2 = new StringBuilder();
+		for (char charValue : str1.toCharArray()) {
+			str2 = str2 + charValue;									// append to new string
+			sb2.append(charValue);										// append to StringBuilder
+		}
+
+		System.out.println(str2); 										// hello
+		System.out.println(new String(str1.toCharArray()));				// hello
+		System.out.println(sb2.toString()); 							// hello		
 	}
 }
