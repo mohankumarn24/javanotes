@@ -73,7 +73,7 @@ public class MapDemo {
          */
         
         /*********** LinkedHashMap  *************/
-        System.out.println("\nLinkedHashMap");
+        System.out.println("\nLinkedHashMap:");
         Map<Integer, String> lienkedHashMap = new LinkedHashMap<>();
         
         // Adding some student records to the LinkedHashMap  
@@ -89,7 +89,7 @@ public class MapDemo {
         
         
         /*********** LinkedHashMap  *************/
-        System.out.println("\nTreeMap");
+        System.out.println("\nTreeMap:");
         Map<Integer, String> treeMap = new TreeMap<>();
         
         // Adding some student records to the LinkedHashMap  

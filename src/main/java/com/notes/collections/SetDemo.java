@@ -17,7 +17,7 @@ public class SetDemo {
 		set.add("A");
 		set.add("B");
 		set.add("C");
-		set.add("A"); // duplicate not added
+		set.add("A"); 					// duplicate not added
 
 		// print HashSet
 		System.out.println("print HashSet");
@@ -29,7 +29,7 @@ public class SetDemo {
 		// remove element
 		// add and remove elment
 		System.out.println("\nadd and remove elment");
-		set.add("Z"); 		// supports addAll, removeIf, removeAll, clear
+		set.add("Z"); 					// supports addAll, removeIf, removeAll, clear
 		set.remove("Z");
 		set.forEach(str -> System.out.println(str));
 		

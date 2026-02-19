@@ -23,44 +23,44 @@ public class ArrayListDemo {
         
         // indexOf
         System.out.println("\nindexOf");
-        System.out.println(String.format("indexOf A: %s", list.indexOf("A")));
+        System.out.println(String.format("indexOf A: %s", list.indexOf("A")));	// gets index of first occurrence ie. 0
         
         // size
         System.out.println("\nsize");
         System.out.println(String.format("size: %d", list.size()));
         list.forEach(str ->  System.out.println(str));
 
-        // Print using for loop
+        // 1. Print using for loop
 		System.out.println("\nPrint using for loop");
 		for (int i = 0; i < list.size(); i++) {
 			System.out.println(list.get(i));
 		}
 
-		// Print using for-each loop
+		// 2. Print using for-each loop
 		System.out.println("\nPrint using for-each loop");
 		for (String str : list) {
 			System.out.println(str);
 		}
 		
-		// Print using iterator
+		// 3a. Print using iterator
 		System.out.println("\nPrint using iterator");
-		Iterator<String> iterator = list.iterator();
+		Iterator<String> iterator = list.iterator();			// or Iterator<String> iterator = list.listIterator();
 		while (iterator.hasNext()) {
 			System.out.println(iterator.next());
 		}
 		
-		// Print using list iterator
+		// 3b. Print using list iterator
 		System.out.println("\nPrint using list iterator");
 		ListIterator<String> listIterator = list.listIterator(list.size());
 		while (listIterator.hasPrevious()) {
 			System.out.println(listIterator.previous());
 		}
 		
-		// Print using forEach
+		// 4. Print using forEach
 		System.out.println("\nPrint using forEach");
 		list.forEach(str ->  System.out.println(str));
 		
-		// Print using forEachRemaining
+		// 5. Print using forEachRemaining
 		System.out.println("\nPrint using forEachRemaining");
 		Iterator<String> itr = list.iterator();
 		itr.forEachRemaining(str -> System.out.println(str));
@@ -108,7 +108,7 @@ public class ArrayListDemo {
 		list.forEach(str ->  System.out.println(str));
 		
 		// RetainAll
-		System.out.println("\nRetainAll"); // retain elements present in both list
+		System.out.println("\nRetainAll"); 						// retain elements present in both list
 		ArrayList<String> list3 = new ArrayList<>();
 		list3.add("A");
 		list3.add("X");
@@ -116,7 +116,7 @@ public class ArrayListDemo {
 		list.forEach(str ->  System.out.println(str));
         
 		// Clear
-		System.out.println("\nClear");	// remove all elements
+		System.out.println("\nClear");							// remove all elements
 		list.clear();
 		System.out.println("Is list emepty? " + list.isEmpty());
 	}

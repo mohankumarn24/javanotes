@@ -26,6 +26,13 @@ public class EnumDemo {
         
         Day day2 = Day.valueOf("MONDAY");
         System.out.println("\nUsed in RequestBody: " + day2);				// User sends "monday" in request body and we must ensure that it is valid value
+        
+        // Invalid value throws RTE
+        try {
+            Day day3 = Day.valueOf("UNKNOWN");        	
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());								// RTE: No enum constant com.notes.enums.Day.UNKNOWN
+        }
 	}
 }
 
