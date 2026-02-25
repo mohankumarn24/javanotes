@@ -8,7 +8,7 @@ import java.util.Date;
 // - Exception occurred during compile time. Cannot run the class. Solution: use try-catch or throws
 // - Checked exceptions are the exceptions that are checked at compile-time. This means that the compiler verifies that the code handles these
 //   exceptions either by catching them or declaring them in the method signature using the throws keyword. 
-public class ParseExceptionCTE  {
+public class A_ParseExceptionCTE  {
 
 	public static void main(String[] args) {
 		

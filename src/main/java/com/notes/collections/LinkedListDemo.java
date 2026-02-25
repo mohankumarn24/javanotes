@@ -44,7 +44,8 @@ public class LinkedListDemo {
 		// convert list to array
 		System.out.println("\nconvert list to array");
 		List<String> list2 = Arrays.asList("A", "B", "C");
-		String[] array = list2.toArray(new String[list2.size()]);
+		// String[] array = list2.toArray(new String[list2.size()]);
+		String[] array = list2.toArray(String[]::new);
 		for (String str : array) {
 			System.out.println(str);
 		}

@@ -1,7 +1,7 @@
 package com.notes.exceptions;
 
 // Infinite Recursion
-public class StackOverflowErrorDemo {
+public class C_StackOverflowErrorDemo {
 
 	public static void recursiveCall() {
 		recursiveCall(); // no base condition

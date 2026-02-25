@@ -18,12 +18,6 @@ public class MapDemo {
 		map.put(2, 200);
 		map.put(3, 300);
 		
-		// iterate map
-		System.out.println("iterate map");
-		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-			System.out.println(String.format("Key=%d and Value=%d", entry.getKey(), entry.getValue()));
-		}
-
 		Set<Integer> keySet = map.keySet();
 		boolean containsKey = map.containsKey(1);
 		boolean containsValue = map.containsValue(100);
@@ -32,6 +26,12 @@ public class MapDemo {
 		System.out.println("Keyset: " + keySet);
 		System.out.println("Is contains key 1: " + containsKey);
 		System.out.println("Is contains value 100: " + containsValue);
+		
+		// iterate map
+		System.out.println("iterate map");
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			System.out.println(String.format("Key=%d and Value=%d", entry.getKey(), entry.getValue()));
+		}
 
 		// forEach using Java 11
 		System.out.println("\nforEach using Java 11");

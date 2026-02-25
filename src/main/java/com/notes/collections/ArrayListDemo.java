@@ -49,8 +49,15 @@ public class ArrayListDemo {
 			System.out.println(iterator.next());
 		}
 		
-		// 3b. Print using list iterator
-		System.out.println("\nPrint using list iterator");
+		// 3b. Print using iterator
+		System.out.println("\nPrint using listIterator");
+		iterator = list.listIterator();
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
+		}
+		
+		// 3c. Print using list iterator
+		System.out.println("\nPrint using list iterator (reverse)");
 		ListIterator<String> listIterator = list.listIterator(list.size());
 		while (listIterator.hasPrevious()) {
 			System.out.println(listIterator.previous());
@@ -118,6 +125,9 @@ public class ArrayListDemo {
 		// Clear
 		System.out.println("\nClear");							// remove all elements
 		list.clear();
+		
+		// IsEmpty
+		System.out.println("\nIsEmpty");
 		System.out.println("Is list emepty? " + list.isEmpty());
 	}
 }

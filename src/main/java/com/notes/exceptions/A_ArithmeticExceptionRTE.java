@@ -5,7 +5,7 @@ package com.notes.exceptions;
 // - Unchecked exceptions, also known as runtime exceptions, are not checked at compile-time. 
 //   These exceptions usually occur due to programming errors, such as logic errors or incorrect assumptions in the code. 
 //   They do not need to be declared in the method signature using the throws keyword, making it optional to handle them
-public class ArithmeticExceptionRTE {
+public class A_ArithmeticExceptionRTE {
 
 	public static void main(String[] args) {
 
