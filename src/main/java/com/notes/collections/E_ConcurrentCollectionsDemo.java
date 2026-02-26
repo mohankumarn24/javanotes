@@ -34,6 +34,21 @@ public class E_ConcurrentCollectionsDemo {
         // Map
         concurrentHashMapExample();			// -- IMPORTANT --
         concurrentSkipListMapExample();		// Sorted Concurrent Map
+        
+        /*
+         * CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+         * 
+         * BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(3);
+         * BlockingDeque<String> deque = new LinkedBlockingDeque<>();
+         * ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>();
+         * 
+         * CopyOnWriteArraySet<Integer> set = new CopyOnWriteArraySet<>();
+         * ConcurrentSkipListSet<Integer> set = new ConcurrentSkipListSet<>();
+         * 
+         * ConcurrentHashMap<String, String> orders = new ConcurrentHashMap<>();
+         * ConcurrentSkipListMap<Integer, String> map = new ConcurrentSkipListMap<>();
+         * 
+         */
     }
 
     /* ---------------------------------------------------
