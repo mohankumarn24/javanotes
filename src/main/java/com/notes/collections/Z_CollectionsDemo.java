@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class CollectionsDemo {
+public class Z_CollectionsDemo {
 
 	public static void main(String[] args) {
 		

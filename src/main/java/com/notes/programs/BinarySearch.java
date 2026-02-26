@@ -58,3 +58,17 @@ public class BinarySearch {
 		}
 	}
 }
+
+/*
+--------------------------------------------------------
+SEARCH / SORT
+--------------------------------------------------------
+	 Algorithm        | Time Complexity | Space Complexity                         
+	------------------|-----------------|------------------------------------------
+	 Bubble Sort      | O(n²)           | O(1)                                     
+	 Selection Sort   | O(n²)           | O(1)                                     
+	 Insertion Sort   | O(n²)           | O(1)                                     
+	 Merge Sort       | O(n log n)      | O(n)                                     
+	 Radix Sort       | O(n × k)        | O(n + k)                                 
+	 Binary Search    | O(log n)        | O(1) (iterative) / O(log n) (recursive)  	 
+*/

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class ArrayListDemo {
+public class A1_ArrayListDemo {
 
 	public static void main(String[] args) {
 

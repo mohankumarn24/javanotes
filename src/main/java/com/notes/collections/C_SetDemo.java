@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.TreeSet;
 
-public class SetDemo {
+public class C_SetDemo {
 
 	public static void main(String[] args) {
 

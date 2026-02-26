@@ -5,7 +5,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
-public class QueueDemo {
+public class B_QueueDemo {
 	
 	public static void main(String[] args) {
 		

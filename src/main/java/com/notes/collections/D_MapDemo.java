@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class MapDemo {
+public class D_MapDemo {
 
 	public static void main(String[] args) {
 
