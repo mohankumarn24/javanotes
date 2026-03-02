@@ -16,15 +16,20 @@ import java.util.HashMap;
 
 public class Java17Features {
 
+	// var someNum = 100; 						// CTE: 'var' is not allowed here
+	
     public static void main(String[] args) {
+    	
         textBlockDemo();
         recordDemo();
         sealedClassDemo();
+        varDemo();
         switchDemo();
         instanceofDemo();
         patternMatchingDemo();
-        varDemo();
         helpfulNullPointerDemo();
+        
+        // not Java 17 features
         optionalDemo();
         immutableCollectionsDemo();
         mapEnhancementDemo();
@@ -150,22 +155,37 @@ public class Java17Features {
     // AFTER (Java 17) — only Circle, Rectangle, Triangle are allowed. Period.
     //
     // Each permitted subtype MUST be one of:
-    //   1. record / final class  — implicitly or explicitly final, nobody extends further
-    //   2. sealed class          — further restricted with its own permits list
-    //   3. non-sealed class      — opened back up, anyone can extend freely
     //
-    sealed interface Shape permits Circle, Rectangle, Triangle {}
+    //   1. record (implicitly final) — most common for data carriers
+    //          record Circle(double radius) implements Shape {}
+    //          // Records are implicitly final and CANNOT be extended
+    //
+    //   2. sealed class — further restricted with its own permits list
+    //          sealed class Triangle implements Shape permits IsoscelesTriangle {}
+    //
+    //   3. non-sealed class — hierarchy opened back up
+    //          non-sealed class Triangle implements Shape {}
+    //
+    // NOTE:
+    // - record CANNOT be final / sealed / non-sealed explicitly
+    // - record CANNOT extend another class (it already extends java.lang.Record)
+    //
+    // Ex: Can be used to permit only a few payment gateways instead of everything
+    
+    sealed interface Shape permits Circle, Rectangle, Triangle {}		// can be interface or class
 
-    // 1. record — implicitly final (most common for simple data shapes)
+    // 1. record — implicitly final (most common for simple data shapes). We cannot extend these classes
     record Circle   (double radius)         implements Shape {}
     record Rectangle(double w, double h)    implements Shape {}
     record Triangle (double base, double h) implements Shape {}
 
     // 2. sealed subtype example (commented — would need its own permitted class):
     //    sealed class Triangle implements Shape permits IsoscelesTriangle {}
-    //    final class IsoscelesTriangle extends Triangle {}   // only this is allowed
-
-    // 3. non-sealed subtype example (commented — opens hierarchy back up):
+    //    final class IsoscelesTriangle extends Triangle {}   	// If extending a class, the subclass must be final / sealed / non-sealed
+    															// If implementing a sealed interface, the implementing CLASS
+    															// If implementing a sealed interface, the implementing CLASS
+       
+    // 3. non-sealed subtype example (commented - opens hierarchy back up):
     //    non-sealed class Triangle implements Shape {}
     //    class AnyTriangle extends Triangle {}               // anyone can extend now
 
@@ -190,9 +210,66 @@ public class Java17Features {
          */
     }
 
+    
+    // ════════════════════════════════════════════════════════════════════════════
+    // 4. var — Local Variable Type Inference (LVTI). Type assigned at compile time
+    // ════════════════════════════════════════════════════════════════════════════
+    static void varDemo() {
+        System.out.println("\n=== 7. VAR ===");
 
+        // int a;											// allowed. int a = 8; -> optional
+        // var b;											// CTE.     var b = 8; -> mandatory
+        
+        // int a[] = new int[] {1, 2, 3};					// allowed
+        // var b[] = new int[] {1, 2, 3};					// CTE: 'var' is not allowed as an element type of an array
+        
+        // String var = "hello";							// variable names allowed, but class names not allowed
+        // Java17Features var = new Java17Features();		// allowed
+        
+        // BEFORE (Java 8/11) — type repeated on both sides
+        List<String> listBefore = new ArrayList<String>();
+        listBefore.add("Java 8");
+        System.out.println("Before: " + listBefore);
+
+        // AFTER (Java 17) — compiler infers type from right-hand side
+        var listAfter = new ArrayList<String>(); // inferred as ArrayList<String>
+        listAfter.add("Java 17");
+
+        // Most useful with long generic types — saves repetition on the left side
+        // Before:
+        Map<String, List<Map<Integer, String>>> complexBefore = new HashMap<>();
+
+        // After — right side already tells the compiler the type:
+        var complexAfter = new HashMap<String, List<Map<Integer, String>>>();
+
+        // Put something in both so they're "used" — avoids compiler warnings
+        complexBefore.put("key", new ArrayList<>());
+        complexAfter.put("key", new ArrayList<>());
+
+        for (var item : listAfter) {
+            System.out.println("After item: " + item);
+        }
+
+        /*
+         * TIPS:
+         *  - var is compile-time inference — NOT dynamic typing like JavaScript
+         *  - Type locked at declaration:  var a = "hi"; a = 2; <- COMPILE ERROR
+         *  - CANNOT use for: method params, return types, class fields
+         *  - var a;         <- ERROR (no initializer)
+         *  - var a = null;  <- ERROR (null has no type to infer)
+         *  - var is not a keyword — it's a reserved type name
+         *
+         *  Q: Is var dynamic typing?
+         *  A: NO. Type is fixed at compile time. Java is still statically typed.
+         *
+         *  Q: Can you use var for method parameters?
+         *  A: NO. Method signatures are API contracts — types must be explicit.
+         */
+    }
+    
+    
     // ══════════════════════════════════════════════════════════
-    // 4. SWITCH — Statement (Java 8) vs Expression (Java 17)
+    // 5. SWITCH — Statement (Java 8) vs Expression (Java 17)
     // ══════════════════════════════════════════════════════════
     enum Season { SPRING, SUMMER, AUTUMN, WINTER }
 
@@ -234,11 +311,21 @@ public class Java17Features {
         int numLettersAfter = switch (day) {
             case "MONDAY", "FRIDAY", "SUNDAY"  -> 6;
             case "TUESDAY"                     -> 7;
+            // case "TUESDAY"                  -> { yield 7; }
             case "THURSDAY", "SATURDAY"        -> 8;
             case "WEDNESDAY"                   -> 9;
             default                            -> -1;
         };
-        System.out.println("After: " + numLettersAfter);
+        System.out.println("After (->): " + numLettersAfter);
+        
+        int numLettersAfter2 = switch (day) {				// if using ':' use 'yield 6'
+        case "MONDAY", "FRIDAY", "SUNDAY"  : yield 6;
+        case "TUESDAY"                     : yield 7;
+        case "THURSDAY", "SATURDAY"        : yield 8;
+        case "WEDNESDAY"                   : yield 9;
+        default                            : yield -1;
+        };
+        System.out.println("After (yield): " + numLettersAfter2);
 
         // ── yield: return value from a block {} inside switch expression ──
         String result = switch (day) {
@@ -268,7 +355,8 @@ public class Java17Features {
             case SPRING -> "Plant";
             case SUMMER -> "Swim";
             case AUTUMN -> "Harvest";
-            case WINTER -> "Stay in";  // <- no default needed!
+            case WINTER -> "Stay in";  // <- no default needed!. 
+            						   // If all values not mentioned, we get CTE: "A Switch expression should cover all possible values"
         };
         System.out.println("Season before: " + activityBefore + " | after: " + activityAfter);
 
@@ -297,7 +385,7 @@ public class Java17Features {
 
 
     // ══════════════════════════════════════════════════════════
-    // 5. PATTERN MATCHING FOR instanceof
+    // 6. PATTERN MATCHING FOR instanceof
     // ══════════════════════════════════════════════════════════
     static void instanceofDemo() {
         System.out.println("\n=== 5. PATTERN MATCHING instanceof ===");
@@ -339,7 +427,7 @@ public class Java17Features {
 
 
     // ══════════════════════════════════════════════════════════
-    // 6. PATTERN MATCHING — instanceof chain (Java 17 way)
+    // 7. PATTERN MATCHING — instanceof chain (Java 17 way)
     //    Note: switch on Object/types is Java 21, NOT Java 17
     // ══════════════════════════════════════════════════════════
     static void patternMatchingDemo() {
@@ -384,54 +472,6 @@ public class Java17Features {
          *  Q: Why not use switch for this in Java 17?
          *  A: Java 17 switch only supports int/String/enum.
          *     switch(obj) { case Circle c -> ... } needs Java 21.
-         */
-    }
-
-
-    // ══════════════════════════════════════════════════════════
-    // 7. var — Local Variable Type Inference
-    // ══════════════════════════════════════════════════════════
-    static void varDemo() {
-        System.out.println("\n=== 7. VAR ===");
-
-        // BEFORE (Java 8/11) — type repeated on both sides
-        List<String> listBefore = new ArrayList<String>();
-        listBefore.add("Java 8");
-        System.out.println("Before: " + listBefore);
-
-        // AFTER (Java 17) — compiler infers type from right-hand side
-        var listAfter = new ArrayList<String>(); // inferred as ArrayList<String>
-        listAfter.add("Java 17");
-
-        // Most useful with long generic types — saves repetition on the left side
-        // Before:
-        Map<String, List<Map<Integer, String>>> complexBefore = new HashMap<>();
-
-        // After — right side already tells the compiler the type:
-        var complexAfter = new HashMap<String, List<Map<Integer, String>>>();
-
-        // Put something in both so they're "used" — avoids compiler warnings
-        complexBefore.put("key", new ArrayList<>());
-        complexAfter.put("key", new ArrayList<>());
-
-        for (var item : listAfter) {
-            System.out.println("After item: " + item);
-        }
-
-        /*
-         * TIPS:
-         *  - var is compile-time inference — NOT dynamic typing like JavaScript
-         *  - Type locked at declaration:  var a = "hi"; a = 2; <- COMPILE ERROR
-         *  - CANNOT use for: method params, return types, class fields
-         *  - var a;         <- ERROR (no initializer)
-         *  - var a = null;  <- ERROR (null has no type to infer)
-         *  - var is not a keyword — it's a reserved type name
-         *
-         *  Q: Is var dynamic typing?
-         *  A: NO. Type is fixed at compile time. Java is still statically typed.
-         *
-         *  Q: Can you use var for method parameters?
-         *  A: NO. Method signatures are API contracts — types must be explicit.
          */
     }
 
@@ -558,36 +598,92 @@ public class Java17Features {
 
         Map<String, List<String>> map = new HashMap<>();
 
+        // ─────────────────────────────────────────────
         // BEFORE — verbose null-check pattern
+        // ─────────────────────────────────────────────
         if (!map.containsKey("roles")) {
             map.put("roles", new ArrayList<>());
         }
         map.get("roles").add("ADMIN");
 
-        // AFTER — computeIfAbsent: creates entry only if absent, then returns it
+        // ─────────────────────────────────────────────
+        // AFTER
+        // 1. putIfAbsent (EAGER creation)
+        // 	  Value is created EVEN if key already exists
+        // ─────────────────────────────────────────────
+        List<String> auditLog = new ArrayList<>();
+        auditLog.add("LOGIN");
+        
+        map.putIfAbsent("audit", auditLog);              										// inserted
+        map.putIfAbsent("audit", new ArrayList<>());     										// new list created, but ignored
+        System.out.println("audit:       " + map.get("audit"));									// audit:       [LOGIN]
+        // ⚠️ Example of eager execution
+        // map.putIfAbsent("x", expensiveMethod()); 											// expensiveMethod() ALWAYS runs
+        
+        // ─────────────────────────────────────────────
+        // 2. computeIfPresent
+        //    Executes ONLY if key already exists
+        // ─────────────────────────────────────────────
+        map.computeIfPresent("roles", (k, v) -> {
+            v.add("USER");   																	// modify existing value as key "roles=[ADMIN]" is already present
+            return v;        																	// must return updated value
+        });
+        System.out.println("roles after computeIfPresent (add): " + map.get("roles"));			// roles after computeIfPresent (add): [ADMIN, USER]
+
+        // ─────────────────────────────────────────────
+        // computeIfPresent — removal use case
+        // Returning null REMOVES the entry
+        // ─────────────────────────────────────────────
+        map.computeIfPresent("roles", (k, v) -> {
+            v.remove("USER");
+            return v.isEmpty() ? null : v;
+        });
+        System.out.println("roles after computeIfPresent (remove): " + map.get("roles"));		// roles after computeIfPresent (remove): [ADMIN]
+        
+        // ─────────────────────────────────────────────
+        // 3. computeIfAbsent (LAZY creation)
+        //    Creates value ie., 'new ArrayList<>()' ONLY if key is absent
+        // ─────────────────────────────────────────────
         map.computeIfAbsent("permissions", k -> new ArrayList<>()).add("READ");
-        map.computeIfAbsent("permissions", k -> new ArrayList<>()).add("WRITE"); // reuses existing list
+        map.computeIfAbsent("permissions", k -> new ArrayList<>()).add("WRITE"); 				// reuses existing list
+        System.out.println("permissions after computeIfAbsent: " + map.get("permissions"));		// permissions after computeIfAbsent: [READ, WRITE]
+        
+        map.computeIfPresent("permissions", (k, v) -> {
+            v.remove("WRITE");
+            return v.isEmpty() ? null : v;
+        });
+        System.out.println("permissions after computeIfPresent: " + map.get("permissions"));	// permissions after computeIfPresent: [READ]
 
-        System.out.println("roles:       " + map.get("roles"));
-        System.out.println("permissions: " + map.get("permissions"));
-
-        // getOrDefault — also very useful
+        // ─────────────────────────────────────────────
+        // 4. getOrDefault
+        // ─────────────────────────────────────────────
         // BEFORE
         List<String> rolesBefore = map.containsKey("roles") ? map.get("roles") : new ArrayList<>();
 
         // AFTER
         List<String> rolesAfter = map.getOrDefault("roles", new ArrayList<>());
-        System.out.println("getOrDefault: " + rolesAfter);
+        System.out.println("getOrDefault: " + rolesAfter);										// getOrDefault: [ADMIN]
 
         /*
          * TIPS:
-         *  Q: computeIfAbsent vs putIfAbsent?
-         *  A: putIfAbsent(k, v)        — v is ALWAYS created even if key exists (wasteful)
-         *     computeIfAbsent(k, k->v) — lambda runs ONLY if key is absent (preferred)
          *
-         *  Q: Classic use case for computeIfAbsent?
-         *  A: Building a Map<Key, List<Value>> (grouping):
-         *     map.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
+         * putIfAbsent(k, v)
+         *   - Value created eagerly
+         *   - Simple default insertion
+         *
+         * computeIfAbsent(k, k -> v)
+         *   - Value created lazily
+         *   - BEST for Map<K, List<V>> grouping
+         *
+         * computeIfPresent(k, (k, v) -> newV)
+         *   - Runs only if key exists
+         *   - Can update OR remove (return null)
+         *
+         * getOrDefault(k, default)
+         *   - Read-only fallback
+         *
+         * Classic pattern:
+         * map.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
          */
     }
 
