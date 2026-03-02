@@ -774,3 +774,116 @@ public class Java17Features {
      *  A: putIfAbsent always creates the value. computeIfAbsent is lazy — preferred.
      */
 }
+
+/*
+/*
+ * ============================================================
+ *  JAVA 17 — MAJOR ENHANCEMENTS (Compared to Java 11)
+ * ============================================================
+ *
+ * Java 17 is an LTS release and is the most common upgrade
+ * target from Java 8 / Java 11 in enterprise projects.
+ *
+ * ------------------------------------------------------------
+ * 1. LANGUAGE ENHANCEMENTS
+ * ------------------------------------------------------------
+ *
+ * ▶ Records
+ *   - Introduced immutable data carriers with minimal boilerplate
+ *   - Auto-generates constructor, accessors, equals, hashCode, toString
+ *   - All components are implicitly private final
+ *   - Records are implicitly final and extend java.lang.Record
+ *   - Best for DTOs, value objects, API models
+ *
+ * ▶ Sealed Classes & Interfaces
+ *   - Allows restricting which classes/interfaces can extend or implement a type
+ *   - Improves domain modeling and exhaustiveness checks
+ *   - Permitted subclasses must be final, sealed, or non-sealed
+ *
+ * ▶ Pattern Matching for instanceof
+ *   - Combines type check and cast into one step
+ *   - Eliminates redundant casts and ClassCastException risk
+ *     Example: if (obj instanceof String s) { ... }
+ *
+ * ▶ Switch Expressions
+ *   - switch can now return values
+ *   - Arrow syntax (->) prevents fall-through bugs
+ *   - Supports multi-label cases and yield keyword
+ *   - Compiler enforces exhaustiveness for enums
+ *
+ * ▶ Text Blocks
+ *   - Multi-line string literals using triple quotes (""")
+ *   - Greatly improves readability for JSON, SQL, XML, HTML
+ *
+ * ▶ Local Variable Type Inference (var)
+ *   - Reduces verbosity for local variables
+ *   - Compile-time type inference (NOT dynamic typing)
+ *   - Not allowed for fields, method params, or return types
+ *
+ * ------------------------------------------------------------
+ * 2. JVM & RUNTIME IMPROVEMENTS
+ * ------------------------------------------------------------
+ *
+ * ▶ Helpful NullPointerExceptions
+ *   - JVM now tells exactly which variable or method call was null
+ *   - No code changes required
+ *   - Huge debugging productivity improvement
+ *
+ * ▶ Strong Encapsulation of JDK Internals
+ *   - Internal JDK APIs are strongly encapsulated
+ *   - Illegal reflective access is no longer allowed by default
+ *   - Encourages use of supported public APIs
+ *
+ * ▶ Improved Garbage Collectors
+ *   - G1 GC is the default and more optimized
+ *   - ZGC and Shenandoah are production-ready (low-latency)
+ *
+ * ------------------------------------------------------------
+ * 3. API ENHANCEMENTS
+ * ------------------------------------------------------------
+ *
+ * ▶ Stream API improvements
+ *   - toList() produces an unmodifiable list
+ *   - Better performance and clarity
+ *
+ * ▶ Optional API enhancements
+ *   - ifPresentOrElse()
+ *   - or()
+ *   - stream()
+ *
+ * ▶ Collection Factory Methods (since Java 9, widely used in 17)
+ *   - List.of(), Set.of(), Map.of()
+ *   - Create immutable collections easily
+ *
+ * ------------------------------------------------------------
+ * 4. SECURITY & MAINTENANCE
+ * ------------------------------------------------------------
+ *
+ * ▶ Security Defaults Improved
+ *   - Stronger TLS defaults
+ *   - More secure cryptographic algorithms
+ *
+ * ▶ Deprecated / Removed Features
+ *   - Applets removed
+ *   - Security Manager deprecated
+ *   - RMI Activation removed
+ *
+ * ------------------------------------------------------------
+ * 5. WHY JAVA 17 MATTERS
+ * ------------------------------------------------------------
+ *
+ * ▶ Long-Term Support (LTS)
+ * ▶ Massive reduction in boilerplate code
+ * ▶ Safer, more expressive language constructs
+ * ▶ Better performance and debugging
+ * ▶ Industry standard baseline for modern Java
+ *
+ * ------------------------------------------------------------
+ * INTERVIEW ONE-LINER:
+ *
+ * "Java 17 introduced records, sealed classes, pattern matching for instanceof,
+ *  switch expressions, text blocks, and major JVM improvements, making Java
+ *  more expressive, safer, and easier to maintain compared to Java 11."
+ *
+ * ============================================================
+ */
