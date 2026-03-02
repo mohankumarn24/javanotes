@@ -179,15 +179,51 @@ public class Java17Features {
     record Rectangle(double w, double h)    implements Shape {}
     record Triangle (double base, double h) implements Shape {}
 
-    // 2. sealed subtype example (commented — would need its own permitted class):
-    //    sealed class Triangle implements Shape permits IsoscelesTriangle {}
-    //    final class IsoscelesTriangle extends Triangle {}   	// If extending a class, the subclass must be final / sealed / non-sealed
-    															// If implementing a sealed interface, the implementing CLASS
-    															// If implementing a sealed interface, the implementing CLASS
-       
-    // 3. non-sealed subtype example (commented - opens hierarchy back up):
-    //    non-sealed class Triangle implements Shape {}
-    //    class AnyTriangle extends Triangle {}               // anyone can extend now
+	// 2. sealed subtype example
+	// sealed class Triangle implements Shape permits IsoscelesTriangle {}
+	// final class IsoscelesTriangle extends Triangle {}
+	//
+	// ✔ If EXTENDING a sealed CLASS:
+    //        The subclass MUST be declared as one of:
+    //          - final       (cannot be extended further)
+    //          - sealed      (restricted again with permits)
+    //          - non-sealed  (opened for extension)
+	//
+	// ✔ If IMPLEMENTING a sealed INTERFACE (CLASS case):
+    //        The implementing CLASS MUST be declared as one of:
+    //          - final
+    //          - sealed
+    //          - non-sealed
+	//
+	// ✔ If IMPLEMENTING a sealed INTERFACE (INTERFACE case):
+    //        The implementing INTERFACE MUST be declared as:
+    //          - sealed
+    //          - non-sealed
+	//
+	// ❌ Interfaces themselves cannot be final
+    //       (Only classes can be final)
+	//
+	// ❌ Records cannot be sealed or non-sealed
+    //       (Records are implicitly final)
+	//
+	// ⚠️ IMPORTANT:
+    //      - final classes do NOT need a permits clause
+    //      - sealed classes / interfaces MUST declare permits (unless nested)
+	//
+	// Example:
+	// sealed interface Shape permits Triangle {}
+	//
+	// final class Triangle implements Shape {} 				// ✔ valid
+	// sealed class Triangle implements Shape {} 				// ✔ valid
+	// non-sealed class Triangle implements Shape {} 			// ✔ valid
+	//
+	// sealed interface Triangle extends Shape {} 				// ✔ valid
+	// non-sealed interface Triangle extends Shape {} 			// ✔ valid
+	//
+	//
+	// 3. non-sealed subtype example (opens hierarchy back up):
+	// 		non-sealed class Triangle implements Shape {}
+	// 		class AnyTriangle extends Triangle {} 				// ✔ allowed
 
     static void sealedClassDemo() {
         System.out.println("\n=== 3. SEALED CLASSES ===");
