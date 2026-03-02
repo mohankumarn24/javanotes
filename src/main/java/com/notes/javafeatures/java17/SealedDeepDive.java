@@ -1,4 +1,4 @@
-package com.notes.java17;
+package com.notes.javafeatures.java17;
 
 // 1. CLASSES
 

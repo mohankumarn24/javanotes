@@ -1,4 +1,4 @@
-package com.notes.java21;
+package com.notes.javafeatures.java21;
 
 public class Java21Features {
 
@@ -6,5 +6,4 @@ public class Java21Features {
 		// TODO Auto-generated method stub
 
 	}
-
 }

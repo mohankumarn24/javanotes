@@ -1,4 +1,4 @@
-package com.notes.java25;
+package com.notes.javafeatures.java25;
 
 public class Java25Features {
 
