@@ -355,11 +355,11 @@ public class Java17Features {
         System.out.println("After (->): " + numLettersAfter);
         
         int numLettersAfter2 = switch (day) {				// if using ':' use 'yield 6'
-        case "MONDAY", "FRIDAY", "SUNDAY"  : yield 6;
-        case "TUESDAY"                     : yield 7;
-        case "THURSDAY", "SATURDAY"        : yield 8;
-        case "WEDNESDAY"                   : yield 9;
-        default                            : yield -1;
+	        case "MONDAY", "FRIDAY", "SUNDAY"  : yield 6;
+	        case "TUESDAY"                     : yield 7;
+	        case "THURSDAY", "SATURDAY"        : yield 8;
+	        case "WEDNESDAY"                   : yield 9;
+	        default                            : yield -1;
         };
         System.out.println("After (yield): " + numLettersAfter2);
 
