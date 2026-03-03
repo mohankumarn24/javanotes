@@ -1,181 +1,178 @@
 package com.notes.javafeatures.java17;
 
-//============================================================
-//SEALED CLASSES & INTERFACES — COMPLETE, CORRECT DEMO
-//============================================================
+/*
+ * ============================================================
+ * SEALED COMPLETE DEMO — CLEAN & ORDERED
+ * ============================================================
+ *
+ * Order:
+ * 1. Sealed CLASS → final | sealed | non-sealed
+ * 2. Sealed INTERFACE → INTERFACE
+ * 3. Sealed INTERFACE → CLASS
+ * 4. Nested sealed (no explicit permits needed)
+ * 5. Sealed + Abstract
+ *
+ */
 
-//─────────────────────────────────────────────
-//1. SEALED CLASS HIERARCHY
-//─────────────────────────────────────────────
+// ============================================================
+// 1️. Sealed CLASS extended by CLASS
+//    → final | sealed | non-sealed
+// ============================================================
 
-//Sealed base class
-//- Can extend ONE class and implement interfaces
-//- Permitted subclasses must be in same package or module
-//sealed class A extends Thread implements Cloneable permits B, C {}
-sealed class A permits B, C {
-}
+sealed class User permits Admin, Employee, Guest {}
 
-//non-sealed explicitly RE-OPENS the hierarchy
-//Anyone can extend B now
-non-sealed class B extends A {
-}
+// final → completely closed
+final class Admin extends User {}
 
-//final completely CLOSES the hierarchy
-//No subclass of C allowed
-final class C extends A {
-}
+// sealed → restrict further
+sealed class Employee extends User permits Manager {}
 
-//Allowed ONLY because B is non-sealed
-class D extends B {
-}
+// non-sealed → reopen hierarchy
+non-sealed class Guest extends User {}
 
-//❌ NOT allowed
-//class E extends C {}   // Compile-time error (C is final)
+final class Manager extends Employee {}
 
-//─────────────────────────────────────────────
-//2. SEALED INTERFACE HIERARCHY (CORRECTED)
-//─────────────────────────────────────────────
+// allowed because Guest is non-sealed
+class TemporaryGuest extends Guest {}
 
-//Sealed interface
-//Controls ONLY its direct subtypes
-sealed interface X permits Y, P {
-}
 
-//Sealed interface extending another sealed interface
-//NOTE: Since Y extends X, Y MUST be listed in X's permits
-sealed interface Y extends X permits Z {
-}
+// ============================================================
+// 2️. Sealed INTERFACE extended by INTERFACE
+//    → sealed | non-sealed
+// ============================================================
 
-//Class implementing sealed interface
-//MUST be final / sealed / non-sealed
-final class Z implements Y {
-}
+sealed interface TransactionState permits Pending, Completed {}
 
-//❌ NOT allowed
-//class W implements Y {}   // Compile-time error (must declare final/sealed/non-sealed)
+// extending sealed interface → must be sealed or non-sealed
+sealed interface Pending extends TransactionState permits AwaitingApproval {}
 
-//─────────────────────────────────────────────
-//3. INTERFACE → INTERFACE (SEALED RULE)
-//─────────────────────────────────────────────
+// non-sealed interface → reopens hierarchy
+non-sealed interface Completed extends TransactionState {}
 
-//✔ Interfaces implementing a sealed interface
-//MUST be declared as sealed or non-sealed
-sealed interface P extends X permits Q {
-}
+final class AwaitingApproval implements Pending {}
 
-//✔ Allowed
-non-sealed interface Q extends P {
-}
 
-//❌ NOT allowed
-//final interface R extends X {}   // Compile-time error (interfaces cannot be final)
+// ============================================================
+// 3️. Sealed INTERFACE implemented by CLASS
+//    → final | sealed | non-sealed
+// ============================================================
 
-//─────────────────────────────────────────────
-//4. NESTED SEALED TYPES (NO permits NEEDED)
-//─────────────────────────────────────────────
+sealed interface Payment permits CardPayment, UPIPayment, CashPayment, SpecialPayment {}
+
+// record → implicitly final
+record CardPayment(String cardNumber) implements Payment {}
+
+// final → closed
+final class CashPayment implements Payment {}
+
+// sealed → restrict further
+sealed class UPIPayment implements Payment permits PhonePe {}
+
+// non-sealed → reopen
+non-sealed class SpecialPayment implements Payment {}
+
+final class PhonePe extends UPIPayment {}
+
+class CustomPayment extends SpecialPayment {}   // allowed
+
+
+// ============================================================
+// 4️. Nested sealed (no explicit permits needed)
+// ============================================================
 
 sealed class Vehicle {
 
-	// Nested permitted subtypes
-	// No explicit permits clause required
-	final class Car extends Vehicle {
-	}
-
-	final class Bike extends Vehicle {
-	}
+    // Nested classes automatically permitted
+    final class Car extends Vehicle {}
+    final class Bike extends Vehicle {}
 }
 
-//❌ NOT allowed
-//class Truck extends Vehicle {}   // Compile-time error
+// ❌ External class cannot extend Vehicle
+// class Truck extends Vehicle {}  // Compile-time error
 
-//─────────────────────────────────────────────
-//5. RECORDS + SEALED (COMMON INTERVIEW TRAP)
-//─────────────────────────────────────────────
 
-//Records are implicitly final
-//They CAN be permitted subtypes
-sealed interface Payment permits Card, Cash {
+// ============================================================
+// 5️. Sealed + Abstract
+// ============================================================
+
+// sealed controls WHO can extend
+// abstract controls WHETHER it can be instantiated
+sealed abstract class Document permits Invoice, Receipt {
+
+    abstract String generate();
 }
 
-//✔ Valid — records are implicitly final
-record Card(String number) implements Payment {
+final class Invoice extends Document {
+    String generate() {
+        return "Invoice generated";
+    }
 }
 
-//✔ Valid
-record Cash(double amount) implements Payment {
+non-sealed class Receipt extends Document {
+    String generate() {
+        return "Receipt generated";
+    }
 }
 
-//❌ NOT allowed
-//non-sealed record UPI(String id) implements Payment {}
-//❌ Records cannot be sealed or non-sealed
-
-//─────────────────────────────────────────────
-//6. ABSTRACT + SEALED (VERY IMPORTANT)
-//─────────────────────────────────────────────
-
-//sealed controls WHO can extend
-//abstract controls WHETHER it can be instantiated
-sealed abstract class Shape permits Circle, Rectangle {
-	abstract double area();
-}
-
-//final subtype
-final class Circle extends Shape {
-	double area() {
-		return Math.PI * 5 * 5;
-	}
-}
-
-//non-sealed subtype re-opens hierarchy
-non-sealed class Rectangle extends Shape {
-	double area() {
-		return 10 * 5;
-	}
-}
-
-//Allowed because Rectangle is non-sealed
-class Square extends Rectangle {
-	double area() {
-		return 4 * 4;
-	}
+// allowed because Receipt is non-sealed
+class SpecialReceipt extends Receipt {
+    String generate() {
+        return "Special receipt generated";
+    }
 }
 
 
-//============================================================
-//SUMMARY (INTERVIEW GOLD)
-//============================================================
-/*
-* 1. Sealed types restrict ONLY direct subtypes.
-*
-* 2. Every direct subtype MUST declare:
-*      - final
-*      - sealed
-*      - non-sealed
-*
-* 3. Classes implementing sealed interfaces:
-*      - final | sealed | non-sealed
-*
-* 4. Interfaces implementing sealed interfaces:
-*      - sealed | non-sealed (final NOT allowed)
-*
-* 5. Records:
-*      - implicitly final
-*      - allowed as permitted subtypes
-*      - cannot be sealed or non-sealed
-*
-* 6. Nested permitted types:
-*      - do NOT require explicit permits clause
-*
-* INTERVIEW ONE-LINER:
-* "Sealed types give compile-time control over inheritance,
-*  and every direct subtype must explicitly declare its openness."
-*/
-
+// ============================================================
+// MAIN CLASS
+// ============================================================
 
 public class SealedDeepDive {
- public static void main(String[] args) {
-     // No runtime logic needed — sealed is a compile-time feature
- }
+
+    public static void main(String[] args) {
+
+        // 1️. Sealed class demo
+        User user = new Admin();
+        System.out.println("User type: " + user.getClass().getSimpleName());
+
+        // 2️. Interface → Interface demo
+        TransactionState state = new AwaitingApproval();
+        System.out.println("State type: " + state.getClass().getSimpleName());
+
+        // 3️. Interface → Class demo
+        Payment payment = new CardPayment("1234-5678");
+        System.out.println("Payment type: " + payment.getClass().getSimpleName());
+
+        // 4️. Nested sealed demo
+        Vehicle vehicle = new Vehicle().new Car();
+        System.out.println("Vehicle type: " + vehicle.getClass().getSimpleName());
+
+        // 5️. Sealed + Abstract demo
+        Document doc = new Invoice();
+        System.out.println(doc.generate());
+
+        /*
+         * ======================================================
+         * FINAL RULES (MEMORY VERSION)
+         * ======================================================
+         *
+         * Sealed CLASS extended by CLASS →
+         *      final | sealed | non-sealed
+         *
+         * Sealed INTERFACE extended by INTERFACE →
+         *      sealed | non-sealed
+         *
+         * Sealed INTERFACE implemented by CLASS →
+         *      final | sealed | non-sealed
+         *
+         * record → implicitly final
+         *
+         * sealed → restrict WHO can extend
+         * final → stop extension
+         * non-sealed → reopen extension
+         * abstract → cannot instantiate
+         *
+         */
+    }
 }
 
 
