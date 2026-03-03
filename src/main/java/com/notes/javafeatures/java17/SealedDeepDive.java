@@ -14,72 +14,74 @@ package com.notes.javafeatures.java17;
  *
  */
 
+/*
+ * RULE:
+ * All permitted subclasses must be:
+ *  - In the same package (if not using modules)
+ *  - OR in the same module (if using modules)
+ */
+
 // ============================================================
 // 1️. Sealed CLASS extended by CLASS
 //    → final | sealed | non-sealed
 // ============================================================
-
 sealed class User permits Admin, Employee, Guest {}
 
-// final → completely closed
+// 1a. final → completely closed
 final class Admin extends User {}
 
-// sealed → restrict further
+// 1b. sealed → restrict further
 sealed class Employee extends User permits Manager {}
+  final class Manager extends Employee {}												// Sealed CLASS extended by CLASS → final | sealed | non-sealed
 
-// non-sealed → reopen hierarchy
+// 1c. non-sealed → reopen hierarchy
 non-sealed class Guest extends User {}
-
-final class Manager extends Employee {}
-
-// allowed because Guest is non-sealed
-class TemporaryGuest extends Guest {}
+  class TemporaryGuest extends Guest {}													// Allowed because Guest is non-sealed
 
 
 // ============================================================
 // 2️. Sealed INTERFACE extended by INTERFACE
 //    → sealed | non-sealed
 // ============================================================
-
 sealed interface TransactionState permits Pending, Completed {}
 
-// extending sealed interface → must be sealed or non-sealed
-sealed interface Pending extends TransactionState permits AwaitingApproval {}
+// 2a. extending sealed interface → must be sealed or non-sealed
+sealed interface Pending extends TransactionState permits AwaitingApproval, AwaitingShipping {}
+  sealed interface AwaitingApproval extends Pending permits ExpressShipping {}			// Sealed INTERFACE extended by INTERFACE → sealed | non-sealed. Considered sealed
+    final class ExpressShipping implements AwaitingApproval {}							// Sealed INTERFACE implemented by CLASS → final | sealed | non-sealed. Considered final
+  final class AwaitingShipping implements Pending {}									// Sealed INTERFACE implemented by CLASS → final | sealed | non-sealed. Considered final
 
-// non-sealed interface → reopens hierarchy
+
+// 2b. non-sealed interface → reopens hierarchy (ANY interface or class can extend/implement it)
 non-sealed interface Completed extends TransactionState {}
-
-final class AwaitingApproval implements Pending {}
-
+  interface FullyCompleted extends Completed {}											// Interface extending non-sealed interface
+    class OnlinePaymentCompleted implements FullyCompleted {}							// Class implementing extended interface
+  class PaymentCompleted implements Completed {}										// Class implementing non-sealed interface
+	
 
 // ============================================================
 // 3️. Sealed INTERFACE implemented by CLASS
 //    → final | sealed | non-sealed
 // ============================================================
-
 sealed interface Payment permits CardPayment, UPIPayment, CashPayment, SpecialPayment {}
 
-// record → implicitly final
+// 3a. record → implicitly final
 record CardPayment(String cardNumber) implements Payment {}
-
-// final → closed
+// 3a. final → closed
 final class CashPayment implements Payment {}
 
-// sealed → restrict further
+// 3b. sealed → restrict further
 sealed class UPIPayment implements Payment permits PhonePe {}
+  final class PhonePe extends UPIPayment {}
 
-// non-sealed → reopen
+// 3c. non-sealed → reopen
 non-sealed class SpecialPayment implements Payment {}
-
-final class PhonePe extends UPIPayment {}
-
-class CustomPayment extends SpecialPayment {}   // allowed
+  class CustomPayment extends SpecialPayment {}   										// Allowed
 
 
 // ============================================================
 // 4️. Nested sealed (no explicit permits needed)
 // ============================================================
-
 sealed class Vehicle {
 
     // Nested classes automatically permitted
@@ -94,7 +96,6 @@ sealed class Vehicle {
 // ============================================================
 // 5️. Sealed + Abstract
 // ============================================================
-
 // sealed controls WHO can extend
 // abstract controls WHETHER it can be instantiated
 sealed abstract class Document permits Invoice, Receipt {
@@ -125,7 +126,6 @@ class SpecialReceipt extends Receipt {
 // ============================================================
 // MAIN CLASS
 // ============================================================
-
 public class SealedDeepDive {
 
     public static void main(String[] args) {
@@ -135,7 +135,7 @@ public class SealedDeepDive {
         System.out.println("User type: " + user.getClass().getSimpleName());
 
         // 2️. Interface → Interface demo
-        TransactionState state = new AwaitingApproval();
+        TransactionState state = new ExpressShipping();
         System.out.println("State type: " + state.getClass().getSimpleName());
 
         // 3️. Interface → Class demo
