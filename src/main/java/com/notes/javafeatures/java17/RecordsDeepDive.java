@@ -5,6 +5,99 @@ import java.util.Comparator;
 import java.util.List;
 
 /*
+1. A record in Java is a special type of class used to represent immutable data objects.
+   It removes boilerplate code when you only need a class to hold data.
+
+   Records automatically generate:
+   - constructor
+   - accessor methods
+   - equals()
+   - hashCode()
+   - toString()
+
+2. Records are ideal for:
+   - DTOs
+   - API responses
+   - request objects
+   - database projections
+   - configuration objects
+   - Kafka message payloads
+
+
+3. Records already have getters automatically.
+   These are called accessor methods, not traditional getters.
+
+   Example:
+
+       record User(String name, int age) {}
+
+       User user = new User("Mohan", 30);
+
+       Usage:
+       System.out.println(user.name());  // NOT user.getName()
+       System.out.println(user.age());
+
+
+3b. Can you write your own getter?
+    Yes, but it is rarely needed.
+
+       record User(String name) {
+           public String getName() {
+               return name;
+           }
+       }
+
+
+3c. Can you override accessor methods?
+    Yes.
+
+       record User(String name) {
+
+           @Override
+           public String name() {
+               return name.toUpperCase();
+           }
+       }
+
+       Usage:
+       User u = new User("mohan");
+       System.out.println(u.name()); // MOHAN
+
+
+4. No setters. Why?
+
+   Because record fields are automatically:
+
+   - private
+   - final
+
+   So values cannot be modified after creation (immutable).
+
+   Example:
+
+       public void setName(String name) {   // ❌ Not allowed
+           this.name = name;
+       }
+
+
+5. Records can still contain:
+
+   - methods
+   - validation logic
+   - static fields
+   - static methods
+   - constructors (compact constructors)
+   
+6. Restrictions of Records
+
+   - Records cannot extend other classes
+   - Records implicitly extend java.lang.Record
+   - Fields are always final
+   - Records are immutable
+   - Records can implement interfaces   
+*/
+
+/*
 class Student {
 	
 	private final int id;

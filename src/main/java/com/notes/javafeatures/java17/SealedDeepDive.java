@@ -95,28 +95,38 @@ sealed class Vehicle {
 
 // ============================================================
 // 5️. Sealed + Abstract
+//    → final | sealed | non-sealed
 // ============================================================
 // sealed controls WHO can extend
 // abstract controls WHETHER it can be instantiated
-sealed abstract class Document permits Invoice, Receipt {
+sealed abstract class Document permits Invoice, Bill, Receipt {
 
     abstract String generate();
 }
 
+// final
 final class Invoice extends Document {
     String generate() {
         return "Invoice generated";
     }
 }
 
+// sealed
+sealed class Bill extends Document permits ElectricityBill, WaterBill {
+    String generate() {
+        return "Bill generated";
+    }
+}
+final class ElectricityBill extends Bill {}
+final class WaterBill extends Bill {}
+
+// non-sealed
 non-sealed class Receipt extends Document {
     String generate() {
         return "Receipt generated";
     }
 }
-
-// allowed because Receipt is non-sealed
-class SpecialReceipt extends Receipt {
+class SpecialReceipt extends Receipt {						// allowed because Receipt is non-sealed
     String generate() {
         return "Special receipt generated";
     }

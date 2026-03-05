@@ -722,7 +722,96 @@ public class Java17Features {
          * map.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
          */
     }
+    
+    // Insert value only if key is missing
+    public static void putIfAbsentExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("apple", 10);
+        
+        map.putIfAbsent("apple", 20);   							// ignored
+        map.putIfAbsent("banana", 30);  							// inserted
+        
+        System.out.println(map);									// {apple=10, banana=30}
+    }
+    
+    // Compute and insert value if key missing
+    public static void computeIfAbsentExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("apple", 10);
+        
+        map.computeIfAbsent("apple", k -> 50);      				// ignored
+        map.computeIfAbsent("banana", k -> k.length());
+        
+        System.out.println(map);									// {apple=10, banana=6}
+    }
+    
+    public static void computeIfAbsentListExample() {
+        Map<String, List<String>> map = new HashMap<>();
+        
+        map.computeIfAbsent("fruit", k -> new ArrayList<>()).add("apple");
+        map.computeIfAbsent("fruit", k -> new ArrayList<>()).add("banana");
+        map.computeIfAbsent("vegetable", k -> new ArrayList<>()).add("carrot");
+        
+        System.out.println(map);									// {fruit=[apple, banana], vegetable=[carrot]}
+    }
+    
+    // Compute new value only if key exists
+    public static void computeIfPresentExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("apple", 10);
+        
+        map.computeIfPresent("apple", (k, v) -> v + 5);
+        map.computeIfPresent("banana", (k, v) -> v + 5);
+        
+        System.out.println(map);									// {apple=15}
+    }
+    
+    // Compute value whether key exists or not
+    public static void computeExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("apple", 10);
+        
+        map.compute("apple", (k, v) -> v + 5);      				// key exists
+        map.compute("banana", (k, v) -> v == null ? 1 : v + 1); 	// key missing
+        
+        System.out.println(map);									// {apple=15, banana=1}
+    }
+    
+    // Merge existing value with new value
+    public static void mergeExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("apple", 10);
+        
+        // Key exists   -> merge old value and new value
+        // Key missing  -> insert new value
+        map.merge("apple", 5, (oldVal, newVal) -> oldVal + newVal);
+        map.merge("banana", 3, (oldVal, newVal) -> oldVal + newVal);
+        
+        System.out.println(map);									// {apple=15, banana=3}
+    }
 
+    public static void getOrDefaultExample() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("apple", 10);
+        
+        // If key exists  → return value
+        // If key missing → return defaultValue
+        int apple = map.getOrDefault("apple", 0);
+        int banana = map.getOrDefault("banana", 0);
+        
+        System.out.println("apple = " + apple);					// apple = 10
+        System.out.println("banana = " + banana);				// banana = 0
+    }
+    
+    /*
+	| Method             | Key Exists   | Key Missing      |
+	| ------------------ | ------------ | ---------------- |
+	| `putIfAbsent`      | do nothing   | insert value     |
+	| `computeIfAbsent`  | do nothing   | compute + insert |
+	| `computeIfPresent` | compute      | do nothing       |
+	| `compute`          | compute      | compute          |
+	| `merge`            | merge values | insert value     |
+     */
 
     // ══════════════════════════════════════════════════════════
     // 12. NULL HANDLING UTILITIES (Java 9+, good to know)
