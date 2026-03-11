@@ -126,6 +126,54 @@ However, if 'finally' itself throws an exception:
     - The new exception from 'finally' propagates to the caller.
 
 ------------------------------------------------------------
+Case 4: finally block and return
+        If both try and finally have return statements, the finally return overrides the try return because finally executes just before the method completes.
+----------------------------------------------------
+If both 'try' and 'finally' are present, and return is inside 'try',
+the return value is computed first, then 'finally' executes.
+
+Example 1:
+	public int test() {
+	    try {
+	        return 1;
+	    } finally {
+	        return 2;
+	    }
+	}
+
+Notes: 
+    try block runs.
+    return 1 is prepared.
+    Before returning, the finally block executes.
+    finally has return 2, which overrides the earlier return.
+    Method returns 2.
+Output:
+    2
+Return value:
+    2
+
+--
+Example 2:
+	public int test() {
+	    try {
+	        int x = 10 / 0; // ArithmeticException
+	        return 1;
+	    } finally {
+	    	// Best practise: Avoid returning in finally
+	        return 2;
+	    }
+	}
+
+Notes:
+	Returning from finally is considered bad practice because:
+	 - It suppresses exceptions.
+	 - It overrides return values from try or catch.
+Output:
+	Even though an exception occurs, the method still returns: 2
+Return value:
+    2
+
+------------------------------------------------------------
 
  Summary Table
 ------------------------------------------------------------

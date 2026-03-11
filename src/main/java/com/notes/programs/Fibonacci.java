@@ -12,7 +12,7 @@ public class Fibonacci {
         int n = 10;
         // Print the first N numbers
         for (int i = 0; i < n; i++) {
-            System.out.print(fibonacci(i) + " ");
+            System.out.println(String.format("Fibonacci(%d): %d", i, fibonacci(i)));
         }
     }
 	
@@ -22,3 +22,17 @@ public class Fibonacci {
         return fibonacci(n - 1) + fibonacci(n - 2);
     }
 }
+
+/*
+Fibonacci(0): 0
+Fibonacci(1): 1
+
+Fibonacci(2): 1
+Fibonacci(3): 2
+Fibonacci(4): 3
+Fibonacci(5): 5
+Fibonacci(6): 8
+Fibonacci(7): 13
+Fibonacci(8): 21
+Fibonacci(9): 34
+*/
