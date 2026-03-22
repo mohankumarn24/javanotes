@@ -154,6 +154,7 @@ public class B_QueueDemo {
         
         System.out.println(stack.contains(10)); 	// true
         stack.clear();
+        System.out.println("size: " + stack.size());
 
 	}
 }

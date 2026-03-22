@@ -49,6 +49,22 @@ public class A2_LinkedListDemo {
 		for (String str : array) {
 			System.out.println(str);
 		}
+		
+		// testing immutability
+		System.out.println("\ntesting immutability");
+		String[] strs = new String[] {"A", "B", "C"};
+		List<String> list3 = Arrays.asList(strs);		// Arrays.asList() returns a fixed-size list backed by the original array, so changes in one reflect in the other.
+														// list3.add("Z"); -> RTE: UnsupportedOperationException
+		// List<String> list3 = List.of(strs);			// List.of() creates an immutable list with no structural or element updates allowed, and it does not share backing with the input array.
+		strs[0] = "AA";									// If original array is modified -> modifies original array & list
+		list3.set(1, "BB");								// If list is modified 			 -> modifies original array & list
+														// If used List.of(..) 			 -> UnsupportedOperationException, if tried to update values
+		strs[2] = "CC";									// updates original array. Also updates list3
+		
+		for (String updatedStr : strs) {
+			System.out.println(updatedStr);				// AA BB CC
+		}
+		list3.forEach(str ->  System.out.println(str));	// AA BB CC
 	}
 }
 
