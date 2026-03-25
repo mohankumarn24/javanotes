@@ -136,6 +136,7 @@ public class VirtualThreadDemo {
         
         // Extra
         virtualThreadPinning();
+        noPinningDemo();
         migration();
     }
     
@@ -143,25 +144,48 @@ public class VirtualThreadDemo {
     // Virtual Thread Pinning Problem
     // --------------------------------------------
     /*
-     * FIX FOR PINNING (Using ReentrantLock)
+     * PINNING IN VIRTUAL THREADS:
      *
-     * Problem with synchronized:
-     * - Causes "pinning" in virtual threads
-     * - Virtual thread cannot detach from carrier thread
-     * - Blocks carrier thread → reduces scalability
+     * Problem:
+     * - Pinning occurs when a virtual thread blocks while holding a lock
+     * - The virtual thread cannot unmount from its carrier thread
+     * - Carrier thread gets blocked → reduces scalability
      *
-     * Why ReentrantLock:
-     * - Does NOT cause pinning
-     * - Allows virtual thread to unmount during blocking
-     * - Better for virtual thread environments
+     * Important:
+     * - This can happen with BOTH synchronized and ReentrantLock
+     * - The issue is NOT the lock itself, but blocking while holding it
      *
-     * Best Practice:
-     * - Avoid synchronized with virtual threads
-     * - Prefer ReentrantLock or non-blocking designs
+     * Best Practices:
+     * - Avoid blocking operations while holding locks
+     * - Minimize lock scope
+     * - Prefer non-blocking or lock-free designs when possible
+     * - Let virtual threads block WITHOUT holding locks (safe unmount)
+     */
+    
+    /**
+     * WITH PINNING:
+     * Virtual Thread → holds lock → cannot unmount → carrier blocked ❌
      */
     static void virtualThreadPinning() throws Exception {
-        System.out.println("\n=== Virtual Thread (No Pinning) ===");
-
+    	/**
+		 * PINNING SCENARIO:
+		 *  - 5 virtual threads are created
+		 *  - All try to acquire the same lock
+		 *  - Only 1 thread acquires the lock
+		 *  - That thread sleeps (blocking) while holding the lock
+		 *  - Other threads wait for the lock
+		 *  - Virtual thread cannot unmount → carrier thread is PINNED
+		 *  - Tasks execute sequentially (~5 sec)
+    	 * 
+    	 * Why this is called PINNING:
+    	 * 	Virtual Thread → holds lock → cannot unmount
+    	 * 		→ Carrier thread (OS thread) is stuck
+    	 * 		→ No scalability benefit
+    	 */
+    	
+        System.out.println("\n=== Virtual Thread (Pinning) ===");
+        long start = System.currentTimeMillis();
+        
         var lock = new ReentrantLock();
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
             for (int i = 0; i < 5; i++) {
@@ -178,6 +202,47 @@ public class VirtualThreadDemo {
                 });
             }
         }
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
+    }
+    
+    /**
+     * WITHOUT PINNING:
+     * Virtual Thread → sleep → unmount → carrier free → scalable ✅
+     */
+    static void noPinningDemo() throws Exception {
+    	
+    	/**
+    	 * NO PINNING SCENARIO:
+    	 *  - 5 virtual threads are created
+    	 *  - All execute in parallel (no lock)
+    	 *  - Each thread sleeps (blocking)
+    	 *  - JVM unmounts virtual threads from carrier threads
+    	 *  - Carrier threads are reused for other tasks
+    	 *  - Tasks complete together (~1 sec, parallel)
+    	 *
+    	 * No pinning because no lock is held while blocking
+    	 * No lock → virtual threads unmount during sleep → parallel execution (~1 sec)
+    	 * → full scalability achieved
+    	 */
+   	
+        System.out.println("\n=== Virtual Thread (No Pinning) ===");
+        long start = System.currentTimeMillis();
+
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < 5; i++) {
+                executor.submit(() -> {
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("Task: " + Thread.currentThread());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                });
+            }
+        }
+
+        System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
     }
 
     // --------------------------------------------
@@ -216,7 +281,6 @@ public class VirtualThreadDemo {
 
         try (@SuppressWarnings("preview")
         var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-
             var u = scope.fork(() -> fetch("User"));
             var o = scope.fork(() -> fetch("Order"));
 
@@ -224,7 +288,6 @@ public class VirtualThreadDemo {
             scope.throwIfFailed();
 
             String newResult = u.get() + o.get();
-
             System.out.println("New: " + newResult);
         }
     }
@@ -246,23 +309,32 @@ Custom Named VT: VirtualThread[#23,my-virtual-thread]/runnable@ForkJoinPool-1-wo
 Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-2
 Task 4 started on VirtualThread[#30]/runnable@ForkJoinPool-1-worker-5
 Task 0 started on VirtualThread[#26]/runnable@ForkJoinPool-1-worker-3
-Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
 Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-1
-Task 2 completed
+Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
 Task 3 completed
+Task 4 completed
 Task 0 completed
 Task 1 completed
-Task 4 completed
+Task 2 completed
 Future Result: Result from Virtual Thread
 Is Virtual? true
 Main completed
 
+=== Virtual Thread (Pinning) ===
+Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-2
+Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-8
+Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-2
+Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-4
+Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-4
+Time taken: 5027 ms
+
 === Virtual Thread (No Pinning) ===
-Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-9
-Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-6
-Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-9
-Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-7
-Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-9
+Task: VirtualThread[#1050]/runnable@ForkJoinPool-1-worker-7
+Task: VirtualThread[#1048]/runnable@ForkJoinPool-1-worker-8
+Task: VirtualThread[#1049]/runnable@ForkJoinPool-1-worker-2
+Task: VirtualThread[#1052]/runnable@ForkJoinPool-1-worker-4
+Task: VirtualThread[#1051]/runnable@ForkJoinPool-1-worker-12
+Time taken: 1005 ms
 
 === Migration ===
 Old: UserOrder

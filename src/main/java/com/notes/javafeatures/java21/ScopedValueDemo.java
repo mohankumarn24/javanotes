@@ -2,6 +2,7 @@ package com.notes.javafeatures.java21;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.StructuredTaskScope;
 
 /*
  * INSIGHT:
@@ -94,11 +95,13 @@ public class ScopedValueDemo {
     @SuppressWarnings("preview")
     private static void scopedValueDemo() {
 
+    	// Bind SCOPED_VALUE to value "REQ-1" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-1").run(() -> {
             // ✅ Value is available only within this scope
             print("First Call  : ");
         });
 
+     // Bind SCOPED_VALUE to value "REQ-2" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-2").run(() -> {
             // ✅ New scope → completely independent value
             print("Second Call : ");
@@ -109,32 +112,86 @@ public class ScopedValueDemo {
         // SCOPED_VALUE.get();	// It throws NoSuchElementException 
     }
 
+    // Prints the value from ScopedValue
     private static void print(String label) {
-        try {
-            System.out.println(label + SCOPED_VALUE.get());
-        } catch (Exception e) {
-            System.out.println(label + " No value bound");
-        }
+    	// Check if a value is bound in the current execution scope
+    	if (SCOPED_VALUE.isBound()) {
+    		// ✅ Value is available → safely read it
+    	    System.out.println(label + SCOPED_VALUE.get());
+    	} else {
+    		// ❌ No value bound → outside scope or propagation failed
+    	    System.out.println(label + "No value bound");
+    	}
     }
     
     // -------------------------------
     // ScopedValue with Virtual Threads
     // -------------------------------
+    /**
+     * ScopedValue is designed for structured concurrency. Virtual threads support it naturally, but using ExecutorService can break the propagation.
+     * Virtual Thread Call: No value bound
+     * 
+     * // ❌ Fails
+     * // ScopedValue + ExecutorService       = ⚠️ unreliable
+     * executor.submit(() -> print("Executor Call: ")).get();
+     * 
+     * // ✅ Works
+     * // ScopedValue + Structured concurrency = ✅ 
+     * Thread.startVirtualThread(() -> print("Direct VT Call: ")).join();
+     * 
+     */  
     @SuppressWarnings("preview")
     private static void virtualThreadScopedValueDemo() throws Exception {
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    	
+    	/**
+    	 * 1. Bind value → SCOPED_VALUE = "REQ-123"
+    	 * 2. Create structured scope
+    	 * 3. Start 2 virtual threads using fork()
+    	 * 4. Both threads access same ScopedValue
+    	 * 5. Wait for completion
+    	 * 6. Scope ends → value disappears
+    	 */
+    	
+    	// Bind SCOPED_VALUE = "REQ-123" for this execution block (scope)
+        ScopedValue.where(SCOPED_VALUE, "REQ-123").run(() -> {
 
-            ScopedValue.where(SCOPED_VALUE, "REQ-VT").run(() -> {
-                try {
-                    executor.submit(() -> {
-                        // ✅ ScopedValue propagates correctly
-                        print("Virtual Thread Call: ");
-                    }).get(); // 👈 ensures execution completes before exiting
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
+            /**
+             * StructuredTaskScope manages virtual threads in a structured way
+             * StructuredTaskScope ensures:
+             *  - StructuredTaskScope ensures:
+             *  - tasks run in virtual threads
+             *  - proper lifecycle management
+             */
+            try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+
+                // fork() → creates a new virtual thread and runs this task
+                scope.fork(() -> {
+                    // This runs in a virtual thread
+                    // ScopedValue is automatically available here
+                	print("Task 1: ");
+                    return null; // required (because fork expects Callable in my PC JDK version)
+                });
+
+                // Another virtual thread
+                scope.fork(() -> {
+                	// Runs concurrently with Task 1
+                	print("Task 2: ");
+                    return null;
+                });
+
+                // Wait for all forked tasks to complete
+                scope.join();
+
+                // If any task fails → exception will be thrown here
+                scope.throwIfFailed();
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        // After this point:
+        // ❌ SCOPED_VALUE is NO LONGER available (scope ended)
     }
 }
 
@@ -146,10 +203,11 @@ Second Call : REQ-1
 === ScopedValue Correct ===
 First Call  : REQ-1
 Second Call : REQ-2
-Outside     :  No value bound
+Outside     : No value bound
 
 === ScopedValue + Virtual Threads ===
-Virtual Thread Call:  No value bound
+Task 1: REQ-123
+Task 2: REQ-123
 */
 
 

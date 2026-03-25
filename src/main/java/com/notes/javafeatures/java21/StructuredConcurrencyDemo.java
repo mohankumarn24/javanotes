@@ -89,7 +89,7 @@ public class StructuredConcurrencyDemo {
     }
     
 	 // --------------------------------------------
-	 // INTERVIEW: ShutdownOnSuccess example
+	 // ShutdownOnSuccess example
 	 // --------------------------------------------
 	 @SuppressWarnings("preview")
 	 static void shutdownOnSuccessDemo() throws Exception {
