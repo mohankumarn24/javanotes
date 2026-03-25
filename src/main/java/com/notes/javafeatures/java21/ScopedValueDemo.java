@@ -4,17 +4,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
- * ============================================================
- * THREADLOCAL vs SCOPEDVALUE (Java 21 - Preview)
- * ============================================================
+ * INSIGHT:
  *
- * Demonstrates:
- * 1. ThreadLocal problem with thread reuse
- * 2. ScopedValue safe alternative
+ * ThreadLocal Problem:
+ * - Requires manual cleanup (remove())
+ * - Risk of memory leaks in thread pools
+ * - Hidden data flow (hard to trace/debug)
  *
- * Compile:
- * javac --enable-preview --release 21 Demo.java
- * java --enable-preview Demo
+ * ScopedValue Advantage:
+ * - Immutable (no accidental modification)
+ * - No manual cleanup
+ * - Clear scope → safer and predictable
+ * - Works naturally with virtual threads
+ *
+ * KEY DIFFERENCE:
+ * ThreadLocal → mutable + thread-bound
+ * ScopedValue → immutable + scope-bound
  */
 public class ScopedValueDemo {
 
@@ -31,77 +36,120 @@ public class ScopedValueDemo {
 
         System.out.println("\n=== ScopedValue Correct ===");
         scopedValueDemo();
+        
+        System.out.println("\n=== ScopedValue + Virtual Threads ===");
+        virtualThreadScopedValueDemo();
     }
 
     // -------------------------------
     // ThreadLocal (problem)
     // -------------------------------
     private static void threadLocalDemo() throws Exception {
-        ExecutorService executor = Executors.newFixedThreadPool(1);
+    	// single thread used
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         // First request
-        executor.submit(() -> {
-            THREAD_LOCAL.set("REQ-1");
-            print("First Call");
-            // ❌ forgot TL.remove()
-        }).get();
+        executorService.submit(() -> {
+	            THREAD_LOCAL.set("REQ-1");
+	            printThreadLocal("First Call  : ");
+	
+	            // ❌ Forgot to remove → value stays in thread
+	            // THREAD_LOCAL.remove();
+	        }).get();
 
         // Second request (same thread reused)
-        executor.submit(() -> {
-            print("Second Call"); // ❌ still sees REQ-1
-        }).get();
+        executorService.submit(() -> {
+	            // ❌ Forgot to set new value → old value (REQ-1) is still present
+	            // THREAD_LOCAL.set("REQ-2");
+	
+        		printThreadLocal("Second Call : "); // ❌ Bug (Leaked). Still prints REQ-1 due to thread reuse
+	
+	            // ❌ Forgot to remove again → continues leaking
+	            // THREAD_LOCAL.remove();
+	        }).get();
 
-        executor.shutdown();
+        executorService.shutdown();
+        
+    	/*
+    	 * Always use try-finally:
+    	 * 
+    	 *      executorService.submit(() -> {
+    	 *      		try {
+    	 *      			THREAD_LOCAL.set("REQ-1");
+    	 *      			print("First Call");
+    	 *      		} finally {
+    	 *      			THREAD_LOCAL.remove(); // ✅ mandatory cleanup
+    	 *      		}
+    	 *      	}).get();
+    	 */
     }
 
+    private static void printThreadLocal(String label) {
+        System.out.println(label + THREAD_LOCAL.get());
+    }
+    
     // -------------------------------
     // ScopedValue (safe)
     // -------------------------------
     @SuppressWarnings("preview")
     private static void scopedValueDemo() {
+
         ScopedValue.where(SCOPED_VALUE, "REQ-1").run(() -> {
-        	// value exists only inside scope
-            print("First Call");
+            // ✅ Value is available only within this scope
+            print("First Call  : ");
         });
 
         ScopedValue.where(SCOPED_VALUE, "REQ-2").run(() -> {
-        	// value exists only inside scope
-            print("Second Call");
+            // ✅ New scope → completely independent value
+            print("Second Call : ");
         });
 
-        print("Outside");
+        // ❌ No value bound here → accessing will throw exception
+        print("Outside     : ");
+        // SCOPED_VALUE.get();	// It throws NoSuchElementException 
     }
 
+    private static void print(String label) {
+        try {
+            System.out.println(label + SCOPED_VALUE.get());
+        } catch (Exception e) {
+            System.out.println(label + " No value bound");
+        }
+    }
+    
     // -------------------------------
-    // Print
+    // ScopedValue with Virtual Threads
     // -------------------------------
-    private static void print(String msg) {
-        String threadLocal = THREAD_LOCAL.get();
-        String scopedValue = SCOPED_VALUE.isBound() ? SCOPED_VALUE.get() : "NOT SET";
-        System.out.println(msg + " | ThreadLocal=" + threadLocal + " | ScopedValue=" + scopedValue);
+    @SuppressWarnings("preview")
+    private static void virtualThreadScopedValueDemo() throws Exception {
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+
+            ScopedValue.where(SCOPED_VALUE, "REQ-VT").run(() -> {
+                try {
+                    executor.submit(() -> {
+                        // ✅ ScopedValue propagates correctly
+                        print("Virtual Thread Call: ");
+                    }).get(); // 👈 ensures execution completes before exiting
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 }
 
 /*
-ThreadLocal Output:
 === ThreadLocal Problem ===
-First Call  | ThreadLocal=REQ-1 | ScopedValue=NOT SET
-Second Call | ThreadLocal=REQ-1 | ScopedValue=NOT SET		<-- BUG (leaked) ie ThreadLocal=REQ-1
+First Call  : REQ-1
+Second Call : REQ-1
 
-👉 Because:
-Same thread reused from pool
-You forgot remove()
-
-
-ScopedValue Output:
 === ScopedValue Correct ===
-First Call  | ThreadLocal=null | ScopedValue=REQ-1
-Second Call | ThreadLocal=null | ScopedValue=REQ-2
-Outside     | ThreadLocal=null | ScopedValue=NOT SET
+First Call  : REQ-1
+Second Call : REQ-2
+Outside     :  No value bound
 
-👉 Because:
-Value exists only inside scope
-Automatically cleaned
+=== ScopedValue + Virtual Threads ===
+Virtual Thread Call:  No value bound
 */
 
 

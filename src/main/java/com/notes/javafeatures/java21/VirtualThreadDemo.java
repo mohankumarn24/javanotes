@@ -1,7 +1,21 @@
 package com.notes.javafeatures.java21;
 
 import java.util.concurrent.*;
+import java.util.concurrent.locks.ReentrantLock;
 
+/*
+INTERVIEW TRAPS:
+
+Do NOT use Virtual Threads for:
+1. CPU heavy tasks (use parallel streams / ForkJoin)
+2. Long synchronized blocks
+3. Tight loops / compute-heavy work
+
+BEST USE:
+- DB calls
+- REST calls
+- Kafka / IO operations
+*/
 public class VirtualThreadDemo {
     public static void main(String[] args) throws Exception {
 
@@ -119,25 +133,140 @@ public class VirtualThreadDemo {
          */
         
         System.out.println("Main completed");
+        
+        // Extra
+        virtualThreadPinning();
+        migration();
+    }
+    
+    // --------------------------------------------
+    // Virtual Thread Pinning Problem
+    // --------------------------------------------
+    /*
+     * FIX FOR PINNING (Using ReentrantLock)
+     *
+     * Problem with synchronized:
+     * - Causes "pinning" in virtual threads
+     * - Virtual thread cannot detach from carrier thread
+     * - Blocks carrier thread → reduces scalability
+     *
+     * Why ReentrantLock:
+     * - Does NOT cause pinning
+     * - Allows virtual thread to unmount during blocking
+     * - Better for virtual thread environments
+     *
+     * Best Practice:
+     * - Avoid synchronized with virtual threads
+     * - Prefer ReentrantLock or non-blocking designs
+     */
+    static void virtualThreadPinning() throws Exception {
+        System.out.println("\n=== Virtual Thread (No Pinning) ===");
+
+        var lock = new ReentrantLock();
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < 5; i++) {
+                executor.submit(() -> {
+                    lock.lock();
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("Task: " + Thread.currentThread());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    } finally {
+                        lock.unlock();
+                    }
+                });
+            }
+        }
+    }
+
+    // --------------------------------------------
+    // Migration from CompletableFuture
+    // --------------------------------------------
+    /*
+     * MIGRATION: CompletableFuture → Structured Concurrency
+     *
+     * OLD (CompletableFuture):
+     * - Uses async chaining (thenCombine, thenApply, etc.)
+     * - Harder to read and debug
+     * - Error handling is complex
+     * - No automatic cancellation of other tasks
+     *
+     * NEW (Structured Concurrency):
+     * - Synchronous, readable style (looks like normal code)
+     * - Tasks are grouped as one unit (scope)
+     * - Fail-fast: if one fails → others are cancelled automatically
+     * - Easier debugging and better error propagation
+     *
+     * KEY IDEA:
+     * Replace async pipelines with structured, scoped concurrency
+     *
+     * INSIGHT:
+     * Structured Concurrency simplifies async code by making it readable,
+     * safer, and automatically handling cancellation.
+     */
+    static void migration() throws Exception {
+    	System.out.println("\n=== Migration ===");
+    	
+        CompletableFuture<String> user = CompletableFuture.supplyAsync(() -> fetch("User"));
+        CompletableFuture<String> order = CompletableFuture.supplyAsync(() -> fetch("Order"));
+        String oldResult = user.thenCombine(order, (u, o) -> u + o).join();
+
+        System.out.println("Old: " + oldResult);
+
+        try (@SuppressWarnings("preview")
+        var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+
+            var u = scope.fork(() -> fetch("User"));
+            var o = scope.fork(() -> fetch("Order"));
+
+            scope.join();
+            scope.throwIfFailed();
+
+            String newResult = u.get() + o.get();
+
+            System.out.println("New: " + newResult);
+        }
+    }
+
+    // Helper method required by migrationExample
+    static String fetch(String name) {
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return name;
     }
 }
 
 /*
-Custom Named VT: VirtualThread[#23,my-virtual-thread]/runnable@ForkJoinPool-1-worker-2
 Simple Virtual Thread: VirtualThread[#21]/runnable@ForkJoinPool-1-worker-1
-Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-2
-Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
+Custom Named VT: VirtualThread[#23,my-virtual-thread]/runnable@ForkJoinPool-1-worker-2
+Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-2
 Task 4 started on VirtualThread[#30]/runnable@ForkJoinPool-1-worker-5
-Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-1
 Task 0 started on VirtualThread[#26]/runnable@ForkJoinPool-1-worker-3
+Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
+Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-1
+Task 2 completed
+Task 3 completed
 Task 0 completed
 Task 1 completed
-Task 2 completed
 Task 4 completed
-Task 3 completed
 Future Result: Result from Virtual Thread
 Is Virtual? true
 Main completed
+
+=== Virtual Thread (No Pinning) ===
+Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-9
+Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-6
+Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-9
+Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-7
+Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-9
+
+=== Migration ===
+Old: UserOrder
+New: UserOrder
 */
 
 
