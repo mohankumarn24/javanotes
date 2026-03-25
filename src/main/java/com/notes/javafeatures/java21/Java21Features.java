@@ -44,6 +44,49 @@ public class Java21Features {
     // ============================================================
     // 1. PATTERN MATCHING (Java 17 vs 21)
     // ============================================================
+    /*
+     * PATTERN MATCHING FOR SWITCH (Java 21)
+     *
+     * Basic Idea:
+     * - Allows type-based pattern matching directly inside switch
+     * - Replaces instanceof + cast + if-else chains
+     *
+     * Before (Java 17):
+     * - Use instanceof with explicit casting and if-else
+     *
+     * Example:
+     *      if (obj instanceof String s) {
+     *          s.length();
+     *      }
+     *
+     * Problems:
+     * 1. Multiple if-else blocks for different types
+     * 2. Manual casting required
+     * 3. Less readable and harder to maintain
+     *
+     * After (Java 21):
+     * - Combine type check + cast + branching in one construct
+     *
+     * Example:
+     *      switch (obj) {
+     *          case String s  -> ...
+     *          case Integer i -> ...
+     *          case null      -> ...
+     *          default        -> ...
+     *      }
+     *
+     * Key Benefits:
+     * 1. Cleaner and more concise code
+     * 2. No explicit casting required
+     * 3. Built-in null handling (case null)
+     * 4. Supports guards (case String s when condition)
+     * 5. Works with record patterns (destructuring)
+     * 6. Enables exhaustive checks with sealed classes
+     *
+     * Interview Insight:
+     * Pattern matching in switch unifies type checking, casting,
+     * and control flow into a single, expressive construct.
+     */
     static void patternMatchingDemo() {
         System.out.println("\n=== PATTERN MATCHING ===");
 
@@ -68,6 +111,49 @@ public class Java21Features {
     // ============================================================
     // 2. RECORD PATTERNS + SEALED CLASSES
     // ============================================================
+    /*
+     * RECORD PATTERNS (Java 21)
+     *
+     * Basic Idea:
+     * - Allows destructuring of record objects directly in pattern matching
+     * - Extracts values without calling getters
+     *
+     * Before (Java 17):
+     * - Use instanceof + manual getter calls
+     *
+     * Example:
+     *      if (shape instanceof Circle c) {
+     *          c.radius(); // explicit accessor
+     *      }
+     *
+     * Problems:
+     * 1. Verbose code
+     * 2. Requires manual extraction using getters
+     * 3. Less readable with nested structures
+     *
+     * After (Java 21):
+     * - Direct destructuring inside pattern
+     *
+     * Example:
+     *      switch (shape) {
+     *          case Circle(double r) -> ...
+     *          case Rectangle(double w, double h) -> ...
+     *      }
+     *
+     * Key Benefits:
+     * 1. No need to call getters (auto extraction)
+     * 2. Cleaner and more readable
+     * 3. Works seamlessly with switch pattern matching
+     * 4. Supports nested destructuring (advanced use)
+     *
+     * Works Best With:
+     * - Records
+     * - Sealed classes (for exhaustive switch)
+     *
+     * Insight:
+     * Record patterns extend pattern matching by enabling direct data extraction,
+     * making code more declarative and reducing boilerplate.
+     */
     static void recordPatternDemo() {
         System.out.println("\n=== RECORD PATTERNS ===");
 
@@ -100,6 +186,47 @@ public class Java21Features {
     // ============================================================
     // 3. VIRTUAL THREADS (FINAL)
     // ============================================================
+    /*
+     * VIRTUAL THREADS (Java 21)
+     *
+     * Basic Idea:
+     * - Lightweight threads managed by JVM (not OS)
+     * - Designed to handle massive concurrency efficiently
+     *
+     * Before (Java 17):
+     * - Platform (OS) threads are heavy
+     * - Requires thread pools to limit resource usage
+     * - Example: Executors.newFixedThreadPool()
+     *
+     * Problems:
+     * - Limited scalability (~10k threads max)
+     * - Thread pool tuning is complex
+     * - Blocking calls waste threads
+     *
+     * After (Java 21):
+     * - Virtual threads are extremely lightweight
+     * - No need for thread pools
+     * - One task = one virtual thread
+     *
+     * Example:
+     * Executors.newVirtualThreadPerTaskExecutor()
+     *
+     * Key Benefits:
+     * 1. Millions of threads possible
+     * 2. Simplifies concurrency (no pool management)
+     * 3. Works with existing blocking code (no rewrite needed)
+     * 4. Better resource utilization
+     *
+     * Important Notes:
+     * - Best suited for I/O-bound tasks (DB calls, API calls)
+     * - Not ideal for CPU-heavy parallel computation
+     *
+     * Interview Insight:
+     * Virtual threads change the concurrency model from:
+     * "thread pool + async programming"
+     * → to
+     * "simple synchronous code with massive scalability"
+     */
     static void virtualThreadsDemo() throws Exception {
         System.out.println("\n=== VIRTUAL THREADS ===");
 
@@ -134,6 +261,60 @@ public class Java21Features {
     // ============================================================
     // 4. STRUCTURED CONCURRENCY (Preview)
     // ============================================================
+    /*
+     * STRUCTURED CONCURRENCY (Java 21 - Preview)
+     *
+     * Basic Idea:
+     * - Treats multiple concurrent tasks as a single unit of work
+     * - Improves readability, error handling, and cancellation
+     *
+     * Before (Java 17 - CompletableFuture):
+     * - Asynchronous programming with chaining
+     *
+     * Example:
+     *      CompletableFuture<String> user =
+     *          CompletableFuture.supplyAsync(() -> fetch("User"));
+     *
+     *      CompletableFuture<String> order =
+     *          CompletableFuture.supplyAsync(() -> fetch("Order"));
+     *
+     *      user.thenCombine(order, ...).join();
+     *
+     * Problems:
+     * 1. Hard to read and maintain
+     * 2. Error handling is complex
+     * 3. No automatic cancellation of dependent tasks
+     * 4. Debugging is difficult
+     *
+     * After (Java 21 - Structured Concurrency):
+     * - Tasks are grouped and executed together
+     *
+     * Example:
+     *      try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+     *
+     *          var userTask  = scope.fork(() -> fetch("User"));
+     *          var orderTask = scope.fork(() -> fetch("Order"));
+     *
+     *          scope.join();          // wait for all tasks
+     *          scope.throwIfFailed(); // fail fast if any task fails
+     *
+     *          var result = userTask.get() + " + " + orderTask.get();
+     *      }
+     *
+     * Key Benefits:
+     * 1. Cleaner, synchronous-style code
+     * 2. Automatic cancellation on failure
+     * 3. Better error propagation
+     * 4. Easier debugging and reasoning
+     *
+     * Important Notes:
+     * - Preview feature → requires --enable-preview
+     * - Works best with Virtual Threads
+     *
+     * Interview Insight:
+     * Structured Concurrency simplifies async programming by replacing
+     * complex CompletableFuture chains with clear, scoped task execution.
+     */
     static void structuredConcurrencyDemo() throws Exception {
         System.out.println("\n=== STRUCTURED CONCURRENCY ===");
 
@@ -177,6 +358,54 @@ public class Java21Features {
     // ============================================================
     // 5. SEQUENCED COLLECTIONS (List + Map)
     // ============================================================
+    /*
+     * SEQUENCED COLLECTIONS (Java 21)
+     *
+     * Basic Idea:
+     * - Introduces a unified way to access elements in a defined order
+     * - Adds first/last operations across List, Set, and Map
+     *
+     * New Interfaces:
+     * - SequencedCollection
+     * - SequencedSet
+     * - SequencedMap
+     *
+     * Before (Java 17):
+     * - No standard way to get first/last elements
+     * - List:
+     *      list.get(0)
+     *      list.get(list.size() - 1)
+     * - Map:
+     *      No direct first/last entry access
+     *
+     * After (Java 21):
+     * - Direct methods available:
+     *
+     * List:
+     *      list.getFirst()
+     *      list.getLast()
+     *      list.addFirst()
+     *      list.addLast()
+     *
+     * Map (LinkedHashMap):
+     *      map.firstEntry()
+     *      map.lastEntry()
+     *
+     * Key Benefits:
+     * 1. Cleaner and more readable code
+     * 2. No index-based access required
+     * 3. Consistent API across collections
+     * 4. Reduces boilerplate logic
+     *
+     * Works With:
+     * - List (ArrayList, LinkedList)
+     * - Deque
+     * - LinkedHashMap (for ordered maps)
+     *
+     * Interview Insight:
+     * Sequenced Collections standardize order-based operations,
+     * removing the need for manual index handling and improving API consistency.
+     */
     static void sequencedCollectionsDemo() {
         System.out.println("\n=== SEQUENCED COLLECTIONS ===");
 
@@ -203,6 +432,52 @@ public class Java21Features {
     // ============================================================
     // 6. THREADLOCAL vs SCOPED VALUE
     // ============================================================
+    /*
+     * THREADLOCAL vs SCOPED VALUE (Java 21 - Preview)
+     *
+     * Basic Idea:
+     * - Both are used to pass contextual data across methods/threads
+     * - ScopedValue is the modern, safer alternative to ThreadLocal
+     *
+     * ThreadLocal (Java 17):
+     * - Stores mutable data per thread
+     *
+     * Example:
+     *      ThreadLocal<String> tl = new ThreadLocal<>();
+     *      tl.set("User");
+     *      tl.get();
+     *      tl.remove(); // must clean manually
+     *
+     * Problems:
+     * 1. Memory leaks if not removed properly
+     * 2. Mutable state → hard to reason about
+     * 3. Not suitable for virtual threads (can cause unexpected behavior)
+     *
+     * ScopedValue (Java 21 - Preview):
+     * - Immutable, context-bound value
+     * - Scoped to a block of execution
+     *
+     * Example:
+     *      ScopedValue<String> USER = ScopedValue.newInstance();
+     *
+     *      ScopedValue.where(USER, "User").run(() -> {
+     *          USER.get();
+     *      });
+     *
+     * Key Benefits:
+     * 1. Immutable → safer
+     * 2. No memory leaks (no manual cleanup)
+     * 3. Works naturally with virtual threads
+     * 4. Clear scope → better readability
+     *
+     * When to Use:
+     * - ThreadLocal → legacy / existing code
+     * - ScopedValue → modern applications (especially with virtual threads)
+     *
+     * Insight:
+     * ScopedValue is designed to replace ThreadLocal in modern Java,
+     * especially in structured concurrency and virtual thread environments.
+     */
     @SuppressWarnings("preview")
 	static void threadLocalVsScopedValueDemo() {
         System.out.println("\n=== THREADLOCAL vs SCOPED VALUE ===");
@@ -223,6 +498,46 @@ public class Java21Features {
     // ============================================================
     // 7. STRING TEMPLATES (Preview)
     // ============================================================
+    /*
+     * STRING TEMPLATES (Java 21 - Preview)
+     *
+     * Basic Idea:
+     * - Provides a safer and cleaner way to build strings
+     * - Similar to f-strings (Python) or template literals (JS)
+     *
+     * Before (Java 17):
+     * - String concatenation using +
+     *      "Hello " + name
+     *
+     * Problems:
+     * - Hard to read for complex strings
+     * - Error-prone
+     * - No validation of embedded expressions
+     *
+     * After (Java 21 - Preview):
+     * - Template-based string construction
+     *
+     * Example:
+     *      String msg = STR."Hello \{name}";
+     *
+     * Key Benefits:
+     * 1. Better readability
+     * 2. Safer string construction
+     * 3. Easier to embed expressions
+     * 4. Reduces concatenation clutter
+     *
+     * Important Notes:
+     * - This is a PREVIEW feature
+     * - Requires --enable-preview to compile and run
+     *
+     * Production Note:
+     * - If preview is not enabled, fallback to:
+     *      String msg = "Hello " + name;
+     *
+     * Interview Insight:
+     * String Templates improve developer productivity by making
+     * string creation more readable, expressive, and less error-prone.
+     */
     static void stringTemplatesDemo() {
         System.out.println("\n=== STRING TEMPLATES ===");
 
@@ -236,6 +551,44 @@ public class Java21Features {
     // ============================================================
     // 8. UNNAMED PATTERNS (Preview)
     // ============================================================
+    /*
+     * UNNAMED PATTERNS (Java 21 - Preview)
+     *
+     * Basic Idea:
+     * - Allows ignoring variables in pattern matching
+     * - Useful when we only care about the type, not the value
+     *
+     * Before (Java 17 / without preview):
+     *      if (obj instanceof String s) {
+     *          // variable 's' is declared but may not be used
+     *      }
+     *
+     * Problem:
+     * - Unused variables reduce code clarity
+     *
+     * After (Java 21 - Preview):
+     *      if (obj instanceof String _) {
+     *          // value is ignored
+     *      }
+     *
+     * Key Benefits:
+     * 1. Cleaner code (no unused variables)
+     * 2. Expresses intent clearly (type check only)
+     * 3. Works with switch and pattern matching
+     *
+     * Important Notes:
+     * - '_' is reserved (cannot be used as variable name anymore)
+     * - Requires --enable-preview
+     *
+     * Production Alternative:
+     *      if (obj instanceof String s) {
+     *          // just don't use 's'
+     *      }
+     *
+     * Interview Insight:
+     * Unnamed patterns improve readability by removing unnecessary variables
+     * when only type checking is required.
+     */
     static void unnamedPatternDemo() {
         System.out.println("\n=== UNNAMED PATTERN ===");
 
@@ -265,8 +618,8 @@ Java21 Area = 50.26548245743669
 
 === VIRTUAL THREADS ===
 Platform Thread -> Thread[#21,pool-1-thread-1,5,main]
-Virtual Thread 1 -> VirtualThread[#22]/runnable@ForkJoinPool-1-worker-1
-Virtual Thread 2 -> VirtualThread[#24]/runnable@ForkJoinPool-1-worker-2
+Virtual Thread 1 -> VirtualThread[#22]/runnable@ForkJoinPool-1-worker-2
+Virtual Thread 2 -> VirtualThread[#24]/runnable@ForkJoinPool-1-worker-1
 
 === STRUCTURED CONCURRENCY ===
 Java17: User + Order
@@ -289,4 +642,5 @@ Hello Mohan
 
 === UNNAMED PATTERN ===
 String detected (ignored value)
+
 */

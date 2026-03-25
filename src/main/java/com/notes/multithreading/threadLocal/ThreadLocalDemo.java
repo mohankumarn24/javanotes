@@ -12,23 +12,42 @@ public class ThreadLocalDemo {
 	
 	public static class MyRunnable implements Runnable {
 		
-		private ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
+		// Recommended: static + final for clarity
+		private static final ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
 		// private ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 0); 			// initialized with zero
 		
 		// Normal variables = shared across threads if the object is shared. Ex: 'count' variable in 'counter'
 		// ThreadLocal = one value per thread, even when the object is shared
 
+	    /*
+	     * ThreadLocal:
+	     * - Each thread has its own value
+	     * - Value is stored inside the thread
+	     * - MUST be cleaned using remove() to avoid leaks
+	     */
+		
 		@Override
 		public void run() {
+			// Set value specific to current thread
 			// threadLocal.set((int) (Math.random() * 50D));
 			// threadLocal.set(new Random().nextInt(500)); 											// 0-499
 			threadLocal.set(ThreadLocalRandom.current().nextInt(50));								// 0-49
+			
 			try {
+				// Simulate work
 				Thread.sleep(1000);
+				
+				// Read value
+				System.out.println(String.format("threadLocal=%d for Thread %s", 
+						threadLocal.get(),
+						Thread.currentThread().getName()));
 			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 				System.out.println("Exception occurred for thread: " + Thread.currentThread().getName());
+			} finally {
+	            // 🔥 VERY IMPORTANT: Prevents -> memory leaks, stale data in thread pools
+	            threadLocal.remove();
 			}
-			System.out.println(String.format("threadLocal=%d for Thread %s", threadLocal.get(), Thread.currentThread().getName()));
 		}
 	}
 
