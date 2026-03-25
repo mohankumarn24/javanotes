@@ -144,3 +144,201 @@ public class Java25Features {
         printJava25Features();
     }
 }
+
+/*
+package com.notes.javafeatures.java21;
+
+import java.util.*;
+import java.util.concurrent.*;
+
+/**
+ * ========================
+ * JAVA 21 vs JAVA 25
+ * ========================
+ *
+ * KEY MESSAGE:
+ * Java 21 introduced the concurrency shift (Virtual Threads).
+ * Java 25 stabilizes, improves, and makes it production standard.
+ *
+ * Compile:
+ * javac --enable-preview --release 21 Java21vs25.java
+ * java --enable-preview Java21vs25
+ *\/
+public class Java21vs25 {
+
+    public static void main(String[] args) throws Exception {
+
+        patternMatchingDemo();
+        recordPatternDemo();
+
+        virtualThreadsDemo();
+        structuredConcurrencyDemo();
+
+        sequencedCollectionsDemo();
+
+        threadLocalVsScopedValueDemo();
+
+        stringTemplatesDemo();
+        unnamedPatternDemo();
+    }
+
+    // ============================================================
+    // 1. PATTERN MATCHING (Final in 21 → Mature usage in 25)
+    // ============================================================
+    static void patternMatchingDemo() {
+        Object obj = "Java";
+
+        // Java 21
+        String result21 = switch (obj) {
+            case String s  -> "Java21: length = " + s.length();
+            case Integer i -> "Integer = " + i;
+            default        -> "Unknown";
+        };
+
+        // Java 25
+        String result25 = switch (obj) {
+            case String s  -> "Java25: upper = " + s.toUpperCase();
+            case Integer i -> "Integer = " + i;
+            default        -> "Unknown";
+        };
+    }
+
+    // ============================================================
+    // 2. RECORD PATTERNS + SEALED CLASSES
+    // ============================================================
+    static void recordPatternDemo() {
+        Shape shape = new Circle(4);
+
+        double area21 = switch (shape) {
+            case Circle(double r) -> Math.PI * r * r;
+            case Rectangle(double w, double h) -> w * h;
+        };
+
+        double area25 = switch (shape) {
+            case Circle(double r) -> r * r * Math.PI;
+            case Rectangle(double w, double h) -> w * h;
+        };
+    }
+
+    sealed interface Shape permits Circle, Rectangle {}
+    record Circle(double radius) implements Shape {}
+    record Rectangle(double width, double height) implements Shape {}
+
+    // ============================================================
+    // 3. VIRTUAL THREADS
+    // ============================================================
+    static void virtualThreadsDemo() throws Exception {
+
+        // Java 21
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            executor.submit(() -> task("Java21 VT"));
+        }
+
+        // Java 25
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            executor.submit(() -> task("Java25 VT"));
+        }
+    }
+
+    // ============================================================
+    // 4. STRUCTURED CONCURRENCY
+    // ============================================================
+    static void structuredConcurrencyDemo() throws Exception {
+
+        // Java 21
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+
+            var user = scope.fork(() -> fetch("User"));
+            var order = scope.fork(() -> fetch("Order"));
+
+            scope.join();
+            scope.throwIfFailed();
+
+            System.out.println(user.get() + " + " + order.get());
+        }
+
+        // Java 25
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+
+            var user = scope.fork(() -> fetch("User"));
+            var order = scope.fork(() -> fetch("Order"));
+
+            scope.join();
+            scope.throwIfFailed();
+
+            var result = user.get() + " + " + order.get();
+            System.out.println(result);
+        }
+    }
+
+    // ============================================================
+    // 5. SEQUENCED COLLECTIONS
+    // ============================================================
+    static void sequencedCollectionsDemo() {
+
+        List<String> list = new ArrayList<>(List.of("A", "B", "C"));
+
+        // Java 21
+        list.addFirst("START");
+
+        // Java 25
+        list.addLast("END");
+
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+        map.put("A", 1);
+        map.put("B", 2);
+
+        map.firstEntry();
+        map.lastEntry();
+    }
+
+    // ============================================================
+    // 6. THREADLOCAL vs SCOPED VALUE
+    // ============================================================
+    static void threadLocalVsScopedValueDemo() {
+
+        // Java 21
+        ThreadLocal<String> tl = new ThreadLocal<>();
+        tl.set("User21");
+        tl.get();
+        tl.remove();
+
+        // Java 25
+        ScopedValue<String> USER = ScopedValue.newInstance();
+
+        ScopedValue.where(USER, "User25").run(() -> USER.get());
+    }
+
+    // ============================================================
+    // 7. STRING TEMPLATES
+    // ============================================================
+    static void stringTemplatesDemo() {
+
+        String name = "Mohan";
+
+        String msg21 = STR."Hello \{name}";
+        String msg25 = STR."Hi \{name}, Java25";
+    }
+
+    // ============================================================
+    // 8. UNNAMED PATTERNS
+    // ============================================================
+    static void unnamedPatternDemo() {
+
+        Object obj = "test";
+
+        if (obj instanceof String _) {
+            // Java 21 / 25
+        }
+    }
+
+    static void task(String msg) {
+        System.out.println(msg + " -> " + Thread.currentThread());
+    }
+
+    static String fetch(String name) {
+        try { Thread.sleep(200); } catch (InterruptedException e) {}
+        return name;
+    }
+}
+*/
