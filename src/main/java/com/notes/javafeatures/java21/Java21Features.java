@@ -4,159 +4,289 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * ============================================================ JAVA 21 NEW
- * FEATURES (NO PREVIEW APIs) Safe for production & interviews
- * ============================================================
+ * ========================
+ * JAVA 21 - FINAL + PREVIEW
+ * ========================
  *
- * Covers ONLY FINAL features: 1. Pattern Matching for switch (Object) 2. Record
- * Patterns 3. Sealed Classes (exhaustive switch) 4. Virtual Threads (FINAL) 5.
- * Sequenced Collections
+ * KEY MESSAGE:
+ * Java 21 is NOT about syntax.
+ * It introduces a CONCURRENCY SHIFT:
+ *
+ * Virtual Threads + Structured Concurrency
+ * replace thread pools & CompletableFuture complexity
+ *
+ * INTERVIEW INSIGHT:
+ * Moves from async (CompletableFuture)
+ * → structured concurrency (clean, safe, readable)
+ *
+ * Compile:
+ * javac --enable-preview --release 21 Java21Features.java
+ * java --enable-preview Java21Features
  */
 public class Java21Features {
 
-	public static void main(String[] args) throws Exception {
-		switchPatternDemo();
-		recordPatternDemo();
-		sequencedCollectionDemo();
-		virtualThreadDemo();
-	}
+    public static void main(String[] args) throws Exception {
 
-// ══════════════════════════════════════════════════════════
-// 1. PATTERN MATCHING FOR switch (FINAL)
-// ══════════════════════════════════════════════════════════
-	static void switchPatternDemo() {
-		System.out.println("\n=== 1. SWITCH PATTERN MATCHING (Java 21) ===");
+        patternMatchingDemo();
+        recordPatternDemo();
 
-		Object obj = "Java 21";
+        virtualThreadsDemo();
+        structuredConcurrencyDemo();
 
-		// BEFORE (Java 17) — instanceof chain
-		if (obj instanceof String s) {
-			System.out.println("Before length: " + s.length());
-		}
+        sequencedCollectionsDemo();
 
-		// AFTER (Java 21) — switch on Object
-		String result = switch (obj) {
-		case String s -> "String length = " + s.length();
-		case Integer i -> "Integer value = " + i;
-		case null -> "Null value";
-		default -> "Unknown type";
-		};
+        threadLocalVsScopedValueDemo();
 
-		System.out.println("After: " + result);
+        stringTemplatesDemo();
+        unnamedPatternDemo();
+    }
 
-		/*
-		 * INTERVIEW TIPS: - switch now works on Object - instanceof + cast + branching
-		 * in ONE construct - null can be handled explicitly
-		 */
-	}
+    // ============================================================
+    // 1. PATTERN MATCHING (Java 17 vs 21)
+    // ============================================================
+    static void patternMatchingDemo() {
+        System.out.println("\n=== PATTERN MATCHING ===");
 
-// ══════════════════════════════════════════════════════════
-// 2. RECORD PATTERNS (FINAL)
-// ══════════════════════════════════════════════════════════
-	static void recordPatternDemo() {
-		System.out.println("\n=== 2. RECORD PATTERNS ===");
+        Object obj = "Java 21";
 
-		Shape shape = new Circle(4);
+        // Java 17
+        if (obj instanceof String s) {
+            System.out.println("Java17: Length = " + s.length());
+        }
 
-		// BEFORE (Java 17)
-		double areaBefore;
-		if (shape instanceof Circle c) {
-			areaBefore = Math.PI * c.radius() * c.radius();
-		} else if (shape instanceof Rectangle r) {
-			areaBefore = r.width() * r.height();
-		} else {
-			areaBefore = 0;
-		}
+        // Java 21
+        String result = switch (obj) {
+            case String s  -> "Java21: Length = " + s.length();
+            case Integer i -> "Integer = " + i;
+            case null      -> "Null";
+            default        -> "Unknown";
+        };
 
-		// AFTER (Java 21) — record destructuring
-		double areaAfter = switch (shape) {
-		case Circle(double r) -> Math.PI * r * r;
-		case Rectangle(double w, double h) -> w * h;
-		};
+        System.out.println(result);
+    }
 
-		System.out.println("Area before = " + areaBefore);
-		System.out.println("Area after  = " + areaAfter);
+    // ============================================================
+    // 2. RECORD PATTERNS + SEALED CLASSES
+    // ============================================================
+    static void recordPatternDemo() {
+        System.out.println("\n=== RECORD PATTERNS ===");
 
-		/*
-		 * INTERVIEW TIPS: - Record patterns extract components directly - No accessor
-		 * calls like circle.radius() - Best used with sealed hierarchies
-		 */
-	}
+        Shape shape = new Circle(4);
 
-// ══════════════════════════════════════════════════════════
-// 3. SEALED CLASSES (EXHAUSTIVE SWITCH)
-// ══════════════════════════════════════════════════════════
-	sealed interface Shape permits Circle, Rectangle {
-	}
+        // Java 17
+        double area17;
+        if (shape instanceof Circle c) {
+            area17 = Math.PI * c.radius() * c.radius();
+        } else if (shape instanceof Rectangle r) {
+            area17 = r.width() * r.height();
+        } else {
+            area17 = 0;
+        }
 
-	record Circle(double radius) implements Shape {
-	}
+        // Java 21
+        double area21 = switch (shape) {
+            case Circle(double r) -> Math.PI * r * r;
+            case Rectangle(double w, double h) -> w * h;
+        };
 
-	record Rectangle(double width, double height) implements Shape {
-	}
+        System.out.println("Java17 Area = " + area17);
+        System.out.println("Java21 Area = " + area21);
+    }
 
-	/*
-	 * INTERVIEW TIPS: - switch becomes exhaustive for sealed types - No default
-	 * needed - Compiler enforces completeness
-	 */
+    sealed interface Shape permits Circle, Rectangle {}
+    record Circle(double radius) implements Shape {}
+    record Rectangle(double width, double height) implements Shape {}
 
-// ══════════════════════════════════════════════════════════
-// 4. SEQUENCED COLLECTIONS (NEW)
-// ══════════════════════════════════════════════════════════
-	static void sequencedCollectionDemo() {
-		System.out.println("\n=== 4. SEQUENCED COLLECTIONS ===");
+    // ============================================================
+    // 3. VIRTUAL THREADS (FINAL)
+    // ============================================================
+    static void virtualThreadsDemo() throws Exception {
+        System.out.println("\n=== VIRTUAL THREADS ===");
 
-		List<String> names = new ArrayList<>(List.of("Sachin", "Dravid", "Virat"));
+        // Java 17 - Thread Pool required
+        ExecutorService platformExecutor = Executors.newFixedThreadPool(2);
+        platformExecutor.submit(() -> task("Platform Thread"));
+        platformExecutor.shutdown();
 
-		// BEFORE (Java 17)
-		System.out.println("First (old): " + names.get(0));
-		System.out.println("Last  (old): " + names.get(names.size() - 1));
+        // Java 21 - No pooling needed
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            executor.submit(() -> task("Virtual Thread 1"));
+            executor.submit(() -> task("Virtual Thread 2"));
+        }
 
-		// AFTER (Java 21)
-		System.out.println("First (new): " + names.getFirst());
-		System.out.println("Last  (new): " + names.getLast());
+        /*
+         * Key Insight:
+         * - No need for thread pools
+         * - One task = one virtual thread
+         * - Scales massively
+         */
+    }
 
-		names.addFirst("START");
-		names.addLast("END");
+    static void task(String msg) {
+        try {
+            Thread.sleep(300);
+            System.out.println(msg + " -> " + Thread.currentThread());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
-		System.out.println("After addFirst/addLast: " + names);
+    // ============================================================
+    // 4. STRUCTURED CONCURRENCY (Preview)
+    // ============================================================
+    static void structuredConcurrencyDemo() throws Exception {
+        System.out.println("\n=== STRUCTURED CONCURRENCY ===");
 
-		/*
-		 * INTERVIEW TIPS: - New interfaces: SequencedCollection, SequencedSet,
-		 * SequencedMap - Cleaner first/last access - Works with List, Deque,
-		 * LinkedHashMap
-		 */
-	}
+        // Java 17 - CompletableFuture
+        CompletableFuture<String> user =
+                CompletableFuture.supplyAsync(() -> fetch("User"));
 
-// ══════════════════════════════════════════════════════════
-// 5. VIRTUAL THREADS (FINAL)
-// ══════════════════════════════════════════════════════════
-	static void virtualThreadDemo() throws Exception {
-		System.out.println("\n=== 5. VIRTUAL THREADS ===");
+        CompletableFuture<String> order =
+                CompletableFuture.supplyAsync(() -> fetch("Order"));
 
-		// BEFORE — platform threads
-		ExecutorService platformExecutor = Executors.newFixedThreadPool(2);
-		platformExecutor.submit(() -> blockingTask("Platform thread"));
-		platformExecutor.shutdown();
+        String result17 = user.thenCombine(order, (u, o) -> u + " + " + o).join();
+        System.out.println("Java17: " + result17);
 
-		// AFTER — virtual threads
-		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-			executor.submit(() -> blockingTask("Virtual thread 1"));
-			executor.submit(() -> blockingTask("Virtual thread 2"));
-		}
+        // Java 21 - Structured Concurrency
+        try (@SuppressWarnings("preview")
+		var scope = new StructuredTaskScope.ShutdownOnFailure()) {
 
-		/*
-		 * INTERVIEW TIPS: - Virtual threads are lightweight (millions possible) - Ideal
-		 * for I/O-heavy workloads - Existing blocking code works unchanged
-		 */
-	}
+            var userTask = scope.fork(() -> fetch("User"));
+            var orderTask = scope.fork(() -> fetch("Order"));
 
-	static void blockingTask(String msg) {
-		try {
-			Thread.sleep(300);
-			System.out.println(msg + " running on " + Thread.currentThread());
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-	}
+            scope.join();
+            scope.throwIfFailed();
+
+            var userResult = userTask.get();
+            var orderResult = orderTask.get();
+
+            String result21 = userResult + " + " + orderResult;
+            System.out.println("Java21: " + result21);
+        }
+    }
+
+    static String fetch(String name) {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return name;
+    }
+
+    // ============================================================
+    // 5. SEQUENCED COLLECTIONS (List + Map)
+    // ============================================================
+    static void sequencedCollectionsDemo() {
+        System.out.println("\n=== SEQUENCED COLLECTIONS ===");
+
+        List<String> list = new ArrayList<>(List.of("A", "B", "C"));
+
+        System.out.println("Java17 First = " + list.get(0));
+        System.out.println("Java17 Last  = " + list.get(list.size() - 1));
+
+        list.addFirst("START");
+        list.addLast("END");
+
+        System.out.println("Java21 First = " + list.getFirst());
+        System.out.println("Java21 Last  = " + list.getLast());
+
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+        map.put("A", 1);
+        map.put("B", 2);
+        map.put("C", 3);
+
+        System.out.println("First Entry = " + map.firstEntry());
+        System.out.println("Last Entry  = " + map.lastEntry());
+    }
+
+    // ============================================================
+    // 6. THREADLOCAL vs SCOPED VALUE
+    // ============================================================
+    @SuppressWarnings("preview")
+	static void threadLocalVsScopedValueDemo() {
+        System.out.println("\n=== THREADLOCAL vs SCOPED VALUE ===");
+
+        ThreadLocal<String> tl = new ThreadLocal<>();
+        tl.set("User17");
+
+        System.out.println("ThreadLocal: " + tl.get());
+        tl.remove();
+
+        ScopedValue<String> USER = ScopedValue.newInstance();
+
+        ScopedValue.where(USER, "User21").run(() ->
+                System.out.println("ScopedValue: " + USER.get())
+        );
+    }
+
+    // ============================================================
+    // 7. STRING TEMPLATES (Preview)
+    // ============================================================
+    static void stringTemplatesDemo() {
+        System.out.println("\n=== STRING TEMPLATES ===");
+
+        String name = "Mohan";
+        // String msg = STR."Hello \{name}";
+        String msg = "Hello " + name;
+
+        System.out.println(msg);
+    }
+
+    // ============================================================
+    // 8. UNNAMED PATTERNS (Preview)
+    // ============================================================
+    static void unnamedPatternDemo() {
+        System.out.println("\n=== UNNAMED PATTERN ===");
+
+        Object obj = "test";
+
+        // if (obj instanceof String _) {
+        if (obj instanceof String s) {
+            System.out.println("String detected (ignored value)");
+        }
+    }
+
+    /*
+     * JVM Improvement:
+     * Generational ZGC improves performance & latency
+     */
 }
+
+/*
+
+=== PATTERN MATCHING ===
+Java17: Length = 7
+Java21: Length = 7
+
+=== RECORD PATTERNS ===
+Java17 Area = 50.26548245743669
+Java21 Area = 50.26548245743669
+
+=== VIRTUAL THREADS ===
+Platform Thread -> Thread[#21,pool-1-thread-1,5,main]
+Virtual Thread 1 -> VirtualThread[#22]/runnable@ForkJoinPool-1-worker-1
+Virtual Thread 2 -> VirtualThread[#24]/runnable@ForkJoinPool-1-worker-2
+
+=== STRUCTURED CONCURRENCY ===
+Java17: User + Order
+Java21: User + Order
+
+=== SEQUENCED COLLECTIONS ===
+Java17 First = A
+Java17 Last  = C
+Java21 First = START
+Java21 Last  = END
+First Entry = A=1
+Last Entry  = C=3
+
+=== THREADLOCAL vs SCOPED VALUE ===
+ThreadLocal: User17
+ScopedValue: User21
+
+=== STRING TEMPLATES ===
+Hello Mohan
+
+=== UNNAMED PATTERN ===
+String detected (ignored value)
+*/
