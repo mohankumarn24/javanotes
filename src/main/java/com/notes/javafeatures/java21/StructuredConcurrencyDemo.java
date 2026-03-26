@@ -43,7 +43,27 @@ public class StructuredConcurrencyDemo {
 
     // -------------------------------
     // ✅ Structured Concurrency
-    // -------------------------------
+    // ------------------------------
+    /**
+     * A StructuredTaskScope that shuts down when any subtask fails.
+     *
+     * Behavior:
+     * - Forks multiple concurrent subtasks.
+     * - If any subtask throws an exception:
+     *   - The scope is shut down immediately.
+     *   - All remaining running tasks are cancelled (interrupted).
+     * - After joining, use throwIfFailed() to propagate the failure.
+     *
+     * Use Case:
+     * - When all tasks must succeed to produce a valid result.
+     * - Suitable for aggregating results where partial completion is not acceptable.
+     *
+     * Example:
+     * - Fetching data from multiple services where every response is required.
+     *
+     * Key Idea:
+     * - "Fail fast on first error."
+     */
     private static void structuredWay() throws Exception {
         try (@SuppressWarnings("preview")
         var scope = new StructuredTaskScope.ShutdownOnFailure()) {
@@ -64,6 +84,26 @@ public class StructuredConcurrencyDemo {
     // -------------------------------
     // Simulated APIs
     // -------------------------------
+    /**
+     * StructuredTaskScope.ShutdownOnSuccess<T> -> A StructuredTaskScope that shuts down when the first subtask succeeds.
+     *
+     * Behavior:
+     * - Forks multiple concurrent subtasks.
+     * - As soon as one subtask completes successfully:
+     *   - The scope is shut down.
+     *   - All other running tasks are cancelled (interrupted).
+     * - The successful result can be retrieved using result().
+     *
+     * Use Case:
+     * - When only one successful result is needed.
+     * - Suitable for racing multiple alternatives to get the fastest response.
+     *
+     * Example:
+     * - Querying multiple redundant services and using the first valid response.
+     *
+     * Key Idea:
+     * - "Return the first successful result and stop the rest."
+     */    
     private static String fetchUser() {
         try {
             Thread.sleep(5000); // long task
