@@ -188,6 +188,60 @@ public class Java21Features {
      * Record patterns extend pattern matching by enabling direct data extraction,
      * making code more declarative and reducing boilerplate.
      */
+    
+    /*
+     * DESIGN CHOICE: Pattern Matching (Java 21) instead of Polymorphism
+     *
+     * - Shape is a sealed interface with NO methods
+     * - Circle and Rectangle are simple data carriers (records)
+     *
+     *   sealed interface Shape permits Circle, Rectangle {}
+     *   record Circle(double radius) implements Shape {}
+     *   record Rectangle(double width, double height) implements Shape {}
+     *
+     * - Business logic (area calculation) is handled using switch:
+     *
+     *   double area = switch (shape) {
+     *       case Circle(double r) -> Math.PI * r * r;
+     *       case Rectangle(double w, double h) -> w * h;
+     *   };
+     *
+     * WHY NO METHODS IN INTERFACE?
+     * - We are NOT doing:
+     *
+     *   shape.area();   // would require method in interface
+     *
+     * - Instead we use:
+     *
+     *   switch(shape) { ... }  // logic outside
+     *
+     * KEY RULE:
+     * - switch-based logic  → NO methods needed
+     * - object-based logic  → methods required
+     *
+     * ALTERNATIVE (OOP STYLE):
+     *
+     *   interface Shape { double area(); }
+     *
+     *   record Circle(double r) implements Shape {
+     *       public double area() { return Math.PI * r * r; }
+     *   }
+     *
+     * SEALED BENEFIT:
+     * - Compiler knows all types → exhaustive switch
+     * - No 'default' needed
+     *
+     * BREAK CASE:
+     *
+     *   non-sealed class Circle implements Shape {}
+     *
+     *   // Now this becomes mandatory:
+     *   default -> throw new IllegalStateException();
+     *
+     * SUMMARY:
+     * - Data (records) + external logic (switch)
+     * - Clean, modern Java 21 pattern
+     */
     static void recordPatternDemo() {
         System.out.println("\n=== RECORD PATTERNS ===");
 
@@ -749,8 +803,8 @@ Java21: User + Order
 
 === VIRTUAL THREADS ===
 Platform Thread -> Thread[#28,pool-1-thread-1,5,main]
-Virtual Thread 2 -> VirtualThread[#30]/runnable@ForkJoinPool-1-worker-1
 Virtual Thread 1 -> VirtualThread[#29]/runnable@ForkJoinPool-1-worker-2
+Virtual Thread 2 -> VirtualThread[#30]/runnable@ForkJoinPool-1-worker-1
 
 === SEQUENCED COLLECTIONS ===
 Java17 First = A
@@ -770,8 +824,8 @@ String detected (ignored value)
 Winner: Fast API
 
 === VIRTUAL THREAD PINNING ===
-Pinned: VirtualThread[#34]/runnable@ForkJoinPool-1-worker-2
-Pinned: VirtualThread[#36]/runnable@ForkJoinPool-1-worker-3
+Pinned: VirtualThread[#34]/runnable@ForkJoinPool-1-worker-3
+Pinned: VirtualThread[#36]/runnable@ForkJoinPool-1-worker-2
 Pinned: VirtualThread[#35]/runnable@ForkJoinPool-1-worker-1
 
 === MIGRATION ===

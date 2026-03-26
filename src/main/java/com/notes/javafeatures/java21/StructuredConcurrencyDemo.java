@@ -19,14 +19,14 @@ public class StructuredConcurrencyDemo {
     // ❌ Old Way (Problem)
     // -------------------------------
     private static void oldWay() throws Exception {
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-
-        Future<String> userFuture = executor.submit(() -> fetchUser());             	// long task (~5s)
-        Future<String> orderFuture = executor.submit(() -> fetchOrderWithFailure());    // fails fast (~500ms)
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        
+        Future<String> userFuture = executorService.submit(() -> fetchUser());             		// long task (~5s)
+        Future<String> orderFuture = executorService.submit(() -> fetchOrderWithFailure());    	// fails fast (~500ms)
 
         try {
-            String user = userFuture.get();      										// blocks ~5s ❗
-            String order = orderFuture.get();   										// ❌ exception already happened
+            String user = userFuture.get();      												// blocks ~5s ❗
+            String order = orderFuture.get();   												// ❌ exception already happened
 
             System.out.println("Result: " + user + " | " + order);
         } catch (Exception e) {
@@ -38,7 +38,7 @@ public class StructuredConcurrencyDemo {
             // - No automatic cancellation → wasted time/resources
         }
 
-        executor.shutdown();
+        executorService.shutdown();
     }
 
     // -------------------------------
@@ -91,7 +91,6 @@ public class StructuredConcurrencyDemo {
 	 // --------------------------------------------
 	 // ShutdownOnSuccess example
 	 // --------------------------------------------
-	 @SuppressWarnings("preview")
 	 static void shutdownOnSuccessDemo() throws Exception {
 	     try (var scope = new StructuredTaskScope.ShutdownOnSuccess<String>()) {
 	

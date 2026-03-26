@@ -39,6 +39,7 @@ public class ScopedValueDemo {
         scopedValueDemo();
         
         System.out.println("\n=== ScopedValue + Virtual Threads ===");
+        threadLocalEquivalentDemo();
         virtualThreadScopedValueDemo();
     }
 
@@ -101,7 +102,7 @@ public class ScopedValueDemo {
             print("First Call  : ");
         });
 
-     // Bind SCOPED_VALUE to value "REQ-2" for this execution scope
+        // Bind SCOPED_VALUE to value "REQ-2" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-2").run(() -> {
             // ✅ New scope → completely independent value
             print("Second Call : ");
@@ -141,6 +142,57 @@ public class ScopedValueDemo {
      * 
      */  
     @SuppressWarnings("preview")
+    private static void threadLocalEquivalentDemo() throws Exception {
+
+        // ❌ Setting ThreadLocal in parent thread is NOT useful for virtual threads
+        // Virtual threads created by StructuredTaskScope do NOT inherit ThreadLocal values
+        // This line is intentionally kept here for demonstration purpose11
+        THREAD_LOCAL.set("REQ-123");												// Parent thread sets value
+
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+            /**
+             * In virtual threads, ThreadLocal must be set inside each task — parent value is ignored
+             * 
+             * Each fork() creates a NEW virtual thread
+             * ThreadLocal values are NOT shared → must be set inside each task
+             */
+            scope.fork(() -> {
+                // ✅ Each virtual thread must set its own value
+                // If below line is removed → THREAD_LOCAL.get() will return null
+                THREAD_LOCAL.set("REQ-111");
+
+                try {
+                    // Each thread prints its own isolated value
+                    printThreadLocal("Task 1: ");
+                    return null;
+                } finally {
+                    // ✅ VERY IMPORTANT: Prevent memory leaks (especially in long-running apps)
+                    THREAD_LOCAL.remove();
+                }
+            });
+
+            scope.fork(() -> {
+                // ✅ Independent value for another virtual thread
+                // If below line is removed → THREAD_LOCAL.get() will return null            	
+                THREAD_LOCAL.set("REQ-222");
+
+                try {
+                    printThreadLocal("Task 2: ");
+                    return null;
+                } finally {
+                    THREAD_LOCAL.remove();
+                }
+            });
+
+            // Wait for all virtual threads to complete
+            scope.join();
+
+            // If any thread failed → exception is thrown here
+            scope.throwIfFailed();
+        }
+    }
+    
+    @SuppressWarnings("preview")
     private static void virtualThreadScopedValueDemo() throws Exception {
     	
     	/**
@@ -154,7 +206,6 @@ public class ScopedValueDemo {
     	
     	// Bind SCOPED_VALUE = "REQ-123" for this execution block (scope)
         ScopedValue.where(SCOPED_VALUE, "REQ-123").run(() -> {
-
             /**
              * StructuredTaskScope manages virtual threads in a structured way
              * StructuredTaskScope ensures:
@@ -163,7 +214,6 @@ public class ScopedValueDemo {
              *  - proper lifecycle management
              */
             try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-
                 // fork() → creates a new virtual thread and runs this task
                 scope.fork(() -> {
                     // This runs in a virtual thread
@@ -206,6 +256,8 @@ Second Call : REQ-2
 Outside     : No value bound
 
 === ScopedValue + Virtual Threads ===
+Task 1: REQ-111
+Task 2: REQ-222
 Task 1: REQ-123
 Task 2: REQ-123
 */

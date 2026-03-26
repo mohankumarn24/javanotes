@@ -187,9 +187,9 @@ public class VirtualThreadDemo {
         long start = System.currentTimeMillis();
         
         var lock = new ReentrantLock();
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+        try (var executorService = Executors.newVirtualThreadPerTaskExecutor()) {
             for (int i = 0; i < 5; i++) {
-                executor.submit(() -> {
+                executorService.submit(() -> {
                     lock.lock();
                     try {
                         Thread.sleep(1000);
@@ -229,9 +229,9 @@ public class VirtualThreadDemo {
         System.out.println("\n=== Virtual Thread (No Pinning) ===");
         long start = System.currentTimeMillis();
 
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+        try (var executorService = Executors.newVirtualThreadPerTaskExecutor()) {
             for (int i = 0; i < 5; i++) {
-                executor.submit(() -> {
+            	executorService.submit(() -> {
                     try {
                         Thread.sleep(1000);
                         System.out.println("Task: " + Thread.currentThread());
@@ -304,37 +304,37 @@ public class VirtualThreadDemo {
 }
 
 /*
-Simple Virtual Thread: VirtualThread[#21]/runnable@ForkJoinPool-1-worker-1
 Custom Named VT: VirtualThread[#23,my-virtual-thread]/runnable@ForkJoinPool-1-worker-2
-Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-2
-Task 4 started on VirtualThread[#30]/runnable@ForkJoinPool-1-worker-5
-Task 0 started on VirtualThread[#26]/runnable@ForkJoinPool-1-worker-3
-Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-1
+Simple Virtual Thread: VirtualThread[#21]/runnable@ForkJoinPool-1-worker-1
 Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
-Task 3 completed
+Task 0 started on VirtualThread[#26]/runnable@ForkJoinPool-1-worker-2
+Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-3
+Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-1
+Task 4 started on VirtualThread[#30]/runnable@ForkJoinPool-1-worker-5
+Task 2 completed
+Task 1 completed
 Task 4 completed
 Task 0 completed
-Task 1 completed
-Task 2 completed
+Task 3 completed
 Future Result: Result from Virtual Thread
 Is Virtual? true
 Main completed
 
 === Virtual Thread (Pinning) ===
-Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-2
-Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-8
-Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-2
-Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-4
-Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-4
-Time taken: 5027 ms
+Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-1
+Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-1
+Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-9
+Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-1
+Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-9
+Time taken: 5042 ms
 
 === Virtual Thread (No Pinning) ===
-Task: VirtualThread[#1050]/runnable@ForkJoinPool-1-worker-7
-Task: VirtualThread[#1048]/runnable@ForkJoinPool-1-worker-8
-Task: VirtualThread[#1049]/runnable@ForkJoinPool-1-worker-2
-Task: VirtualThread[#1052]/runnable@ForkJoinPool-1-worker-4
-Task: VirtualThread[#1051]/runnable@ForkJoinPool-1-worker-12
-Time taken: 1005 ms
+Task: VirtualThread[#1048]/runnable@ForkJoinPool-1-worker-6
+Task: VirtualThread[#1050]/runnable@ForkJoinPool-1-worker-12
+Task: VirtualThread[#1049]/runnable@ForkJoinPool-1-worker-9
+Task: VirtualThread[#1052]/runnable@ForkJoinPool-1-worker-1
+Task: VirtualThread[#1051]/runnable@ForkJoinPool-1-worker-3
+Time taken: 1009 ms
 
 === Migration ===
 Old: UserOrder
