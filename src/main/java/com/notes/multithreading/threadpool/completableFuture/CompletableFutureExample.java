@@ -5,9 +5,9 @@ import java.util.concurrent.CompletableFuture;
 // https://chatgpt.com/share/68b1a945-fce4-8004-970f-175e01ef7440
 // https://chatgpt.com/share/68b1b1b6-75e0-8004-b8cf-6dda11fb09c5
 public class CompletableFutureExample {
-
+	
 	public static void main(String[] args) throws Exception {
-
+		
 		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
 			try {
 				Thread.sleep(2000);
@@ -16,20 +16,41 @@ public class CompletableFutureExample {
 			return "Hello from CompletableFuture!";
 		});
 
-		// Attach callback (non-blocking)
-		future.thenApply(msg -> msg + " Processed").thenAccept(result -> System.out.println(result));
+        // Attach callback chain (non-blocking)
+        CompletableFuture<Void> callbackFuture =future.thenApply(msg -> msg + " Processed").thenAccept(result -> System.out.println(result));
+        
 		System.out.println("-- Main thread (start) --"); // runs even if above line is not completed
 		
-		// Blocking style (same as Future.get)
-		// System.out.println("Blocking result: " + future.get());
-		// System.out.println("Main thread working..."); // blocked till above line is completed
+		/**
+		 * Option 1: callbackFuture.join()
+		 * - Waits for CompletableFuture callback chain to finish
+		 * - Prevents JVM from exiting early
+		 * - Async task still runs in background
+		 * - Cleaner and more reliable than Thread.sleep()
+		 */
+		callbackFuture.join();
+
+		/**
+		 * Option 2: Thread.sleep(...)
+		 * - Keeps main thread alive for demo purpose
+		 * - Helps visually demonstrate non-blocking behavior
+		 * - Not recommended in real code
+		 * - In real applications (Spring Boot, web servers), not needed
+		 */
+		// Thread.sleep(3000);
 		
-		// Ensure main thread doesn’t exit early
-		Thread.sleep(3000);
-		
-		System.out.println(" -- Main thread (end) --"); // runs even if above line is not completed
+		System.out.println("-- Main thread (end) --"); // runs even if above line is not completed
 	}
 }
+
+/*
+-- Main thread (start) --
+Hello from CompletableFuture! Processed
+-- Main thread (end) --
+*/
+
+
+
 
 /*
 1. Using Future:

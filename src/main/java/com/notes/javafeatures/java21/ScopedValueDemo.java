@@ -57,7 +57,7 @@ public class ScopedValueDemo {
         // First request
         executorService.submit(() -> {
 	            THREAD_LOCAL.set("REQ-1");
-	            printThreadLocalValue("First Call  : ");
+	            printThreadLocalValue("First Call  : ");							// REQ-1
 	
 	            // ❌ Forgot to remove → value stays in thread
 	            // THREAD_LOCAL.remove();
@@ -68,7 +68,7 @@ public class ScopedValueDemo {
 	            // ❌ Forgot to set new value → old value (REQ-1) is still present
 	            // THREAD_LOCAL.set("REQ-2");
 	
-        		printThreadLocalValue("Second Call : "); // ❌ Bug (Leaked). Still prints REQ-1 due to thread reuse
+        		printThreadLocalValue("Second Call : "); 							// REQ-1 -> ❌ Bug (Leaked). Still prints REQ-1 due to thread reuse
 	
 	            // ❌ Forgot to remove again → continues leaking
 	            // THREAD_LOCAL.remove();
@@ -103,17 +103,17 @@ public class ScopedValueDemo {
     	// Bind SCOPED_VALUE to value "REQ-1" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-1").run(() -> {
             // ✅ Value is available only within this scope
-        	printScopedValue("First Call  : ");
+        	printScopedValue("First Call  : ");										// REQ-1
         });
 
         // Bind SCOPED_VALUE to value "REQ-2" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-2").run(() -> {
             // ✅ New scope → completely independent value
-        	printScopedValue("Second Call : ");
+        	printScopedValue("Second Call : ");										// REQ-2
         });
 
         // ❌ No value bound here → accessing will throw exception
-        printScopedValue("Outside     : ");
+        printScopedValue("Outside     : ");											// No value bound
         // SCOPED_VALUE.get();	// It throws NoSuchElementException 
     }
     
@@ -155,7 +155,7 @@ public class ScopedValueDemo {
 
                 try {
                     // Each thread prints its own isolated value
-                	printThreadLocalValue("Task 1: ");
+                	printThreadLocalValue("Task 1: ");								// REQ-111
                     return null;
                 } finally {
                     // ✅ VERY IMPORTANT: Prevent memory leaks (especially in long-running apps)
@@ -169,7 +169,7 @@ public class ScopedValueDemo {
                 THREAD_LOCAL.set("REQ-222");
 
                 try {
-                	printThreadLocalValue("Task 2: ");
+                	printThreadLocalValue("Task 2: ");								// REQ-222
                     return null;
                 } finally {
                     THREAD_LOCAL.remove();
@@ -215,14 +215,14 @@ public class ScopedValueDemo {
                 scope.fork(() -> {
                     // This runs in a virtual thread
                     // ScopedValue is automatically available here
-                	printScopedValue("Task 1: ");
+                	printScopedValue("Task 1: ");									// REQ-123
                     return null; // required (because fork expects Callable in my PC JDK version)
                 });
 
                 // Another virtual thread
                 scope.fork(() -> {
                 	// Runs concurrently with Task 1
-                	printScopedValue("Task 2: ");
+                	printScopedValue("Task 2: ");									// REQ-123
                     return null;
                 });
 
@@ -231,7 +231,6 @@ public class ScopedValueDemo {
 
                 // If any task fails → exception will be thrown here
                 scope.throwIfFailed();
-
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
