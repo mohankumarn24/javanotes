@@ -32,28 +32,32 @@ public class ScopedValueDemo {
     private static final ScopedValue<String> SCOPED_VALUE = ScopedValue.newInstance();
 
     public static void main(String[] args) throws Exception {
-        System.out.println("=== ThreadLocal Problem ===");
-        threadLocalDemo();
+        System.out.println("=== ThreadLocal (Leak) Problem ===");
+        threadLocalLeakDemo();
 
         System.out.println("\n=== ScopedValue Correct ===");
-        scopedValueDemo();
+        scopedValueBasicDemo();
         
         System.out.println("\n=== ScopedValue + Virtual Threads ===");
-        threadLocalEquivalentDemo();
-        virtualThreadScopedValueDemo();
+        threadLocalWithVirtualThreadsDemo();
+        scopedValueWithStructuredConcurrencyDemo();
+        
+        // 👉 Final Summary:
+        // ThreadLocal → thread-bound, manual, error-prone (breaks with virtual threads)
+        // ScopedValue → scope-bound, immutable, safe (works with structured concurrency
     }
 
     // -------------------------------
-    // ThreadLocal (problem)
+    // 1. ThreadLocal Leak (Problem ❌)
     // -------------------------------
-    private static void threadLocalDemo() throws Exception {
+    private static void threadLocalLeakDemo() throws Exception {
     	// single thread used
         ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         // First request
         executorService.submit(() -> {
 	            THREAD_LOCAL.set("REQ-1");
-	            printThreadLocal("First Call  : ");
+	            printThreadLocalValue("First Call  : ");
 	
 	            // ❌ Forgot to remove → value stays in thread
 	            // THREAD_LOCAL.remove();
@@ -64,7 +68,7 @@ public class ScopedValueDemo {
 	            // ❌ Forgot to set new value → old value (REQ-1) is still present
 	            // THREAD_LOCAL.set("REQ-2");
 	
-        		printThreadLocal("Second Call : "); // ❌ Bug (Leaked). Still prints REQ-1 due to thread reuse
+        		printThreadLocalValue("Second Call : "); // ❌ Bug (Leaked). Still prints REQ-1 due to thread reuse
 	
 	            // ❌ Forgot to remove again → continues leaking
 	            // THREAD_LOCAL.remove();
@@ -86,67 +90,55 @@ public class ScopedValueDemo {
     	 */
     }
 
-    private static void printThreadLocal(String label) {
+    private static void printThreadLocalValue(String label) {
         System.out.println(label + THREAD_LOCAL.get());
     }
     
     // -------------------------------
-    // ScopedValue (safe)
+    // 2. ScopedValue Basic (Safe ✅)
     // -------------------------------
     @SuppressWarnings("preview")
-    private static void scopedValueDemo() {
+    private static void scopedValueBasicDemo() {
 
     	// Bind SCOPED_VALUE to value "REQ-1" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-1").run(() -> {
             // ✅ Value is available only within this scope
-            print("First Call  : ");
+        	printScopedValue("First Call  : ");
         });
 
         // Bind SCOPED_VALUE to value "REQ-2" for this execution scope
         ScopedValue.where(SCOPED_VALUE, "REQ-2").run(() -> {
             // ✅ New scope → completely independent value
-            print("Second Call : ");
+        	printScopedValue("Second Call : ");
         });
 
         // ❌ No value bound here → accessing will throw exception
-        print("Outside     : ");
+        printScopedValue("Outside     : ");
         // SCOPED_VALUE.get();	// It throws NoSuchElementException 
     }
-
-    // Prints the value from ScopedValue
-    private static void print(String label) {
-    	// Check if a value is bound in the current execution scope
-    	if (SCOPED_VALUE.isBound()) {
-    		// ✅ Value is available → safely read it
-    	    System.out.println(label + SCOPED_VALUE.get());
-    	} else {
-    		// ❌ No value bound → outside scope or propagation failed
-    	    System.out.println(label + "No value bound");
-    	}
-    }
     
-    // -------------------------------
-    // ScopedValue with Virtual Threads
-    // -------------------------------
+    // ------------------------------------------------------
+    // 3.a ThreadLocal with Virtual Threads (Limitation ❌)
+    // ------------------------------------------------------
     /**
-     * ScopedValue is designed for structured concurrency. Virtual threads support it naturally, but using ExecutorService can break the propagation.
-     * Virtual Thread Call: No value bound
-     * 
-     * // ❌ Fails
-     * // ScopedValue + ExecutorService       = ⚠️ unreliable
-     * executor.submit(() -> print("Executor Call: ")).get();
-     * 
-     * // ✅ Works
-     * // ScopedValue + Structured concurrency = ✅ 
-     * Thread.startVirtualThread(() -> print("Direct VT Call: ")).join();
-     * 
-     */  
+     * 👉 ThreadLocal + Virtual Threads Limitation:
+     *
+     * - ThreadLocal is thread-bound → NOT inherited by virtual threads
+     * - Each virtual thread is independent → must set value manually
+     * - Parent thread value is NOT visible in child virtual threads
+     *
+     * ❌ Problem:
+     * - Easy to forget setting/removing → bugs or leaks
+     *
+     * 👉 Key Insight:
+     * ThreadLocal does NOT work naturally with structured concurrency
+     */ 
     @SuppressWarnings("preview")
-    private static void threadLocalEquivalentDemo() throws Exception {
+    private static void threadLocalWithVirtualThreadsDemo() throws Exception {
 
         // ❌ Setting ThreadLocal in parent thread is NOT useful for virtual threads
         // Virtual threads created by StructuredTaskScope do NOT inherit ThreadLocal values
-        // This line is intentionally kept here for demonstration purpose11
+        // This line is intentionally kept here for demonstration purpose
         THREAD_LOCAL.set("REQ-123");												// Parent thread sets value
 
         try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
@@ -163,7 +155,7 @@ public class ScopedValueDemo {
 
                 try {
                     // Each thread prints its own isolated value
-                    printThreadLocal("Task 1: ");
+                	printThreadLocalValue("Task 1: ");
                     return null;
                 } finally {
                     // ✅ VERY IMPORTANT: Prevent memory leaks (especially in long-running apps)
@@ -177,7 +169,7 @@ public class ScopedValueDemo {
                 THREAD_LOCAL.set("REQ-222");
 
                 try {
-                    printThreadLocal("Task 2: ");
+                	printThreadLocalValue("Task 2: ");
                     return null;
                 } finally {
                     THREAD_LOCAL.remove();
@@ -192,8 +184,11 @@ public class ScopedValueDemo {
         }
     }
     
+    // ------------------------------------------------------------------
+    // 3.b ScopedValue with Structured Concurrency (Recommended ✅)
+    // ------------------------------------------------------------------
     @SuppressWarnings("preview")
-    private static void virtualThreadScopedValueDemo() throws Exception {
+    private static void scopedValueWithStructuredConcurrencyDemo() throws Exception {
     	
     	/**
     	 * 1. Bind value → SCOPED_VALUE = "REQ-123"
@@ -204,12 +199,14 @@ public class ScopedValueDemo {
     	 * 6. Scope ends → value disappears
     	 */
     	
+        // 👉 ScopedValue automatically propagates across forked virtual threads
+        // because they share the same structured scope
+    	
     	// Bind SCOPED_VALUE = "REQ-123" for this execution block (scope)
         ScopedValue.where(SCOPED_VALUE, "REQ-123").run(() -> {
             /**
              * StructuredTaskScope manages virtual threads in a structured way
              * StructuredTaskScope ensures:
-             *  - StructuredTaskScope ensures:
              *  - tasks run in virtual threads
              *  - proper lifecycle management
              */
@@ -218,14 +215,14 @@ public class ScopedValueDemo {
                 scope.fork(() -> {
                     // This runs in a virtual thread
                     // ScopedValue is automatically available here
-                	print("Task 1: ");
+                	printScopedValue("Task 1: ");
                     return null; // required (because fork expects Callable in my PC JDK version)
                 });
 
                 // Another virtual thread
                 scope.fork(() -> {
                 	// Runs concurrently with Task 1
-                	print("Task 2: ");
+                	printScopedValue("Task 2: ");
                     return null;
                 });
 
@@ -243,10 +240,22 @@ public class ScopedValueDemo {
         // After this point:
         // ❌ SCOPED_VALUE is NO LONGER available (scope ended)
     }
+    
+    // Prints the value from ScopedValue
+    private static void printScopedValue(String label) {
+    	// Check if a value is bound in the current execution scope
+    	if (SCOPED_VALUE.isBound()) {
+    		// ✅ Value is available → safely read it
+    	    System.out.println(label + SCOPED_VALUE.get());
+    	} else {
+    		// ❌ No value bound → outside scope or propagation failed
+    	    System.out.println(label + "No value bound");
+    	}
+    }
 }
 
 /*
-=== ThreadLocal Problem ===
+=== ThreadLocal (Leak) Problem ===
 First Call  : REQ-1
 Second Call : REQ-1
 
@@ -260,104 +269,4 @@ Task 1: REQ-111
 Task 2: REQ-222
 Task 1: REQ-123
 Task 2: REQ-123
-*/
-
-
-
-/*
-public class ScopedValueTraceExample {
-
-    // ScopedValue for traceId
-    @SuppressWarnings("preview")
-	private static final ScopedValue<String> TRACE_ID = ScopedValue.newInstance();
-
-    @SuppressWarnings("preview")
-	public static void main(String[] args) {
-
-    	// For this block of code, TRACE_ID = REQ-1
-        // Request 1
-        ScopedValue.where(TRACE_ID, "REQ-1").run(() -> {
-            controller();
-        });
-
-        // For this block of code, TRACE_ID = REQ-2
-        // Request 2
-        ScopedValue.where(TRACE_ID, "REQ-2").run(() -> {
-            controller();
-        });
-    }
-
-    static void controller() {
-        service();
-    }
-
-    static void service() {
-        repository();
-    }
-
-    static void repository() {
-        // ✅ Always correct traceId within scope
-        System.out.println("TraceId: " + TRACE_ID.get());
-    }
-}
-
-// TraceId: REQ-1
-// TraceId: REQ-2
-*/
-
-/*
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-public class ThreadLocalTraceExample {
-
-    // Used to store traceId for logging across layers
-    private static final ThreadLocal<String> TRACE_ID = new ThreadLocal<>();
-
-    public static void main(String[] args) {
-
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-
-        // Simulating Request 1
-        executor.submit(() -> {
-            TRACE_ID.set("REQ-1");
-
-            controller();
-
-            // ❌ CONS:
-            // If we forget this → next request may see REQ-1
-            // TRACE_ID.remove();
-        });
-
-        sleep(500);
-
-        // Simulating Request 2
-        executor.submit(() -> {
-
-            // ❌ CONS:
-            // No TRACE_ID set here
-            // But thread may still have REQ-1 (thread reuse)
-            controller();  // 🔥 Wrong traceId possible
-        });
-
-        executor.shutdown();
-    }
-
-    static void controller() {
-        service();
-    }
-
-    static void service() {
-        repository();
-    }
-
-    static void repository() {
-        // ❌ Hidden dependency on ThreadLocal
-        System.out.println("TraceId: " + TRACE_ID.get());
-    }
-
-    static void sleep(long ms) {
-        try { Thread.sleep(ms); } catch (Exception ignored) {}
-    }
-}
 */

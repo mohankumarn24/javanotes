@@ -545,10 +545,10 @@ public class Java21Features {
      * - Direct methods available:
      *
      * List:
-     *      list.getFirst()
-     *      list.getLast()
      *      list.addFirst()
      *      list.addLast()
+     *      list.getFirst()
+     *      list.getLast()
      *
      * Map (LinkedHashMap):
      *      map.firstEntry()

@@ -4,98 +4,34 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 /*
-INTERVIEW TRAPS:
-
-Do NOT use Virtual Threads for:
-1. CPU heavy tasks (use parallel streams / ForkJoin)
-2. Long synchronized blocks
-3. Tight loops / compute-heavy work
-
-BEST USE:
-- DB calls
-- REST calls
-- Kafka / IO operations
+ * TRAPS:
+ * 
+ * Do NOT use Virtual Threads for:
+ *  - CPU heavy tasks (use parallel streams / ForkJoin)
+ *  - Long synchronized blocks
+ *  - Tight loops / compute-heavy work
+ * 
+ * BEST USE:
+ *  - DB calls
+ *  - REST calls
+ *  - Kafka / IO operations
 */
 public class VirtualThreadDemo {
     public static void main(String[] args) throws Exception {
 
-        // =========================================================
-        // 1. SIMPLE VIRTUAL THREAD
-        // =========================================================
-        Thread.startVirtualThread(() -> {
-            // Lightweight thread managed by JVM (not OS)
-            System.out.println("Simple Virtual Thread: " + Thread.currentThread());
-        });
-
-        // =========================================================
-        // 2. THREAD BUILDER (OPTIONAL CONTROL)
-        // =========================================================
-        Thread vt = Thread.ofVirtual()
-                .name("my-virtual-thread") // naming helps debugging
-                .start(() -> {
-                    System.out.println("Custom Named VT: " + Thread.currentThread());
-                });
-
-        vt.join(); // wait for completion
-
-        // =========================================================
-        // 3. MOST IMPORTANT: EXECUTOR WITH VIRTUAL THREADS
-        // =========================================================
-        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
-            // Each task gets its own virtual thread
-            for (int i = 0; i < 5; i++) {
-                int taskId = i;
-
-                executorService.submit(() -> {
-                    System.out.println("Task " + taskId + " started on " + Thread.currentThread());
-
-                    try {
-                        // Blocking is SAFE with virtual threads
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-
-                    System.out.println("Task " + taskId + " completed");
-                });
-            }
-        } // Auto-closes executor
-
-        // =========================================================
-        // 4. CALLABLE + FUTURE (RETURN VALUE)
-        // =========================================================
-        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
-            Future<String> future = executorService.submit(() -> {
-                Thread.sleep(500); // simulate work
-                return "Result from Virtual Thread";
-            });
-
-            // get() blocks — but blocking is OK here
-            System.out.println("Future Result: " + future.get());
-        }
-
-        // =========================================================
-        // 5. CHECK IF THREAD IS VIRTUAL
-        // =========================================================
-        Thread.startVirtualThread(() -> {
-            System.out.println("Is Virtual? " + Thread.currentThread().isVirtual());
-        });
-
-        // =========================================================
-        // 6. MASSIVE SCALABILITY DEMO
-        // =========================================================
-        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
-            for (int i = 0; i < 1000; i++) {
-            	executorService.submit(() -> {
-                    // Thousands of threads are cheap
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt(); }
-                });
-            }
-        }
-
+    	createSimpleVirtualThread();
+    	createVirtualThreadWithBuilder();
+    	
+    	executeTasksWithVirtualThreadExecutor();
+    	executeCallableWithVirtualThreads();
+    	verifyVirtualThread();
+    	
+    	demonstrateVirtualThreadScalability();
+    	demonstrateVirtualThreadPinning();
+    	demonstrateVirtualThreadWithoutPinning();
+    	
+    	migrateFromCompletableFutureToStructuredConcurrency();
+        
         /**
          * 
          * | Thread Type     | JVM waits?  |
@@ -131,18 +67,101 @@ public class VirtualThreadDemo {
          * - Key takeaway:
          *      Virtual threads = lightweight, but still "user threads" (safe, not killed early)
          */
-        
-        System.out.println("Main completed");
-        
-        // Extra
-        virtualThreadPinning();
-        noPinningDemo();
-        migration();
     }
     
-    // --------------------------------------------
-    // Virtual Thread Pinning Problem
-    // --------------------------------------------
+	// =========================================================
+    // 1. SIMPLE VIRTUAL THREAD
+    // =========================================================
+    private static void createSimpleVirtualThread() {
+        Thread.startVirtualThread(() -> {
+            // Lightweight thread managed by JVM (not OS)
+            System.out.println("Simple Virtual Thread: " + Thread.currentThread());
+        });
+		
+	}
+    
+	// =========================================================
+    // 2. THREAD BUILDER (OPTIONAL CONTROL)
+    // =========================================================
+    private static void createVirtualThreadWithBuilder() throws InterruptedException {
+        Thread vt = Thread.ofVirtual()
+                .name("my-virtual-thread") // naming helps debugging
+                .start(() -> {
+                    System.out.println("Custom Named VT: " + Thread.currentThread());
+                });
+
+        vt.join(); // wait for completion
+	}
+    
+	// =========================================================
+    // 3. MOST IMPORTANT: EXECUTOR WITH VIRTUAL THREADS
+    // =========================================================
+    private static void executeTasksWithVirtualThreadExecutor() {
+        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
+            // Each task gets its own virtual thread
+            for (int i = 0; i < 5; i++) {
+                int taskId = i;
+
+                executorService.submit(() -> {
+                    System.out.println("Task " + taskId + " started on " + Thread.currentThread());
+
+                    try {
+                        // Blocking is SAFE with virtual threads
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+
+                    System.out.println("Task " + taskId + " completed");
+                });
+            }
+        } // Auto-closes executor
+	}
+    
+	// =========================================================
+    // 4. CALLABLE + FUTURE (RETURN VALUE)
+    // =========================================================
+    private static void executeCallableWithVirtualThreads() throws InterruptedException, ExecutionException {
+        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
+            Future<String> future = executorService.submit(() -> {
+                Thread.sleep(500); // simulate work
+                return "Result from Virtual Thread";
+            });
+
+            // get() blocks — but blocking is OK here
+            System.out.println("Future Result: " + future.get());
+        }
+	}
+    
+	// =========================================================
+    // 5. CHECK IF THREAD IS VIRTUAL
+    // =========================================================
+    private static void verifyVirtualThread() {
+        Thread.startVirtualThread(() -> {
+            System.out.println("Is Virtual? " + Thread.currentThread().isVirtual());
+        });
+	}
+    
+    // =========================================================
+    // 6. MASSIVE SCALABILITY DEMO
+    // =========================================================
+    private static void demonstrateVirtualThreadScalability() {
+        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < 1000; i++) {
+            	executorService.submit(() -> {
+                    // Thousands of threads are cheap
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); }
+                });
+            }
+        }
+	}
+
+	// ------------------------------------
+    // 7.a. Virtual Thread Pinning (BAD ❌)
+    // ------------------------------------
     /*
      * PINNING IN VIRTUAL THREADS:
      *
@@ -165,23 +184,31 @@ public class VirtualThreadDemo {
     /**
      * WITH PINNING:
      * Virtual Thread → holds lock → cannot unmount → carrier blocked ❌
+     * 
+     * 👉 Golden Rule:
+     * NEVER perform blocking operations (sleep, IO, DB calls) while holding a lock
      */
-    static void virtualThreadPinning() throws Exception {
-    	/**
-		 * PINNING SCENARIO:
-		 *  - 5 virtual threads are created
-		 *  - All try to acquire the same lock
-		 *  - Only 1 thread acquires the lock
-		 *  - That thread sleeps (blocking) while holding the lock
-		 *  - Other threads wait for the lock
-		 *  - Virtual thread cannot unmount → carrier thread is PINNED
-		 *  - Tasks execute sequentially (~5 sec)
-    	 * 
-    	 * Why this is called PINNING:
-    	 * 	Virtual Thread → holds lock → cannot unmount
-    	 * 		→ Carrier thread (OS thread) is stuck
-    	 * 		→ No scalability benefit
-    	 */
+    static void demonstrateVirtualThreadPinning() throws Exception {
+    	
+        /**
+         * 👉 PINNING SCENARIO:
+         * - Multiple virtual threads compete for the same lock
+         * - One thread acquires the lock
+         * - That thread performs a blocking operation (sleep)
+         * - Other threads wait for the lock
+         *
+         * ❌ Problem:
+         * - Virtual thread is BLOCKED while holding the lock
+         * - It CANNOT unmount from carrier thread
+         * - Carrier (OS thread) gets pinned → blocked
+         * - Execution becomes sequential (~5 sec)
+         *
+         * 👉 Root Cause:
+         * Blocking operation INSIDE lock
+         *
+         * 👉 Golden Rule:
+         * NEVER perform blocking (sleep, IO, DB calls) while holding a lock
+         */
     	
         System.out.println("\n=== Virtual Thread (Pinning) ===");
         long start = System.currentTimeMillis();
@@ -192,7 +219,7 @@ public class VirtualThreadDemo {
                 executorService.submit(() -> {
                     lock.lock();
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(1000);				// ❌ blocking inside lock → pinning
                         System.out.println("Task: " + Thread.currentThread());
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
@@ -206,25 +233,30 @@ public class VirtualThreadDemo {
         System.out.println("Time taken: " + (System.currentTimeMillis() - start) + " ms");
     }
     
+    // --------------------------------------------
+    // 7.b. Virtual Thread (No Pinning) (GOOD ✅)
+    // --------------------------------------------
     /**
      * WITHOUT PINNING:
      * Virtual Thread → sleep → unmount → carrier free → scalable ✅
      */
-    static void noPinningDemo() throws Exception {
+    static void demonstrateVirtualThreadWithoutPinning() throws Exception {
     	
-    	/**
-    	 * NO PINNING SCENARIO:
-    	 *  - 5 virtual threads are created
-    	 *  - All execute in parallel (no lock)
-    	 *  - Each thread sleeps (blocking)
-    	 *  - JVM unmounts virtual threads from carrier threads
-    	 *  - Carrier threads are reused for other tasks
-    	 *  - Tasks complete together (~1 sec, parallel)
-    	 *
-    	 * No pinning because no lock is held while blocking
-    	 * No lock → virtual threads unmount during sleep → parallel execution (~1 sec)
-    	 * → full scalability achieved
-    	 */
+        /**
+         * 👉 NO PINNING SCENARIO:
+         * - Multiple virtual threads run independently
+         * - No lock is held during blocking
+         * - Each thread sleeps (blocking)
+         *
+         * ✅ Behavior:
+         * - JVM UNMOUNTS virtual threads during blocking
+         * - Carrier threads are reused
+         * - Tasks execute in parallel (~1 sec)
+         *
+         * 👉 Key Insight:
+         * Blocking is SAFE in virtual threads
+         * ONLY unsafe when combined with locks
+         */
    	
         System.out.println("\n=== Virtual Thread (No Pinning) ===");
         long start = System.currentTimeMillis();
@@ -233,7 +265,7 @@ public class VirtualThreadDemo {
             for (int i = 0; i < 5; i++) {
             	executorService.submit(() -> {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(1000);				// ✅ safe (no lock held)
                         System.out.println("Task: " + Thread.currentThread());
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
@@ -246,7 +278,7 @@ public class VirtualThreadDemo {
     }
 
     // --------------------------------------------
-    // Migration from CompletableFuture
+    // 8. Migration from CompletableFuture
     // --------------------------------------------
     /*
      * MIGRATION: CompletableFuture → Structured Concurrency
@@ -270,7 +302,7 @@ public class VirtualThreadDemo {
      * Structured Concurrency simplifies async code by making it readable,
      * safer, and automatically handling cancellation.
      */
-    static void migration() throws Exception {
+    static void migrateFromCompletableFutureToStructuredConcurrency() throws Exception {
     	System.out.println("\n=== Migration ===");
     	
         CompletableFuture<String> user = CompletableFuture.supplyAsync(() -> fetch("User"));
@@ -306,35 +338,34 @@ public class VirtualThreadDemo {
 /*
 Custom Named VT: VirtualThread[#23,my-virtual-thread]/runnable@ForkJoinPool-1-worker-2
 Simple Virtual Thread: VirtualThread[#21]/runnable@ForkJoinPool-1-worker-1
-Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
-Task 0 started on VirtualThread[#26]/runnable@ForkJoinPool-1-worker-2
-Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-3
-Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-1
 Task 4 started on VirtualThread[#30]/runnable@ForkJoinPool-1-worker-5
+Task 1 started on VirtualThread[#27]/runnable@ForkJoinPool-1-worker-1
+Task 3 started on VirtualThread[#29]/runnable@ForkJoinPool-1-worker-4
+Task 0 started on VirtualThread[#26]/runnable@ForkJoinPool-1-worker-3
+Task 2 started on VirtualThread[#28]/runnable@ForkJoinPool-1-worker-2
 Task 2 completed
 Task 1 completed
 Task 4 completed
-Task 0 completed
 Task 3 completed
+Task 0 completed
 Future Result: Result from Virtual Thread
 Is Virtual? true
-Main completed
 
 === Virtual Thread (Pinning) ===
-Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-1
-Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-1
-Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-9
-Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-1
-Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-9
-Time taken: 5042 ms
+Task: VirtualThread[#1044]/runnable@ForkJoinPool-1-worker-6
+Task: VirtualThread[#1043]/runnable@ForkJoinPool-1-worker-7
+Task: VirtualThread[#1045]/runnable@ForkJoinPool-1-worker-6
+Task: VirtualThread[#1046]/runnable@ForkJoinPool-1-worker-7
+Task: VirtualThread[#1047]/runnable@ForkJoinPool-1-worker-6
+Time taken: 5054 ms
 
 === Virtual Thread (No Pinning) ===
-Task: VirtualThread[#1048]/runnable@ForkJoinPool-1-worker-6
-Task: VirtualThread[#1050]/runnable@ForkJoinPool-1-worker-12
-Task: VirtualThread[#1049]/runnable@ForkJoinPool-1-worker-9
-Task: VirtualThread[#1052]/runnable@ForkJoinPool-1-worker-1
-Task: VirtualThread[#1051]/runnable@ForkJoinPool-1-worker-3
-Time taken: 1009 ms
+Task: VirtualThread[#1049]/runnable@ForkJoinPool-1-worker-12
+Task: VirtualThread[#1048]/runnable@ForkJoinPool-1-worker-7
+Task: VirtualThread[#1050]/runnable@ForkJoinPool-1-worker-9
+Task: VirtualThread[#1052]/runnable@ForkJoinPool-1-worker-11
+Task: VirtualThread[#1051]/runnable@ForkJoinPool-1-worker-6
+Time taken: 1004 ms
 
 === Migration ===
 Old: UserOrder
