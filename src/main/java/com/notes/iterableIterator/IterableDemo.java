@@ -1,6 +1,8 @@
 package com.notes.iterableIterator;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /*
 public interface Iterable<T> {
@@ -26,61 +28,116 @@ public interface Iterator<E> {
 }
 */
 
-// Custom Iterable
-class NameCollection implements Iterable<String> {
-	private String[] names;
+// Immutable code
 
-	public NameCollection(String[] names) {
-		this.names = names;
+// Custom Iterable
+final class NamesCollection implements Iterable<String> {
+	private final String[] names;
+
+	public NamesCollection(String[] names) {
+		// this.names = names.clone();					// error prone
+		// this.names = customClone(names);				// alternative approach (not recommended)
+		this.names = Arrays.copyOf(names, names.length);
 	}
 
 	@Override
 	public Iterator<String> iterator() {
-		return new NameIterator(names);
+		return new NamesIterator(names);
 	}
+	
+	
+    @SuppressWarnings("unused")
+	private String[] customClone(String[] source) {
+        String[] copy = new String[source.length];
+        for (int i = 0; i < source.length; i++) {
+            copy[i] = source[i];
+        }
+        return copy;
+    }
 }
 
 // Custom Iterator
-class NameIterator implements Iterator<String> {
-	private String[] data;
+final class NamesIterator implements Iterator<String> {
+	private final String[] names;
 	private int index = 0;								// has an internal index
 
-	public NameIterator(String[] data) {
-		this.data = data;
+	public NamesIterator(String[] names) {
+		this.names = Arrays.copyOf(names, names.length);
 	}
 
 	@Override
 	public boolean hasNext() {							// hasNext() checks if items remain
-		return index < data.length;
+		return index < names.length;
 	}
 
 	@Override
 	public String next() {								// next() returns current value and moves index forward
-		return data[index++];
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+        
+		return names[index++];
 	}
 }
 
 // Test
 public class IterableDemo {
 	public static void main(String[] args) {
-		String[] names = { "Mohan", "John", "Sam" };
+		String[] names = { "A", "B", "C" };
 
 		// custom collection similar to 'List<String> list = new ArrayList<>();'
-		NameCollection nameCollection = new NameCollection(names);
-		
-		// names[0] = "Mohan updated"; 					// NOTE: if you modify array, nameCollection also gets modified
+		NamesCollection namesCollection = new NamesCollection(names);
 
 		// using iterator
 		System.out.println("Using iterator:");
-		Iterator<String> iterator = nameCollection.iterator();
+		Iterator<String> iterator = namesCollection.iterator();
 		while (iterator.hasNext()) {
 			System.out.println(iterator.next());
 		}
 		
 		// using for-each loop
 		System.out.println("\nUsing for-each loop:");
-		for (String name : nameCollection) {
+		for (String name : namesCollection) {
 			System.out.println(name);
 		}
 	}
 }
+
+
+/**
+private String[] customClone(String[] source) {
+    String[] copy = new String[source.length];
+
+    for (int i = 0; i < source.length; i++) {
+        copy[i] = source[i];
+    }
+
+    return copy;
+}
+
+Equivalent enhanced for-loop version:
+private String[] customClone(String[] source) {
+    String[] copy = new String[source.length];
+
+    int index = 0;
+    for (String value : source) {
+        copy[index++] = value;
+    }
+
+    return copy;
+}
+
+Equivalent using System arraycopy():
+private String[] customClone(String[] source) {
+    String[] copy = new String[source.length];
+    System.arraycopy(source, 0, copy, 0, source.length);
+    return copy;
+}
+
+Equivalent using Arrays copyOf():
+private String[] customClone(String[] source) {
+    return Arrays.copyOf(source, source.length);
+}
+*/
+
+

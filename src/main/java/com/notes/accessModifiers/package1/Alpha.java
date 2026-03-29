@@ -14,6 +14,12 @@ public class Alpha {
 	private void privateMethod() {System.out.println("private method");}
 	protected void protectedMethod() {System.out.println("protected method");}
 	
+	// records
+    record DefaultRecord(String name) {}
+    public record PublicRecord(String name) {}				// Industry standard - only this is used most of the times
+    private record PrivateRecord(String name) {}
+    protected record ProtectedRecord(String name) {}
+	
 	// test method
 	public void testAccessModifiers() {
 		p = 1;  // default variable
@@ -36,6 +42,13 @@ public class Alpha {
 		alpha.publicMethod();
 		alpha.privateMethod();
 		alpha.protectedMethod();
+		
+		
+		// records
+		DefaultRecord defaultRecord = new DefaultRecord("default");
+		PublicRecord PublicRecords = new PublicRecord("public");
+		PrivateRecord privateRecord = new PrivateRecord("private");
+		ProtectedRecord protectedRecord = new ProtectedRecord("protected");
 	}
 	
 	public static void main(String[] args) {
@@ -59,5 +72,12 @@ public class Alpha {
 		// static String str = "hello";						// CTE: Illegal modifier for parameter str; only final is permitted
 		// private final String str = "hello";				// CTE: Illegal modifier for parameter str; only final is permitted
 		// private static final String str = "hello";		// CTE: Illegal modifier for parameter str; only final is permitted
+		
+		
+		// records
+		DefaultRecord defaultRecord = new DefaultRecord("default");
+		PublicRecord PublicRecords = new PublicRecord("public");
+		PrivateRecord privateRecord = new PrivateRecord("private");
+		ProtectedRecord protectedRecord = new ProtectedRecord("protected");
 	}
 }

@@ -99,3 +99,21 @@ public class E_ConcurrentHashMapDemo {
         t2.start();
     }
 }
+
+/*
+=== putIfAbsent ===
+A value: 10
+
+=== computeIfAbsent ===
+Computing value for B
+B value: 100
+
+=== computeIfPresent ===
+Updating A
+A value after update: 15
+
+=== Multithreading computeIfAbsent ===
+Thread-1 computing D
+Thread-1 got value: 500
+Thread-0 got value: 500
+*/

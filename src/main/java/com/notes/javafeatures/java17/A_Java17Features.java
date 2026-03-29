@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Java17Features {
+public class A_Java17Features {
 
 	// var someNum = 100; 						// CTE: 'var' is not allowed here
 	

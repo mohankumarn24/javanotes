@@ -43,7 +43,10 @@ non-sealed class Guest extends User {}
 // 2️. Sealed INTERFACE extended by INTERFACE
 //    → sealed | non-sealed
 // ============================================================
-sealed interface TransactionState permits Pending, Completed {}
+sealed interface TransactionState permits Pending, Processed, Completed {}
+
+// 2b
+record Processed(String transactionName) implements TransactionState {}
 
 // 2a. extending sealed interface → must be sealed or non-sealed
 sealed interface Pending extends TransactionState permits AwaitingApproval, AwaitingShipping {}
@@ -51,8 +54,7 @@ sealed interface Pending extends TransactionState permits AwaitingApproval, Awai
     final class ExpressShipping implements AwaitingApproval {}							// Sealed INTERFACE implemented by CLASS → final | sealed | non-sealed. Considered final
   final class AwaitingShipping implements Pending {}									// Sealed INTERFACE implemented by CLASS → final | sealed | non-sealed. Considered final
 
-
-// 2b. non-sealed interface → reopens hierarchy (ANY interface or class can extend/implement it)
+// 2c. non-sealed interface → reopens hierarchy (ANY interface or class can extend/implement it)
 non-sealed interface Completed extends TransactionState {}
   interface FullyCompleted extends Completed {}											// Interface extending non-sealed interface
     class OnlinePaymentCompleted implements FullyCompleted {}							// Class implementing extended interface
@@ -136,7 +138,7 @@ class SpecialReceipt extends Receipt {						// allowed because Receipt is non-se
 // ============================================================
 // MAIN CLASS
 // ============================================================
-public class SealedDeepDive {
+public class C_SealedDeepDive {
 
     public static void main(String[] args) {
 

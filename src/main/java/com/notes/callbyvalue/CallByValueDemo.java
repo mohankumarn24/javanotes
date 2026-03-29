@@ -43,27 +43,27 @@ public class CallByValueDemo {
 		// NOT MODIFIED
 		String str = "hello";
 		modifyString(str);
-		System.out.println(str);											// Original string
+		System.out.println(str);											// Output: "hello"
 		
 		// string array
 		// MODIFIED
 		// String[] strArray = {"Delhi", "Mumbai", "Bombay", "Goa"};	  	// same as below
 		String[] strArray = new String[] {"Delhi", "Mumbai", "Bombay", "Goa"};
 		modifyStringArray(strArray);
-		System.out.println(String.join(", ", strArray));
+		System.out.println(String.join(", ", strArray));					// Output: "Delhi Modified, Mumbai, Bombay, Goa"
 		
 		// 2.a. Call by Value (Object References):
 		// MODIFIED
 		Person person1 = new Person("Alice");
 		modifyObject(person1);
-		System.out.println(person1.getName()); 								// Output: Bob
+		System.out.println(person1.getName()); 								// Output: "Alice Modified"
 		// ✔️ Object content is changed because both the method and caller share the same object reference.
 				
 		// 2.b. Call by Value (Object References):
 		// NOT MODIFIED
         Person person2 = new Person("Bob");
         reassignObject(person2);
-        System.out.println(person2.getName()); 								// Output: Alice
+        System.out.println(person2.getName()); 								// Output: "Bob"
         // ❌ The original reference p in main() is unchanged because the method only changed its copy of the reference.
         
         // 3. collections
@@ -72,8 +72,8 @@ public class CallByValueDemo {
         List<Person> persons = new ArrayList<>();
         persons.add(new Person("Alice"));
         modifyCollections(persons);
-        persons.forEach(person -> System.out.println(person.toString()));
-        
+        persons.forEach(person -> System.out.println(person.toString()));	// Person [name=Alice]
+        																	// Person [name=Bob new]        
 	}
 
 	static void modifyPrimitives(int num) {

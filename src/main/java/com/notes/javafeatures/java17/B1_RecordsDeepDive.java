@@ -276,7 +276,7 @@ record Student(int id, String name) implements Serializable, Comparable<Student>
      */
 }
 
-public class RecordsDeepDive {
+public class B1_RecordsDeepDive {
 
     public static void main(String[] args) {
 

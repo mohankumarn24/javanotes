@@ -42,7 +42,7 @@ public class IteratorsDemo{
         // Explicit Iterator on Custom Iterable
         System.out.println("\nExplicit Iterator on Custom Iterable:");
         String[] arr = {"Mohan", "John", "Sam"};
-        NameCollection collection = new NameCollection(arr);
+        NamesCollection collection = new NamesCollection(arr);
 
         Iterator<String> it2 = collection.iterator();
         while (it2.hasNext()) {

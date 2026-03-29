@@ -1,6 +1,6 @@
 package com.notes.accessModifiers.package1;
 
-public class Beta extends Alpha {
+public class AlphaSub1 extends Alpha {
 
 	public void testAccessModifiers() {
 		
@@ -24,6 +24,12 @@ public class Beta extends Alpha {
 		alpha.publicMethod();
 		// alpha.privateMethod();
 		alpha.protectedMethod();
+		
+		// records
+		DefaultRecord defaultRecord = new DefaultRecord("default");
+		PublicRecord PublicRecords = new PublicRecord("public");
+		// PrivateRecord privateRecord = new PrivateRecord("private");
+		ProtectedRecord protectedRecord = new ProtectedRecord("protected");
 	}
 	
 	public static void main(String[] args) {
@@ -38,5 +44,12 @@ public class Beta extends Alpha {
 		alpha.publicMethod();
 		// alpha.privateMethod();
 		alpha.protectedMethod();
+		
+		
+		// records
+		DefaultRecord defaultRecord = new DefaultRecord("default");
+		PublicRecord PublicRecords = new PublicRecord("public");
+		// PrivateRecord privateRecord = new PrivateRecord("private");
+		ProtectedRecord protectedRecord = new ProtectedRecord("protected");
 	}
 }

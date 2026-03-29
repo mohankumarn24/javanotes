@@ -1,9 +1,9 @@
-package com.notes.accessModifiers.package3;
+package com.notes.accessModifiers.package2;
 
 import com.notes.accessModifiers.package1.Alpha;
 import com.notes.accessModifiers.package1.Alpha.PublicRecord;
 
-public class Gamma {
+public class Beta2 {
 
 	public void testAccessModifiers() {
 		
