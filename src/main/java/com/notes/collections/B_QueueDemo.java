@@ -84,6 +84,8 @@ public class B_QueueDemo {
 		arrayDeque.add("A");								// arrayDeque.add(12);
 		arrayDeque.add("B");								// arrayDeque.add(11);
 		arrayDeque.add("C");								// arrayDeque.add(13);
+		arrayDeque.addFirst("FIRST");   					// peek() / peekFirst() -> FIRST instead of A	// Visualization: [LAST, C, B, A, FIRST]. Actual deque: Front -> [FIRST, A, B, C, LAST] <- Rear
+		arrayDeque.addLast("LAST");     					// peekLast() -> LAST instead of C				// Visualization: [LAST, C, B, A, FIRST]. Actual deque: Front -> [FIRST, A, B, C, LAST] <- Rear	
 		
 		// print priorityQueue
         System.out.println("\narrayDeque elements");    
@@ -108,7 +110,7 @@ public class B_QueueDemo {
         // remove first and last element
         System.out.println("\nremove first and last element");
         // deque.poll();  									// retrieve and removes the head of this deque, or returns null if this deque is empty.
-        arrayDeque.pollFirst();								//it is same as poll()  
+        arrayDeque.pollFirst();								// it is same as poll()  
         arrayDeque.pollLast();  							// Retrieves and removes the last element of this deque,or returns null if this deque is empty.
         for(String str : arrayDeque){  
             System.out.println(str);  

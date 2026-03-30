@@ -45,13 +45,6 @@ public class CallByValueDemo {
 		modifyString(str);
 		System.out.println(str);											// Output: "hello"
 		
-		// string array
-		// MODIFIED
-		// String[] strArray = {"Delhi", "Mumbai", "Bombay", "Goa"};	  	// same as below
-		String[] strArray = new String[] {"Delhi", "Mumbai", "Bombay", "Goa"};
-		modifyStringArray(strArray);
-		System.out.println(String.join(", ", strArray));					// Output: "Delhi Modified, Mumbai, Bombay, Goa"
-		
 		// 2.a. Call by Value (Object References):
 		// MODIFIED
 		Person person1 = new Person("Alice");
@@ -73,7 +66,14 @@ public class CallByValueDemo {
         persons.add(new Person("Alice"));
         modifyCollections(persons);
         persons.forEach(person -> System.out.println(person.toString()));	// Person [name=Alice]
-        																	// Person [name=Bob new]        
+        																	// Person [name=Bob new]   
+		// 4. string array
+		// MODIFIED
+		// String[] strArray = {"Delhi", "Mumbai", "Bombay", "Goa"};	  	// same as below
+		System.out.println();
+		String[] strArray = new String[] {"Delhi", "Mumbai", "Bombay", "Goa"};
+		modifyStringArray(strArray);
+		System.out.println(String.join(", ", strArray));					// Output: "Delhi Modified, Mumbai, Bombay, Goa"
 	}
 
 	static void modifyPrimitives(int num) {
@@ -82,10 +82,6 @@ public class CallByValueDemo {
 	
 	static void modifyString(String str) {
 		str = "hello modified"; 											// This only modifies the local copy
-	}
-	
-	static void modifyStringArray(String[] strArray) {
-		strArray[0] = "Delhi Modified"; 									// MODIFIES the string index value
 	}
 	
 	static void modifyObject(Person person) {
@@ -100,17 +96,23 @@ public class CallByValueDemo {
     static void modifyCollections(List<Person> persons) {
     	persons.add(new Person("Bob new"));									// MODIFIES collection
     }
+    
+	static void modifyStringArray(String[] strArray) {
+		strArray[0] = "Delhi Modified"; 									// MODIFIES the string index value
+	}
 }
 
 /*
 10
 hello
-Delhi Modified, Mumbai, Bombay, Goa
 Alice Modified
 Bob
 
 Person [name=Alice]
 Person [name=Bob new]
+
+Delhi Modified, Mumbai, Bombay, Goa
+
  */
 
 
