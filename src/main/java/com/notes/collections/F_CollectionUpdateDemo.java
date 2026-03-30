@@ -96,27 +96,27 @@ public class F_CollectionUpdateDemo {
         System.out.println("English	: " + englishMarks);						// English: 0
 
         // 3. Classic use case → counting frequency
-        String[] words = {"apple", "banana", "apple", "orange", "banana", "apple"};
+        String[] fruits = {"apple", "banana", "apple", "orange", "banana", "apple"};
         
         // 3.a Using getOrDefault (classic approach)
         Map<String, Integer> freqMap = new HashMap<>();
-        for (String word : words) {
-            freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+        for (String fruit : fruits) {
+            freqMap.put(fruit, freqMap.getOrDefault(fruit, 0) + 1);
         }
         System.out.println("Frequency Map (getOrDefault)	: " + freqMap);		// Frequency Map: {banana=2, orange=1, apple=3}
         
 		// 3.b Using merge (cleaner, modern approach)
 		Map<String, Integer> freqMap2 = new HashMap<>();
 		
-		for (String word : words) {
-		    freqMap2.merge(word, 1, Integer::sum);
+		for (String fruit : fruits) {
+		    freqMap2.merge(fruit, 1, Integer::sum);
 		}
 		System.out.println("Frequency Map (merge)		: " + freqMap2);
 		
 		// 3.c Using computeIfAbsent (best for grouping / initialization)
 		Map<String, List<String>> grouped = new HashMap<>();
-		for (String word : words) {
-		    grouped.computeIfAbsent(word, k -> new ArrayList<>()).add(word);
+		for (String fruit : fruits) {
+		    grouped.computeIfAbsent(fruit, k -> new ArrayList<>()).add(fruit);
 		}
 		System.out.println("Grouped Map (computeIfAbsent)	: " + grouped);
     }

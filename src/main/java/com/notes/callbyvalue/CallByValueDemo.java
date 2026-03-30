@@ -39,27 +39,27 @@ public class CallByValueDemo {
 		System.out.println(x); 												// Output: 10
 		// ✔️ x is not changed in the main method because only a copy of x is modified.
 		
-		// string
+		// 2. string
 		// NOT MODIFIED
 		String str = "hello";
 		modifyString(str);
 		System.out.println(str);											// Output: "hello"
 		
-		// 2.a. Call by Value (Object References):
+		// 3.a. Call by Value (Object References):
 		// MODIFIED
 		Person person1 = new Person("Alice");
 		modifyObject(person1);
 		System.out.println(person1.getName()); 								// Output: "Alice Modified"
 		// ✔️ Object content is changed because both the method and caller share the same object reference.
 				
-		// 2.b. Call by Value (Object References):
+		// 3.b. Call by Value (Object References):
 		// NOT MODIFIED
         Person person2 = new Person("Bob");
         reassignObject(person2);
         System.out.println(person2.getName()); 								// Output: "Bob"
         // ❌ The original reference p in main() is unchanged because the method only changed its copy of the reference.
         
-        // 3. collections
+        // 4. collections
         // MODIFIED
         System.out.println();
         List<Person> persons = new ArrayList<>();
@@ -67,7 +67,7 @@ public class CallByValueDemo {
         modifyCollections(persons);
         persons.forEach(person -> System.out.println(person.toString()));	// Person [name=Alice]
         																	// Person [name=Bob new]   
-		// 4. string array
+		// 5. string array
 		// MODIFIED
 		// String[] strArray = {"Delhi", "Mumbai", "Bombay", "Goa"};	  	// same as below
 		System.out.println();
