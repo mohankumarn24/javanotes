@@ -179,19 +179,28 @@ public class StringOperations {
 
 		System.out.println(intC == intD);        						// false. No cache here → two different objects
 		
+		
+		////
 		// 21. Create new string from character array
 		System.out.println("\n21. Create new string from character array");
 		String str1 = "hello";											// original string
-
+		
+		// 21.a. Using String append
 		String str2 = new String();
-		StringBuilder sb2 = new StringBuilder();
 		for (char charValue : str1.toCharArray()) {
 			str2 = str2 + charValue;									// append to new string
+		}
+		System.out.println(str2); 										// "hello"
+		
+		// 21.b. Using StringBuilder append
+		StringBuilder sb2 = new StringBuilder();
+		for (char charValue : str1.toCharArray()) {
 			sb2.append(charValue);										// append to StringBuilder
 		}
-
-		System.out.println(str2); 										// hello
-		System.out.println(new String(str1.toCharArray()));				// hello
-		System.out.println(sb2.toString()); 							// hello		
+		System.out.println(sb2.toString()); 							// "hello"	
+		
+		// 21.c. Using 'String.ValueOf()'
+		String str3 = String.valueOf(str1.toCharArray());
+		System.out.println(str3);										// "hello"
 	}
 }
