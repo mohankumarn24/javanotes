@@ -318,6 +318,7 @@ public class A_Java17Features {
         //   Does NOT return a value
         //   Fall-through: forgetting break = silent bug
         //   Multi-label = repeat case lines
+        // 1.a
         int numLettersBefore;
         switch (day) {
             case "MONDAY":
@@ -344,6 +345,7 @@ public class A_Java17Features {
         //   Returns a value directly
         //   Arrow (->) = NO fall-through, NO break needed
         //   Multi-label with comma: case "A", "B" ->
+        // 1.b
         int numLettersAfter = switch (day) {
             case "MONDAY", "FRIDAY", "SUNDAY"  -> 6;
             case "TUESDAY"                     -> 7;
@@ -364,6 +366,7 @@ public class A_Java17Features {
         System.out.println("After (yield): " + numLettersAfter2);
 
         // ── yield: return value from a block {} inside switch expression ──
+        // 1.c        
         String result = switch (day) {
             case "MONDAY" -> "Start of week";
             case "FRIDAY" -> {
@@ -378,6 +381,7 @@ public class A_Java17Features {
         Season season = Season.SUMMER;
 
         // Before (Java 8)
+        // 2.a        
         String activityBefore;
         switch (season) {
             case SPRING: activityBefore = "Plant";   break;
@@ -387,6 +391,7 @@ public class A_Java17Features {
         }
 
         // After (Java 17) — compiler knows all 4 enum values are covered
+        // 2.b        
         String activityAfter = switch (season) {
             case SPRING -> "Plant";
             case SUMMER -> "Swim";

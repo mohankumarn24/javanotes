@@ -69,6 +69,7 @@ sealed interface Payment permits CardPayment, UPIPayment, CashPayment, SpecialPa
 
 // 3a. record → implicitly final
 record CardPayment(String cardNumber) implements Payment {}
+
 // 3a. final → closed
 final class CashPayment implements Payment {}
 
