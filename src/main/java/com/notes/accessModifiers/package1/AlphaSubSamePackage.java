@@ -62,3 +62,40 @@ public class AlphaSubSamePackage extends Alpha {
 		ProtectedRecord protectedRecord = new ProtectedRecord("protected");
 	}
 }
+
+/*
+ * Why can we access p, q, s and methods inside testAccessModifiers()
+ * but not directly inside main()?
+ *
+ * - testAccessModifiers() is a non-static method.
+ * - Non-static methods belong to an object instance.
+ * - So Java automatically uses: this.p, this.publicMethod(), etc.
+ *
+ * Example:
+ *      p = 1;
+ * is internally treated as:
+ *      this.p = 1;
+ *
+ * ------------------------------------------------------------
+ *
+ * - main() is a static method.
+ * - Static methods belong to the class, not to an object.
+ * - So there is no current object (this) inside main().
+ *
+ * Therefore this is invalid inside main():
+ *
+ *      p = 1;
+ *      publicMethod();
+ *
+ * Because Java does not know which object's p or method to use.
+ *
+ * Correct approach inside main():
+ *
+ *      Alpha alpha = new Alpha();
+ *      alpha.p = 1;
+ *      alpha.publicMethod();
+ *
+ * Rule:
+ *      Non-static method  -> can directly access instance members
+ *      Static method      -> must use object reference for instance members
+ */
