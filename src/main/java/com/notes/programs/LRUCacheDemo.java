@@ -16,8 +16,12 @@ import java.util.Map;
  * tail.prev → least recently used (LRU)		
  */
 class Node {
-	int key, value;
-	Node prev, next;
+	
+	int key;
+	int value;
+	
+	Node prev;
+	Node next;
 
 	Node(int k, int v) {
 		key = k;
@@ -33,7 +37,9 @@ class Node {
  */
 class LRUCache {
 	
-	private Node head, tail;
+	private Node head; 
+	private Node tail;
+	
 	private int capacity;
 	private Map<Integer, Node> map;
 
@@ -48,6 +54,33 @@ class LRUCache {
 		tail.prev = head;
 	}
 	
+	/**
+	 * Always insert right after head (MRU position)
+	 * 
+	 * Suppose:
+	 * 		head <-> A <-> B <-> tail
+	 * 
+	 * Insert new node X:
+	 * 	Step 1:
+	 * 		node.next = head.next;
+	 *  Step 2:
+	 *  	node.prev = head;
+	 *  Step 3:
+	 *  	head.next.prev = node;
+	 *  Step 4:
+	 *  	head.next = node;
+	 *  Final:
+	 *  	head <-> X <-> A <-> B <-> tail
+	 *  
+	 */
+	private void insert(Node node) {
+	    node.prev = head;								// head <-  X
+	    node.next = head.next;							// head <-  X ->  A
+
+	    head.next.prev = node;							// head <-  X <-> A
+	    head.next = node;								// head <-> X <-> A
+	}
+
 	/**
 	 * head <-> A <-> B <-> C <-> tail
 	 * 
@@ -71,62 +104,6 @@ class LRUCache {
 	}
 
 	/**
-	 * Always insert right after head (MRU position)
-	 * 
-	 * Suppose:
-	 * 		head <-> A <-> B <-> tail
-	 * 
-	 * Insert new node X:
-	 * 	Step 1:
-	 * 		node.next = head.next;
-	 *  Step 2:
-	 *  	node.prev = head;
-	 *  Step 3:
-	 *  	head.next.prev = node;
-	 *  Step 4:
-	 *  	head.next = node;
-	 *  Final:
-	 *  	head <-> X <-> A <-> B <-> tail
-	 *  
-	 */
-	private void insert(Node node) {
-	    node.prev = head;
-	    node.next = head.next;
-
-	    head.next.prev = node;
-	    head.next = node;
-	}
-
-	/**
-	 * HashMap lookup → O(1)
-	 * 	- remove(node) → O(1)
-	 * 	- insert(node) → O(1)
-	 * 
-	 * 	Final: O(1)
-	 * 
-	 */
-	public int get(int key) {
-
-	    // If key is not present in cache, return -1 (cache miss)
-	    if (!map.containsKey(key)) {
-	    	return -1;
-	    }
-
-	    // Fetch the node from hashmap (O(1))
-	    Node node = map.get(key);
-
-	    // Since this key is accessed, it becomes most recently used
-	    // Remove it from current position in linked list
-	    remove(node);
-
-	    // Re-insert it at head (mark as most recently used)
-	    insert(node);
-
-	    // Return the value
-	    return node.value;
-	}
-
-	/**
 	 * 1. Key already exists
 	 * 		- map.get → O(1)
 	 * 		- remove → O(1)
@@ -146,41 +123,68 @@ class LRUCache {
 	 *
 	 */
 	public void put(int key, int value) {
-
 	    // If key already exists, remove the old node from the linked list
 	    // (we will reinsert it as most recently used)
 	    if (map.containsKey(key)) {
-	        remove(map.get(key));
+	    	Node node = map.get(key);
+	        remove(node);
 	    }
 
 	    // Create a new node with updated value
 	    Node node = new Node(key, value);
 
+	    // Insert node at the head (mark as most recently used)
+	    insert(node);
+	    
 	    // Put the new node in hashmap for O(1) access
 	    map.put(key, node);
 
-	    // Insert node at the head (mark as most recently used)
-	    insert(node);
-
 	    // If capacity exceeded, remove least recently used (LRU) node
 	    if (map.size() > capacity) {
-
 	        // LRU node is just before tail
-	        Node lru = tail.prev;
+	        Node lruNode = tail.prev;
 
 	        // Remove it from linked list
-	        remove(lru);
+	        remove(lruNode);
 
 	        // Remove it from hashmap as well
-	        map.remove(lru.key);
+	        map.remove(lruNode.key);
 	    }
 	}
 	
+	/**
+	 * HashMap lookup → O(1)
+	 * 	- remove(node) → O(1)
+	 * 	- insert(node) → O(1)
+	 * 
+	 * 	Final: O(1)
+	 * 
+	 */
+	public int get(int key) {
+	    // If key is not present in cache, return -1 (cache miss)
+	    if (!map.containsKey(key)) {
+	    	return -1;
+	    }
+
+	    // Fetch the node from hashmap (O(1))
+	    Node node = map.get(key);
+
+	    // Since this key is accessed, it becomes most recently used
+	    // Remove it from current position in linked list
+	    remove(node);
+
+	    // Re-insert it at head (mark as most recently used)
+	    insert(node);
+
+	    // Return the value
+	    return node.value;
+	}
+
 	public void printCache() {
+		
 	    Node curr = head.next;
 
 	    System.out.print("Cache: [");
-
 	    while (curr != tail) {
 	        System.out.print(curr.key);
 
@@ -197,8 +201,9 @@ class LRUCache {
 }
 
 public class LRUCacheDemo {
+	
 	public static void main(String[] args) {
-
+		
 	    // Create LRU Cache with capacity = 2
 	    LRUCache cache = new LRUCache(2);
 
