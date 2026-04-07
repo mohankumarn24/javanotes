@@ -26,8 +26,8 @@ public class ProductExample {
         Product p1 = new Product("1", " Reynolds Pen", 10);
         Product p2 = new Product("1", " Reynolds Pen", 12);
         set.add(p1);        
-        System.out.println("p1.equals(p2)	 : " + p1.equals(p2));		// override default implementation of 'equals()' to check 'id' instead of '=='
-        System.out.println("set.contains(p2) : " + set.contains(p2));	// As per hash contract between 'equals()' and h'ashCode()', whenever two objects are equals, then their hash code must be equal.
+        System.out.println("p1.equals(p2)	 : " + p1.equals(p2));		// true. override default implementation of 'equals()' to check 'id' instead of '=='
+        System.out.println("set.contains(p2) : " + set.contains(p2));	// true. As per hash contract between 'equals()' and h'ashCode()', whenever two objects are equals, then their hash code must be equal.
         																// So, override 'hashCode()' as well
         
         // Map 1
@@ -37,7 +37,7 @@ public class ProductExample {
         map1.put(p2, "Value2");
         System.out.println("p1.equals(p2) 	: " + p1.equals(p2));		// true
         System.out.println("map1.size()   	: " + map1.size());     	// 1
-        System.out.println("map1.get(p1)  	: " + map1.get(p1));    	// "Value1"
+        System.out.println("map1.get(p1)  	: " + map1.get(p1));    	// "Value2"
         System.out.println("map1.get(p2)  	: " + map1.get(p2));    	// "Value2"
         /*
          * Why does p2 overwrite p1? Because in a HashMap:

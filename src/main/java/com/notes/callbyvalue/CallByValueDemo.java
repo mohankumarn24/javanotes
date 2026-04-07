@@ -69,11 +69,11 @@ public class CallByValueDemo {
         																	// Person [name=Bob new]   
 		// 5. string array
 		// MODIFIED
-		// String[] strArray = {"Delhi", "Mumbai", "Bombay", "Goa"};	  	// same as below
+		// String[] strArray = {"A", "B", "C", "D"};	  					// same as below
 		System.out.println();
-		String[] strArray = new String[] {"Delhi", "Mumbai", "Bombay", "Goa"};
+		String[] strArray = new String[] {"A", "B", "C", "D"};
 		modifyStringArray(strArray);
-		System.out.println(String.join(", ", strArray));					// Output: "Delhi Modified, Mumbai, Bombay, Goa"
+		System.out.println(String.join(" ", strArray));						// Output: "P Q R S"
 	}
 
 	static void modifyPrimitives(int num) {
@@ -98,7 +98,10 @@ public class CallByValueDemo {
     }
     
 	static void modifyStringArray(String[] strArray) {
-		strArray[0] = "Delhi Modified"; 									// MODIFIES the string index value
+		strArray[0] = "P"; 													// MODIFIES the string index value
+		strArray[1] = "Q"; 													// MODIFIES the string index value
+		strArray[2] = "R"; 													// MODIFIES the string index value
+		strArray[3] = "S"; 													// MODIFIES the string index value
 	}
 }
 
@@ -111,9 +114,9 @@ Bob
 Person [name=Alice]
 Person [name=Bob new]
 
-Delhi Modified, Mumbai, Bombay, Goa
+P Q R S
 
- */
+*/
 
 
 /* 

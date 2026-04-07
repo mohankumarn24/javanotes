@@ -16,3 +16,11 @@ public class DaemonThreadDemo {
 		t2.start();
 	}
 }
+
+/*
+ * - JVM waits for all user threads (non-daemon threads) to finish.
+ *   But, JVM does NOT wait for daemon threads.
+ *
+ * - As soon as all user threads are completed,
+ *   JVM terminates even if daemon threads are still running.
+ */
