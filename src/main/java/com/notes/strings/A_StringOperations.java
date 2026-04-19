@@ -2,7 +2,7 @@ package com.notes.strings;
 
 import java.util.Arrays;
 
-public class StringOperations {
+public class A_StringOperations {
 	
 	public static void main(String[] args) {
 	

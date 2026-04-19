@@ -37,7 +37,24 @@ final class NamesCollection implements Iterable<String> {
 	public NamesCollection(String[] names) {
 		// this.names = names.clone();					// error prone
 		// this.names = customClone(names);				// alternative approach (not recommended)
-		this.names = Arrays.copyOf(names, names.length);
+		
+        // Safe because String is immutable
+        this.names = Arrays.copyOf(names, names.length);
+
+        /*
+         * Arrays.copyOf() creates a new array object, but elements are copied by reference.
+         *
+         * Since String is immutable, this is effectively safe enough.
+         *
+         * For mutable objects, Arrays.copyOf() would only do a shallow copy.
+         * In that case, create a new object for each element.
+         *
+         * Example:
+         *
+         * List<Person> copy = original.stream()
+         *         .map(Person::new)   // copy constructor
+         *         .collect(Collectors.toList());
+         */
 	}
 
 	@Override
@@ -61,8 +78,12 @@ final class NamesIterator implements Iterator<String> {
 	private final String[] names;
 	private int index = 0;								// has an internal index
 
+	/*
+	 * - No need to copy array again inside NamesIterator
+	 * - NamesCollection already copied and protected the original array. Iterator can safely reuse the same internal array reference.
+	 */
 	public NamesIterator(String[] names) {
-		this.names = Arrays.copyOf(names, names.length);
+		this.names = names;
 	}
 
 	@Override
