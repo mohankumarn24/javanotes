@@ -102,6 +102,7 @@ public class CallByValueDemo {
 		strArray[1] = "Q"; 													// MODIFIES the string index value
 		strArray[2] = "R"; 													// MODIFIES the string index value
 		strArray[3] = "S"; 													// MODIFIES the string index value
+		// strArray[4] = "T"; 												// Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 4 out of bounds for length 4
 	}
 }
 

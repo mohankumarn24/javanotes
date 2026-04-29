@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class B_CompileTimeException {
+public class B1_CompileTimeException {
 
     @SuppressWarnings("unused")
 	private static void methodExtra1() throws IOException {

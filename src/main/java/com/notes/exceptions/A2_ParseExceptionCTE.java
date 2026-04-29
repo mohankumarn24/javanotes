@@ -8,11 +8,11 @@ import java.util.Date;
 // - Exception occurred during compile time. Cannot run the class. Solution: use try-catch or throws
 // - Checked exceptions are the exceptions that are checked at compile-time. This means that the compiler verifies that the code handles these
 //   exceptions either by catching them or declaring them in the method signature using the throws keyword. 
-public class A_ParseExceptionCTE  {
+public class A2_ParseExceptionCTE  {
 
 	public static void main(String[] args) {
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = "2023/01/01";
 		// String dateString = "2023-01-01"; 
 		
@@ -24,7 +24,7 @@ public class A_ParseExceptionCTE  {
 		 *   either by using a try-catch block or by throwing it using the throws clause.
 		 */
 		try {
-			Date dateCTEhandled = dateFormat.parse(dateString); 
+			Date dateCTEhandled = simpleDateFormat.parse(dateString); 
 			System.out.println(dateCTEhandled);  				// Sun Jan 01 00:00:00 IST 2023
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

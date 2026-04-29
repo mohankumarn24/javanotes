@@ -1,6 +1,6 @@
 package com.notes.exceptions;
 
-public class B_RunTimeException {
+public class B2_RunTimeException {
 
     private static void methodC() {
     	

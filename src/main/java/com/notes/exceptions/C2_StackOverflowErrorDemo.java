@@ -1,10 +1,10 @@
 package com.notes.exceptions;
 
 // Infinite Recursion
-public class C_StackOverflowErrorDemo {
+public class C2_StackOverflowErrorDemo {
 
 	public static void recursiveCall() {
-		recursiveCall(); // no base condition
+		recursiveCall(); // no base condition -> will cause StackOverflowError
 	}
 
 	public static void main(String[] args) {

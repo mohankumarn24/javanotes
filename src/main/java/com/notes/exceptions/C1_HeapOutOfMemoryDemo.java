@@ -3,9 +3,13 @@ package com.notes.exceptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class E_HeapOutOfMemoryDemo {
+public class C1_HeapOutOfMemoryDemo {
 
 	public static void main(String[] args) {
+		/*
+		 * - Java List has no fixed max size.
+		 * - ArrayList is limited to ~2.1 billion elements theoretically, but memory constraints cause OutOfMemoryError much earlier
+		 */
 		List<byte[]> list = new ArrayList<>();
 
 		try {
@@ -39,4 +43,24 @@ public class E_HeapOutOfMemoryDemo {
         }
     }
 }
+*/
+
+
+/*
+- Cause:
+	 -- Objects created continuously
+	 -- GC cannot reclaim memory
+	 -- Heap gets exhausted
+
+- Real world causes:
+	 -- Memory leaks
+	 -- Large cache without eviction
+	 -- Loading huge data in memory 
+	 
+- Debug OutOfMemoryError in production:
+	 -- Enable heap dump
+	 -- Analyze via VisualVM / MAT
+	 -- Identify leak
+	 -- Tune JVM options
+	 -- Fix code
 */
