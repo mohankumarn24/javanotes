@@ -8,7 +8,7 @@ public class A2_CompletableFutureExecutorExample {
 
     public static void main(String[] args) {
 
-        ExecutorService executor = Executors.newFixedThreadPool(2); // user threads
+        ExecutorService executorService = Executors.newFixedThreadPool(2); // user threads
 
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
             try {
@@ -16,7 +16,7 @@ public class A2_CompletableFutureExecutorExample {
             } catch (InterruptedException e) {
             }
             return "Hello from CompletableFuture!";
-        }, executor);
+        }, executorService);
 
         CompletableFuture<Void> callbackFuture = future
         		.thenApply(msg -> msg + " Processed")
@@ -36,7 +36,7 @@ public class A2_CompletableFutureExecutorExample {
          * IMPORTANT:
          * Must shutdown executor, otherwise JVM may not exit
          */
-        executor.shutdown();
+        executorService.shutdown();
 
         System.out.println("-- Main thread (end) --");
     }

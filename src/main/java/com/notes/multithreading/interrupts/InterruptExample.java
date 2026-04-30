@@ -7,14 +7,16 @@ public class InterruptExample {
 		@Override
 		public void run() {
 			try {
-				while (!Thread.interrupted()) {			// clears the flag
+				// Always applies to current thread only
+				// Thread.currentThread().interrupted(); 		// ❌ incorrect
+				while (!Thread.interrupted()) {					// clears the flag
 					// Perform a time-consuming task
 					System.out.println("Working..." + Thread.currentThread().getName());
 					Thread.sleep(1000);
 				}
 			} catch (InterruptedException e) {
 				// Handle interruption if needed
-				// Thread.currentThread().interrupt(); // Restore interrupted status
+				// Thread.currentThread().interrupt(); 			// Restore interrupted status
 				System.out.println(Thread.currentThread().getName() + " Thread interrupted!");
 			}
 			System.out.println("Thread terminated gracefully: " + Thread.currentThread().getName());
