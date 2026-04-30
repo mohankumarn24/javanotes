@@ -84,10 +84,30 @@ If the method catches the exception, behavior depends on what happens next.
         } catch (Exception e) {
             System.out.println("Caught exception");
             return null;  // or some default object
+            			  // if nothing is returned, then code wont compile with CTE -> "This method must return a result of type Object". See 'Correct ways to handle it'
         }
     }
 
     → Caller gets null (or whatever fallback is returned)
+    
+    Note: Correct ways to handle it
+          1. Return inside catch -> same as Option 1
+				 catch (Exception e) {
+				    return null;
+				 }          
+          2. Return after try-catch
+				 public Object getData() {
+				    try {
+				        throw new RuntimeException("Oops!");
+				    } catch (Exception e) {
+				        System.out.println("Caught exception");
+				    }
+				    return null; // covers all paths ✅
+				 }          
+          3. Rethrow (better in many real systems) -> same as Option 2
+				 catch (Exception e) {
+				    throw e; // or wrap it
+				 }          
 
  Option 2: Rethrow exception
     public Object getData() {

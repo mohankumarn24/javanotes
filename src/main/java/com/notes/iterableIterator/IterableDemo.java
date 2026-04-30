@@ -105,6 +105,7 @@ final class NamesIterator implements Iterator<String> {
 public class IterableDemo {
 	public static void main(String[] args) {
 		String[] names = { "A", "B", "C" };
+		// String[] names = new String[]{ "A", "B", "C" };
 
 		// custom collection similar to 'List<String> list = new ArrayList<>();'
 		NamesCollection namesCollection = new NamesCollection(names);
