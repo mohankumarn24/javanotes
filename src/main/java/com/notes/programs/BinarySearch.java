@@ -4,8 +4,9 @@ public class BinarySearch {
 
     public static void main(String[] args) {
 
-        int[] arr = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91};
-        int key = 23;
+    	// sorted input
+        int[] arr = {5, 6, 8, 9};
+        int key = 6;
 
         // Using iterative method
         int iterativeResult = binarySearchIterative(arr, key);
