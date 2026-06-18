@@ -53,6 +53,7 @@ public class A_StringOperations {
 		System.out.println("\n5. join");
 		System.out.println(String.format("joined: %s", String.join(" ", "one", "two", "three")));						// "one two three"
 		System.out.println(String.format("joined: %s", String.join(", ", "one", "two", "three")));						// "one, two, three"
+		System.out.println(String.format("joined: %s", String.join(" ", new String[]{"one", "two", "three"})));			// "one two three"
 		System.out.println(String.format("joined: %s", String.join(" ", Arrays.asList("one", "two", "three"))));		// "one two three"
 		
 		// 6. Immutability -> Strings are immutable
