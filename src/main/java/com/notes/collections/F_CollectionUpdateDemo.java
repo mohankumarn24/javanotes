@@ -45,18 +45,19 @@ public class F_CollectionUpdateDemo {
         // 3. PriorityQueue → no direct update ❌
         // Must remove + add (heap structure, no index access)
         // Updating directly would break heap ordering
-        PriorityQueue<Integer> pq = new PriorityQueue<>(List.of(10, 20, 30));
-        pq.remove(20);          												// remove old value
+        PriorityQueue<Integer> pq = new PriorityQueue<>(List.of(10, 20, 30, 20));
+        pq.remove(20);          												// removes only the first occurrence, not all occurrences
         pq.add(25);             												// add new value
-        System.out.println("PriorityQueue	: " + pq);							// PriorityQueue: [10, 30, 25]
+        System.out.println("PriorityQueue	: " + pq);							// PriorityQueue: [10, 20, 30, 25]
+        																		// The printed order is heap order, not guaranteed sorted order
 
 
         // 4. ArrayDeque → no random access ❌
         // Use remove + add
-        Deque<String> deque = new ArrayDeque<>(List.of("D1", "D2", "D3"));
-        deque.remove("D2");     												// remove old
-        deque.add("D2_UPDATED"); 												// add new (end)
-        System.out.println("ArrayDeque	: " + deque);							// ArrayDeque: [D1, D3, D2_UPDATED]
+        Deque<String> deque = new ArrayDeque<>(List.of("D1", "D2", "D3", "D2"));
+        deque.remove("D2");     												// removes only the first occurrence, not all occurrences
+        deque.add("D2_UPDATED"); 												// adds at tail
+        System.out.println("ArrayDeque	: " + deque);							// ArrayDeque: [D1, D3, D2, D2_UPDATED]
 
 
         // 5. Set → no index, no duplicates ❌
@@ -123,18 +124,18 @@ public class F_CollectionUpdateDemo {
 }
 
 /*
-ArrayList		: [A, B_UPDATED, C]
-LinkedList		: [X, Y, Z_UPDATED]
-PriorityQueue	: [10, 30, 25]
-ArrayDeque		: [D1, D3, D2_UPDATED]
-Set				: [S3, S2_UPDATED, S1]
-Map				: {A=1, B=20}
+ArrayList	: [A, B_UPDATED, C]
+LinkedList	: [X, Y, Z_UPDATED]
+PriorityQueue	: [10, 20, 30, 25]
+ArrayDeque	: [D1, D3, D2, D2_UPDATED]
+Set		: [S3, S2_UPDATED, S1]
+Map		: {A=1, B=20}
 
 ===== map.getOrDefault('A', 0) =====
 Math	: 90
 English	: 0
 Frequency Map (getOrDefault)	: {banana=2, orange=1, apple=3}
-Frequency Map (merge)			: {orange=1, banana=2, apple=3}
+Frequency Map (merge)		: {orange=1, banana=2, apple=3}
 Grouped Map (computeIfAbsent)	: {orange=[orange], banana=[banana, banana], apple=[apple, apple, apple]}
 
 */
