@@ -37,9 +37,11 @@ public class Streams {
 		boolean noneMatch = result.stream().noneMatch(t -> t > 1000); 					// none must match
 		System.out.println(String.format("noneMatch: %b", noneMatch));	
 		
+		// Optional<Integer> minOptional = Stream.of(1, 2, 3, 4, 5).min((a, b) -> a > b ? 1 : -1);		// 1
 		Optional<Integer> minOptional = result.stream().min((a, b) -> a.compareTo(b));
 		System.out.println(String.format("min: %d", minOptional.get()));
 		
+		// Optional<Integer> maxOptional = Stream.of(1, 2, 3, 4, 5).min((a, b) -> a > b ? 1 : -1);		// 2
 		Optional<Integer> maxOptional = result.stream().max((a, b) -> a.compareTo(b));
 		System.out.println(String.format("max: %d", maxOptional.get()));
 		
